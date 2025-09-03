@@ -1,0 +1,91 @@
+---
+title: "Some Summary of Circular References"
+publishedAt: "2025-05-20"
+---
+
+Today I want to focus on discussing those bugs caused by loops encountered in code.
+
+One is circular reference in Spring Boot, and the other is infinite rendering loop in React.
+
+In the early days when I started writing code, I often unintentionally created these kinds of bugs. It wasn't until after compiling and running the code that I discovered them, encountering errors such as memory leaks or performance lags during execution. Not only humans, even AI programming today can produce these bugs too. The code may seem fine in the IDE, but errors appear during runtime.
+
+① Circular Reference in Spring Boot
+
+In short, two or more Beans depend on each other, forming a closed loop of dependencies.
+
+Moreover, Spring's auto-wiring mechanism easily obscures the dependency relationships, blurring the boundaries between layers such as the business logic layer and data access layer.
+
+Let's take a very simple and classic example:
+
+```java
+@Service
+public class A {
+    @Autowired
+    private B b;
+}
+
+@Service
+public class B {
+    @Autowired
+    private A a;
+}
+```
+
+The best solution is to restructure the code, clarify the business logic, and eliminate circular dependencies.
+
+Although an AI might suggest solutions such as adding the `@Lazy` annotation, these suggestions often only temporarily solve the problem and can impact performance to some extent.
+
+② Infinite Rendering Loop in React
+
+In simple terms, during the rendering process, a component unintentionally triggers its own or other components' re-rendering infinitely, calling its render method repeatedly.
+
+An infinite rendering loop can cause the page to lag or even crash the program.
+
+Here is a very simple and classic example:
+
+```js
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+    </div>
+  );
+}
+```
+
+In this example, the App component's render method will be called twice: once during the initial render, and again when the button is clicked.
+
+Properly using React hooks, adding suitable rendering condition checks, or lifting shared state up the component tree are all good solutions.
+
+③ React Hooks
+
+`useState` is the most basic Hook, allowing function components to have their own state.
+
+`useEffect` is a Hook that enables performing side effects in function components.
+
+`useContext` is a Hook that allows accessing Context in function components.
+
+`useRef` is a Hook that allows accessing DOM nodes in function components.
+
+`useReducer` is a Hook that allows using Redux in function components.
+
+`useCallback` is a Hook that allows caching functions in function components.
+
+`useMemo` is a Hook that allows caching computed results in function components.
+
+④ Context
+
+Context is a feature provided by React for sharing data across the component tree without manually passing props to every component that needs it.
+
+In React applications, data usually flows from parent to child components via props. But for certain types of data—for example, user preferences, UI themes, or authentication information—that need to be shared across many components, passing props becomes tedious. Context provides a way to share these values between components without explicitly passing props through every level of the component tree.
+
+⑤ React Compiler
+
+The React Compiler introduced in React 19 enables automatic code optimization, avoiding unnecessary re-renders and eliminating the need for dependency arrays in `useCallback`, `useMemo`, etc., for memory management.
+
+Official documentation: [React Compiler](https://zh-hans.react.dev/learn/react-compiler)

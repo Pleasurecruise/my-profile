@@ -1,0 +1,138 @@
+---
+title: "Some Insights on AI Model Training and Fine-tuning"
+publishedAt: "2025-06-06"
+---
+
+I want to record some scaffolding and commonly used CLI commands for AI model training and fine-tuning processes.
+
+e.g. llama-factory ms-swift unsloth vllm sglang
+
+Mainly for Linux public network graphical servers
+
+① llama-factory
+
+Start and use the `gradio` WebUI panel
+
+GPU server public network access
+
+```shell
+export GRADIO_SHARE=true
+llamafactory-cli webui
+```
+
+② ms-swift
+
+Start and use the `gradio` WebUI panel
+
+```shell
+swift web-ui --lang zh --share true
+```
+
+Some libraries for inference acceleration and efficient fine-tuning
+
+vllm: Achieves efficient decoding based on Paged Attention. Supports throughput optimization and low-latency generation.
+
+sglang: Is a structured generation language that provides a front-end language and runtime system to optimize the execution of complex LLM programs. Supports multimodal inputs, parallel control, and KV cache reuse. Focuses on executing complex applications such as agent control, logic reasoning, and multi-round conversations, suitable for programming LLM applications that require multiple generation calls and control flows.
+
+unsloth: An open-source framework specifically designed for LLM fine-tuning and reinforcement learning, optimizing speed and memory usage. Supports technologies like QLoRA and LoRA, suitable for fine-tuning on limited hardware resources.
+
+---
+
+What is a hyperparameter? Common hyperparameters include:
+
+· Random Seed: A random seed is a fixed value used to initialize the random number generator during model training. It ensures that the same sequence of random numbers is used in different training processes, thereby improving model reproducibility. It usually needs to be adjusted according to specific tasks.
+
+· Learning Rate: Learning rate refers to the step size for updating weights during model training. It determines the speed of parameter updates and typically needs to be adjusted according to specific tasks. A smaller learning rate might cause slow convergence, while a larger learning rate might lead to instability during training.
+
+· Batch Size: Batch size refers to the number of samples processed in each iteration during training. It directly affects the direction of parameter updates and usually needs to be adjusted based on available memory and GPU memory. A smaller batch size might cause oscillations during training, while a larger batch size might slow down convergence.
+
+· Epoch: Epoch refers to the number of times the model iterates through the entire training dataset. It directly affects the training time and performance and typically needs to be adjusted according to specific tasks. Too few epochs might lead to underfitting, while too many might cause overfitting.
+
+· Hidden Size: Hidden size refers to the number of neurons in the hidden layer of the model. It directly affects the model's representational capacity and typically needs to be adjusted according to specific tasks. A smaller hidden size might cause underfitting, while a larger hidden size might lead to overfitting.
+
+· Regularization Coefficient: A regularization coefficient is a coefficient used to prevent overfitting during model training. It limits model complexity by adding penalty terms and typically needs to be adjusted according to specific tasks. A smaller regularization coefficient might lead to underfitting, while a larger one might cause overfitting.
+
+· Optimizer: An optimizer refers to the algorithm used to update model parameters during training. Common optimizers include stochastic gradient descent (SGD), Adam, Adagrad, etc. Different optimizers might have different impacts on the training process and need to be adjusted according to specific tasks.
+
+· Activation Function: An activation function introduces non-linear factors into the model. Common activation functions include Sigmoid, ReLU, Tanh, etc. Different activation functions might have different impacts on the training process and need to be adjusted according to specific tasks.
+
+· Loss Function: A loss function evaluates the difference between the model's predictions and the actual labels during training. Common loss functions include mean squared error (MSE) and cross-entropy loss. Different loss functions might have different impacts on the training process and need to be adjusted according to specific tasks.
+
+· Evaluation Metric: An evaluation metric assesses the model's performance during training. Common evaluation metrics include accuracy, precision, recall, etc. Different evaluation metrics might have different impacts on the training process and need to be adjusted according to specific tasks.
+
+· Learning Rate Scheduler: A learning rate scheduler dynamically adjusts the learning rate during training. Common strategies include fixed learning rate, step decay, cosine annealing, etc. Different learning rate adjustment strategies might impact the training process differently and need to be adjusted according to specific tasks.
+
+---
+
+Uploading and downloading model datasets
+
+Taking modelscope as an example
+
+Download:
+
+```
+from modelscope import snapshot_download
+
+download_dir = 'f:/modelscope'
+
+model_dir = snapshot_download('unsloth/Meta-Llama-3.1-8B-Instruct-bnb-4bit', cache_dir=download_dir)
+
+print(f'Model downloaded to: {model_dir}')
+```
+
+```shell
+modelscope download
+    --model Qwen/Qwen2.5-7B-Instruct
+    --cache_dir /root/autodl-tmp/models
+```
+
+Upload:
+
+```
+from modelscope.hub.api import HubApi
+
+YOUR_ACCESS_TOKEN = 'YOUR-MODELSCOPE-TOKEN'
+api = HubApi()
+api.login(YOUR_ACCESS_TOKEN)
+
+owner_name = 'owner'
+model_name = 'awesome-new-model'
+model_id = f"{owner_name}/{model_name}"
+
+api.upload_folder(
+    repo_id=f"{owner_name}/{model_name}",
+    folder_path='C:\\Users\\31968\\Downloads\\Compressed\\wsj0',
+    commit_message='upload dataset folder to repo',
+    repo_type='dataset'
+)
+```
+
+```shell
+modelscope upload owner/awesome-new-model /path/to/model_folder
+    --token YOUR-MODELSCOPE-TOKEN
+    --repo-type model
+    --commit-message 'init'
+    --commit-description 'my first commit'
+```
+
+Background mounting
+
+```shell
+nohup python train_wsj0mix.py hparams/WSJ0Mix/dpmamba_M.yaml \
+  --data_folder /home/wym/wsj0-mix/2speakers \
+  --dynamic_mixing True \
+  --base_folder_dm /home/wym/wsj0/si_tr_s \
+  --precision bf16 > training_output.log 2>&1 &
+```
+
+---
+
+A compilation of some famous frameworks in the history of large model development:
+
+- Transformer 2017 https://github.com/huggingface/transformers
+- BERT 2018 https://github.com/google-research/bert
+- GPT-2 2019 https://github.com/openai/gpt-2
+- ViT 2021 https://github.com/google-research/vision_transformer
+- Mamba 2023 https://github.com/state-spaces/mamba
+- ResNet 2015 https://github.com/KaimingHe/deep-residual-networks
+- CLIP 2021 https://github.com/openai/CLIP

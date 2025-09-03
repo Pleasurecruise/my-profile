@@ -1,0 +1,146 @@
+---
+title: "The usage of the nnUNet framework"
+publishedAt: "2025-07-14"
+---
+
+I want to record a highly recognized framework for graph convolutional neural networks encountered in summer research on artificial intelligence medical image segmentation, nnUNet.
+
+Repo Url: https://github.com/MIC-DKFZ/nnUNet
+
+DeepWiki: https://deepwiki.com/MIC-DKFZ/nnUNet
+
+Variants of U-Net such as U-Mamba and nnU-Net all utilize this framework.
+
+- Encoder
+
+Usually uses downsampling operations (such as convolution + pooling) to extract high-dimensional semantic features layer by layer.
+In 3D U-Net, 3D convolutions are used to process volumetric images (such as CT, MRI data).
+- Decoder
+
+Uses upsampling operations (such as transposed convolution) to gradually restore feature resolution.
+At the same time, skip connections are used to integrate shallow information from the encoder, preserving spatial details.
+- Bottleneck
+
+The deepest part between encoding and decoding, usually performs some processing (convolution + activation function, etc.) to determine high-level semantic information.
+- Skip Connections
+
+Concatenate shallow features from the encoder with upsampled features at the corresponding level in the decoder.
+Helps maintain spatial information and alleviate the problem of gradient vanishing.
+
+U-Mamba combines the advantages of convolutional layers and state space models (SSM), capable of capturing local features while aggregating long-range dependencies, outperforming existing CNN- and Transformer-based segmentation networks.
+
+① Usage Background（According to the Project README）
+
+Image datasets exhibit extreme diversity
+
+- Image dimensions (2D, 3D)
+- Modalities/input channels (RGB images, CT, MRI, microscope images, etc.)
+- Image size, voxel size
+- Class ratios and target structure characteristics vary significantly across different datasets.
+
+Traditionally, when facing a new problem, it is necessary to manually design and optimize customized solutions—a process that is error-prone, difficult to scale, and largely depends on the skill of the practitioner.
+Not only must one consider numerous design choices and data attributes, but these factors are also tightly interrelated, making a reliable manual workflow optimization nearly impossible.
+
+nnU-Net, on the other hand, is a semantic segmentation method that can automatically adapt to the given dataset. It analyzes the provided training cases and automatically configures a matching U-Net-based segmentation pipeline.
+
+Just convert your dataset to the nnU-Net format, ideal for image segmentation in large models, training domain-specific large models.
+
+> Robustness means: remains stable and reliable in the face of disturbances and uncertainty.
+
+② How it works
+
+Creates several U-Net configurations for each dataset:
+
+- 2d: a 2D U-Net (applicable to both 2D and 3D datasets)
+- 3d_fullres: a 3D U-Net operating at high image resolution (only for 3D datasets)
+- 3d_lowres → 3d_cascade_fullres: a 3D U-Net cascade where the first 3D U-Net runs on low-resolution images, then the second high-resolution 3D U-Net refines the predictions from the first (only for 3D datasets with large image dimensions)
+
+③ Data Structure
+
+```text
+TaskXXX_TaskName/
+├── dataset.json  # contains category labels, modalities, and metadata
+├── imagesTr/     # training images (name should contain patient ID, such as patient001_0000.nii.gz)
+├── labelsTr/     # training labels
+└── imagesTs/     # test images (optional)
+```
+
+```text
+imagesTs
+├── la_001_0000.nii.gz
+├── la_002_0000.nii.gz
+├── la_006_0000.nii.gz
+├── ...
+```
+
+dataset.json format
+```json
+{
+ "channel_names": {  # formerly modalities
+   "0": "T2",
+   "1": "ADC"
+ },
+ "labels": {  # THIS IS DIFFERENT NOW!
+   "background": 0,
+   "PZ": 1,
+   "TZ": 2
+ },
+ "numTraining": 32,
+ "file_ending": ".nii.gz"
+ "overwrite_image_reader_writer": "SimpleITKIO"  # optional! If not provided, nnUNet will automatically determine the ReaderWriter
+}
+```
+
+The data format used for inference must be consistent with that used for the original data. The filename must begin with a unique identifier, followed by a four-digit modality identifier.
+
+nnUNet_preprocessed: Preprocessed datasets
+
+nnUNet_raw: Original raw datasets
+
+nnUNet_results: Model training results
+
+④ Common commands
+
+> MSD stands for Medical Segmentation Decathlon, a public dataset in the field of medical image segmentation.
+
+Dataset-Related Processing
+
+```shell
+nnUNetv2_convert_MSD_dataset -i RAW_FOLDER
+nnUNetv2_convert_old_nnUNet_dataset OLD_FOLDER
+nnUNetv2_plan_and_preprocess -d DATASET_ID --verify_dataset_integrity
+```
+
+Model Training
+
+```shell
+nnUNetv2_train DATASET_NAME_OR_ID UNET_CONFIGURATION FOLD --val --npz
+nnUNetv2_find_best_configuration DATASET_NAME_OR_ID -c CONFIGURATIONS
+```
+
+> 5-fold cross-validation is a commonly used cross-validation method, belonging to techniques for evaluating model generalization capabilities in machine learning. In 5-fold cross-validation, the dataset is divided into five non-overlapping subsets (also known as "folds"). The model is trained and tested five rounds: in each round, a different subset is selected as the test set while the remaining four are combined and used for training.
+
+| Parameter Name             | Description |
+|--------------------------|-------------|
+| `dataset_name_or_id`     | specify the dataset name or ID for training (e.g. `Task001_BrainTumour` or `1`) |
+| `configuration`          | specify the training configuration, e.g. `3d_fullres`, `2d`, `3d_lowres`, `3d_cascade_fullres`, etc. |
+| `fold`                   | specify the cross-validation fold, an integer from 0 to 4 (supports 5-fold cross-validation) |
+
+Inference and Postprocessing
+
+```shell
+nnUNetv2_predict -i INPUT_FOLDER -o OUTPUT_FOLDER -d DATASET_NAME_OR_ID -c CONFIGURATION --save_probabilities
+```
+
+| Category         | Purpose                         | Key Commands                                                      |
+|------------------|----------------------------------|-------------------------------------------------------------------|
+| Dataset Setup    | Process raw datasets              | `nnUNetv2_extract_fingerprint`, `nnUNetv2_convert_MSD_dataset`   |
+| Experiment Planning | Configure training parameters     | `nnUNetv2_plan_experiment`                                        |
+| Data Preprocessing | Prepare data for training         | `nnUNetv2_preprocess`                                             |
+| Full Preparation | Execute all preparation steps     | `nnUNetv2_plan_and_preprocess`                                    |
+| Model Training   | Train segmentation models         | `nnUNetv2_train`                                                  |
+| Inference        | Run prediction tasks              | `nnUNetv2_predict`, `nnUNetv2_predict_from_modelfolder`         |
+| Model Ensemble   | Combine predictions from multiple models | `nnUNetv2_ensemble`                                           |
+| Model Evaluation | Evaluate model performance        | `nnUNetv2_find_best_configuration`, `nnUNetv2_evaluate_folder`  |
+| Model Management | Share and reuse models            | `nnUNetv2_export_model_to_zip`, `nnUNetv2_download_pretrained_model_by_url` |
+| Tools & Utilities | Visualization and helper tools    | `nnUNetv2_plot_overlay_pngs`                                      |

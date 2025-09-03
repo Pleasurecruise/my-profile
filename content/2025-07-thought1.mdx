@@ -1,0 +1,38 @@
+---
+title: "What is k8s"
+publishedAt: "2025-07-08"
+---
+
+Here I would like to record some issues I encountered while using a lightweight configuration of Kubernetes (k8s), as well as commonly used commands.
+
+First, it is recommended to deploy a cluster within the same service provider, same region, and internal network environment, especially when resources are small and distributed.
+
+If you only have multiple low-end servers (VPS) across different regions or providers, and they communicate via public IPs just for easier centralized management, then there's absolutely no need to deploy a cluster, as that would be a waste of computing resources.
+
+In such cases, additional considerations like long connection optimization and API Server proxy would be required, which are only suitable for edge worker nodes.
+
+An enterprise-grade Kubernetes cluster usually includes the following components:
+
+- Networking services: DNS resolution, gateway management, traffic control, load balancing
+- Storage services: scheduled snapshot backups, internal network image storage
+- Monitoring services: daemon processes, monitoring, alerting, logging
+- Security services: firewall configuration, intrusion detection
+- Access control services: unified identity authentication, certificate management, container signing
+- Operations services: elastic scheduling, auto-scaling, rolling updates, fault recovery, service mesh
+- Tooling services: visual management, time synchronization, CI/CD, application store
+
+And so on.
+
+If you can use a dashboard for unified visual management, then deploying a dashboard is recommended. KubeSphere is widely used and preferred for such management.
+
+Documentation URL: https://kubesphere.io/docs/v4.1/
+
+---
+
+SaaS (Software as a Service) — Software as a Service
+
+Features: subscription-based, centralized deployment, high availability and elastic scaling, multi-tenant support, etc.
+
+SaaS is a software delivery model, while Kubernetes is a container orchestration platform. SaaS providers can use Kubernetes to efficiently deploy, manage, and scale their services, supporting core scenarios like multi-tenancy and elastic scaling.
+
+---
