@@ -25,7 +25,7 @@ export const chatRouter = createTRPCRouter({
                 content: z.string()
             }))
         }))
-        .mutation(async ({ input, ctx }) => {
+        .mutation(async ({ input, ctx: _ctx }) => {
             // 检查API密钥是否存在
             if (!process.env.OPENAI_API_KEY) {
                 throw new TRPCError({

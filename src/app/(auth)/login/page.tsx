@@ -87,10 +87,10 @@ export default function SignIn() {
                                     password
                                 },
                                 {
-                                    onRequest: (ctx) => {
+                                    onRequest: (_ctx) => {
                                         setLoading(true);
                                     },
-                                    onResponse: (ctx) => {
+                                    onResponse: (_ctx) => {
                                         setLoading(false);
                                     },
                                 },
@@ -126,10 +126,10 @@ export default function SignIn() {
                                     callbackURL: "/chat"
                                 },
                                 {
-                                    onRequest: (ctx) => {
+                                    onRequest: (_ctx) => {
                                         setLoading(true);
                                     },
-                                    onResponse: (ctx) => {
+                                    onResponse: (_ctx) => {
                                         setLoading(false);
                                     },
                                 },

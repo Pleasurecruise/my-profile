@@ -3,10 +3,10 @@ import Link from "next/link";
 import React from "react";
 
 function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
-  let headers = data.headers.map((header, index) => (
+  const headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ));
-  let rows = data.rows.map((row, index) => (
+  const rows = data.rows.map((row, index) => (
     <tr key={index}>
       {row.map((cell, cellIndex) => (
         <td key={cellIndex}>{cell}</td>
@@ -24,8 +24,12 @@ function Table({ data }: { data: { headers: string[]; rows: string[][] } }) {
   );
 }
 
-function CustomLink(props: any) {
-  let href = props.href;
+function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement> & { children?: React.ReactNode }) {
+  const href = props.href;
+
+  if (!href) {
+    return <a {...props} />;
+  }
 
   if (href.startsWith("/")) {
     return (
@@ -42,8 +46,9 @@ function CustomLink(props: any) {
   return <a target="_blank" rel="noopener noreferrer" {...props} />;
 }
 
-function RoundedImage(props: any) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />;
+function RoundedImage(props: React.ImgHTMLAttributes<HTMLImageElement> & { alt: string; src: string }) {
+  const { alt, src, width: _width, height: _height, ...restProps } = props;
+  return <Image alt={alt} className="rounded-lg" src={src} width={500} height={300} {...restProps} />;
 }
 
 // This replaces rehype-slug
@@ -60,7 +65,7 @@ function slugify(str: string) {
 
 function createHeading(level: number) {
   const Heading = ({ children }: { children: React.ReactNode }) => {
-    let slug = slugify(children as string);
+    const slug = slugify(children as string);
     return React.createElement(
       `h${level}`,
       { id: slug },
