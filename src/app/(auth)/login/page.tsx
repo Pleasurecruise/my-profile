@@ -5,11 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { type SVGProps, useState } from "react";
 import { Loader2 } from "lucide-react";
-import { signIn } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import BlurFade from "@/components/magicui/blur-fade";
+import { toast } from "sonner";
+import { signinGithub, signinGoogle } from "@/lib/social-login";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -18,6 +21,7 @@ export default function SignIn() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
+    const router = useRouter();
 
     return (
         <BlurFade delay={BLUR_FADE_DELAY}>
@@ -48,7 +52,7 @@ export default function SignIn() {
                         <div className="flex items-center">
                             <Label htmlFor="password">Password</Label>
                             <Link
-                                href="#"
+                                href="/password/forget"
                                 className="ml-auto inline-block text-sm underline"
                             >
                                 Forgot your password?
@@ -81,7 +85,7 @@ export default function SignIn() {
                         className="w-full"
                         disabled={loading}
                         onClick={async () => {
-                            await signIn.email(
+                            await authClient.signIn.email(
                                 {
                                     email,
                                     password
@@ -92,6 +96,12 @@ export default function SignIn() {
                                     },
                                     onResponse: (_ctx) => {
                                         setLoading(false);
+                                    },
+                                    onError: (ctx) => {
+                                        toast.error(ctx.error.message);
+                                    },
+                                    onSuccess: async () => {
+                                        router.push("/chat");
                                     },
                                 },
                             );
@@ -115,40 +125,41 @@ export default function SignIn() {
                         </div>
                     </div>
 
-                    <Button
-                        variant="outline"
-                        className="w-full gap-2"
-                        disabled={loading}
-                        onClick={async () => {
-                            await signIn.social(
-                                {
-                                    provider: "github",
-                                    callbackURL: "/chat"
-                                },
-                                {
-                                    onRequest: (_ctx) => {
-                                        setLoading(true);
-                                    },
-                                    onResponse: (_ctx) => {
-                                        setLoading(false);
-                                    },
-                                },
-                            );
-                        }}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="1em"
-                            height="1em"
-                            viewBox="0 0 24 24"
+                    <div className="grid grid-cols-2 gap-4">
+                        <Button
+                            variant="outline"
+                            className="w-full gap-2"
+                            disabled={loading}
+                            onClick={async () => {
+                                try {
+                                    setLoading(true);
+                                    await signinGithub();
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
                         >
-                            <path
-                                fill="currentColor"
-                                d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"
-                            ></path>
-                        </svg>
-                        使用GitHub登录
-                    </Button>
+                            <GithubIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline">GitHub</span>
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            className="w-full gap-2"
+                            disabled={loading}
+                            onClick={async () => {
+                                try {
+                                    setLoading(true);
+                                    await signinGoogle();
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        >
+                            <ChromeIcon className="h-4 w-4" />
+                            <span className="hidden sm:inline">Google</span>
+                        </Button>
+                    </div>
 
                     <div className="text-center text-sm">
                         No Account?<Link href="/signup" className="underline"> Sign UP </Link>
@@ -158,5 +169,48 @@ export default function SignIn() {
 
         </Card>
         </BlurFade>
+    );
+}
+
+function ChromeIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="4" />
+            <line x1="21.17" x2="12" y1="8" y2="8" />
+            <line x1="3.95" x2="8.54" y1="6.06" y2="14" />
+            <line x1="10.88" x2="15.46" y1="21.94" y2="14" />
+        </svg>
+    );
+}
+
+function GithubIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+            <path d="M9 18c-4.51 2-5-2-7-2" />
+        </svg>
     );
 }

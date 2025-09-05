@@ -28,8 +28,8 @@ export default function SignUp() {
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -158,7 +158,7 @@ export default function SignUp() {
                                 password,
                                 name: `${firstName} ${lastName}`,
                                 image: image ? await convertImageToBase64(image) : "",
-                                callbackURL: "/dashboard",
+                                callbackURL: "/chat",
                                 fetchOptions: {
                                     onResponse: () => {
                                         setLoading(false);
@@ -170,7 +170,7 @@ export default function SignUp() {
                                         toast.error(ctx.error.message);
                                     },
                                     onSuccess: async () => {
-                                        router.push("/dashboard");
+                                        router.push("/chat");
                                     },
                                 },
                             });

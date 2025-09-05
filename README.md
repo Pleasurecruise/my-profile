@@ -2,4 +2,9 @@
 
 view my portfolio website here: [Click Here](https://yiming1234.cn)
 
-- useing template: https://github.com/dillionverma/portfolio
+Resume write under `src/data/resume.tsx`
+
+Blog write under `content/`
+
+- [ ] Add Academic Experience Card
+- [ ] Add Github Workflow (blog auto translate & transfer to mdx)

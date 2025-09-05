@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import {ThemeProvider} from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import {TooltipProvider} from "@/components/ui/tooltip";
 import {TRPCReactProvider} from "@/trpc/react";
 import {DATA} from "@/data/resume";
@@ -67,6 +68,7 @@ export default function RootLayout({
                 <TooltipProvider delayDuration={0}>
                     {children}
                     <Navbar/>
+                    <Toaster/>
                 </TooltipProvider>
             </ThemeProvider>
         </TRPCReactProvider>

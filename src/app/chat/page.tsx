@@ -1,8 +1,8 @@
 'use client'
 
 import {useState} from "react"
-import {ChatMessages} from "@/components/chat-messages"
-import {ChatInput} from "@/components/chat-input"
+import {ChatMessages} from "./_components/chat-messages"
+import {ChatInput} from "./_components/chat-input"
 import BlurFade from "@/components/magicui/blur-fade";
 import {Card, CardContent, CardHeader, CardTitle, CardFooter} from "@/components/ui/card"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
@@ -10,6 +10,7 @@ import {api} from "@/trpc/react"
 import {useSession, authClient} from "@/lib/auth-client"
 import {useRouter} from "next/navigation"
 import {LogOut, LogIn} from "lucide-react"
+import { toast } from "sonner";
 
 interface Message {
     id: string
@@ -35,10 +36,10 @@ export default function ChatPage() {
         await authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    router.refresh();
+                    router.push("/");
                 },
                 onError: (ctx) => {
-                    alert(ctx.error.message);
+                    toast.error(ctx.error.message);
                 },
             },
         });

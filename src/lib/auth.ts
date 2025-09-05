@@ -6,28 +6,68 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
+import { sendEmail } from "@/lib/email";
+// import { username } from "better-auth/plugins"
+// import { emailOTP } from "better-auth/plugins"
 
 export const auth = betterAuth({
-    emailAndPassword: {
-        enabled: true,
-        async sendResetPassword(data, _request) {
-            // Send an email to the user with a link to reset their password
-            console.log("Reset password URL:", data.url);
-        },
-    },
     plugins: [
+        // username(),
+        // emailOTP({
+        //     async sendVerificationOTP({ email, otp, type }) {
+        //         if (type === "sign-in") {
+        //             // Send the OTP for sign in
+        //         } else if (type === "email-verification") {
+        //             // Send the OTP for email verification
+        //         } else {
+        //             // Send the OTP for password reset
+        //         }
+        //     },
+        // }),
         nextCookies()
     ],
+    emailAndPassword: {
+        enabled: true,
+        requireEmailVerification: false,
+        sendResetPassword: async ({user, url}, request) => {
+            await sendEmail({
+                to: user.email,
+                subject: "Reset your password",
+                html: `<a href="${url}">Click the link to verify your email</a>`
+            });
+        },
+        onPasswordReset: async ({ user }, request) => {
+            // your logic here
+            console.log(`Password for user ${user.email} has been reset.`);
+        },
+    },
+    // emailVerification: {
+    //     sendVerificationEmail: async ( { user, url, token }, request) => {
+    //         await sendEmail({
+    //             to: user.email,
+    //             subject: "Verify your email address",
+    //             html: `<a href="${url}">Click the link to verify your email</a>`
+    //         });
+    //     },
+    // },
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,
             clientSecret: process.env.GITHUB_CLIENT_SECRET!
-        }
+        },
+        google: {
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        },
     },
     session: {
         fields: {
             expiresAt: "expiresAt",
             token: "token"
+        },
+        cookieCache: {
+            enabled: true,
+            maxAge: 30 * 60 // Cache duration in seconds
         }
     },
 
