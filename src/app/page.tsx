@@ -65,7 +65,6 @@ export default function Page() {
                                 altText={work.company}
                                 title={work.company}
                                 subtitle={work.title}
-                                // href={work.href}
                                 badges={work.badges}
                                 period={`${work.start} - ${work.end ?? "Present"}`}
                                 description={work.description}
@@ -74,6 +73,29 @@ export default function Page() {
                     ))}
                 </div>
             </section>
+            {/*<section id="academics">*/}
+            {/*    <div className="flex min-h-0 flex-col gap-y-3">*/}
+            {/*        <BlurFade delay={BLUR_FADE_DELAY * 7}>*/}
+            {/*            <h2 className="text-xl font-bold">Academic</h2>*/}
+            {/*        </BlurFade>*/}
+            {/*        {DATA.academic.map((academic, id) => (*/}
+            {/*            <BlurFade*/}
+            {/*                key={academic.project}*/}
+            {/*                delay={BLUR_FADE_DELAY * 8 + id * 0.05}*/}
+            {/*            >*/}
+            {/*                <ResumeCard*/}
+            {/*                    key={academic.project}*/}
+            {/*                    logoUrl={academic.logoUrl}*/}
+            {/*                    altText={academic.project}*/}
+            {/*                    title={academic.project}*/}
+            {/*                    subtitle={academic.subtitle}*/}
+            {/*                    period={`${academic.start} - ${academic.end ?? "Present"}`}*/}
+            {/*                    description={academic.description}*/}
+            {/*                />*/}
+            {/*            </BlurFade>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*</section>*/}
             <section id="education">
                 <div className="flex min-h-0 flex-col gap-y-3">
                     <BlurFade delay={BLUR_FADE_DELAY * 7}>
@@ -123,8 +145,8 @@ export default function Page() {
                                     Check out my latest work
                                 </h2>
                                 <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                    I&apos;ve worked on a variety of projects, from simple
-                                    websites to complex web applications. Here are a few of my
+                                    I&apos;ve joined & worked on a variety of projects, from simple
+                                    websites to complex applications. Here are a few of my
                                     favorites.
                                 </p>
                             </div>
@@ -170,9 +192,17 @@ export default function Page() {
                                 >
                                     with a direct question on twitter
                                 </Link>{" "}
-                                and I&apos;ll respond whenever I can. I will ignore all
-                                soliciting.
+                                and I&apos;ll respond whenever I can.
+                                You can find the repo address of this portfolio here{" "}
+                                <Link
+                                    href="https://github.com/Pleasurecruise/my-profile"
+                                    className="text-blue-500 hover:underline">
+                                    Pleasurecruise/my-profile
+                                </Link>
                             </p>
+                        </div>
+                        <div className="w-full flex justify-center items-center">
+                            浙公网安备33020502001089号 | 浙ICP备2023040885号-2
                         </div>
                     </BlurFade>
                 </div>

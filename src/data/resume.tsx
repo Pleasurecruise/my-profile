@@ -1,5 +1,5 @@
 import {Icons} from "@/components/icons";
-import {HomeIcon, NotebookIcon, BotMessageSquareIcon} from "lucide-react";
+import {HomeIcon, NotebookIcon, BotMessageSquareIcon, BoxIcon} from "lucide-react";
 
 export const DATA = {
     name: "Yiming Wang",
@@ -10,7 +10,10 @@ export const DATA = {
     description:
         "Junior undergraduate student. I love to participate in open source projects. Active on X.",
     summary:
-        "Passionate computer science student at UoN with hands-on experience in full-stack development and AI technologies. Proficient in modern web development frameworks like React, Next.js, and Vue, with internship experience in algorithm development and front-end engineering. During my time at the school's computer enthusiasts association, I established the organization [CompPsyUnion](https://github.com/CompPsyUnion) on GitHub and was responsible for maintaining open-source activities. Active contributor to open source projects including [Cherry Studio](https://github.com/CherryHQ/cherry-studio), [cherry-studio-app](https://github.com/CherryHQ/cherry-studio-app), [Zoot Plus Backend](https://github.com/ZOOT-Plus/ZootPlusBackend), [MirrorChyan](https://github.com/MirrorChyan/user-frontend), [Hello Github](https://github.com/HelloGitHub-Team/geese) etc. Skilled in both mobile and web development with expertise in TypeScript, Python, and database technologies.",
+        "Passionate computer science student at UoN with hands-on experience in full-stack development and AI technologies. Proficient in modern web development frameworks like React, Next.js, and Vue, with internship experience in algorithm development and front-end engineering. " +
+        "During my time at the school's computer enthusiasts association, I established the organization [CompPsyUnion](https://github.com/CompPsyUnion) on GitHub and was responsible for maintaining open-source activities. " +
+        "In addition to the projects listed below, I have also actively contributed to many projects, such as [MirrorChyan](https://github.com/MirrorChyan/user-frontend), [blinko](https://github.com/blinkospace/blinko), [Hello Github](https://github.com/HelloGitHub-Team/geese) etc. " +
+        "Skilled in both mobile and web development with expertise in TypeScript, Python, and database technologies.",
     avatarUrl: "/me.png",
     skills: [
         "React",
@@ -28,6 +31,7 @@ export const DATA = {
     navbar: [
         {href: "/", icon: HomeIcon, label: "Home"},
         {href: "/blog", icon: NotebookIcon, label: "Blog"},
+        {href: "/moment", icon: BoxIcon,label: "Moment"},
         {href: "/chat", icon: BotMessageSquareIcon, label: "Chat"}
     ],
     contact: {
@@ -37,13 +41,6 @@ export const DATA = {
                 name: "GitHub",
                 url: "https://github.com/Pleasurecruise",
                 icon: Icons.github,
-
-                navbar: true,
-            },
-            LinkedIn: {
-                name: "LinkedIn",
-                url: "https://www.linkedin.com/in/pleasure1234",
-                icon: Icons.linkedin,
 
                 navbar: true,
             },
@@ -63,7 +60,6 @@ export const DATA = {
             },
         },
     },
-
     work: [
         {
             company: "Ningbo Global Innovation Center, Zhejiang University",
@@ -88,6 +84,18 @@ export const DATA = {
                 "Participated in the demand analysis, system design, and coding implementation of the company's \"Plants vs. Zombies 2 UGC Upload System\" project, mainly responsible for front-end development and some testing and maintenance tasks.Utilized the shadcn-vue component library and lucide-vue-next icons, styled with Tailwind CSS. Employed vue router for page navigation and axios for request encapsulation and forwarding. Responsible for deploying front-end and back-end testing environments, verifying consistency between request/response models and interface documentation, and resolving cross-domain communication and debugging issues. Collaborated with the testing team to complete unit testing and bug fixes, optimizing system performance.",
         }
     ],
+    academic: [
+        {
+            project: "FoSE SEP Project",
+            subtitle: "Faculty of Science and Engineering Student Extra-curriculum Programme",
+            href: "https://www.nottingham.ac.uk",
+            logoUrl: "/uon.png",
+            start: "Jun 2025",
+            end: "Aug 2025",
+            description:
+                "Medical Image Analysis with Deep Learning. This project explores the application of deep learning in analyzing medical images for disease detection and diagnosis. By processing medical scans such as X-rays, MRIs, and CT scans, the system aims to identify abnormalities and classify diseases to assist healthcare professionals. The objective is to improve diagnostic accuracy, automate image-based decision-making, and enhance the efficiency of medical imaging analysis.",
+        }
+    ],
     education: [
         {
             school: "University of Nottingham",
@@ -101,7 +109,7 @@ export const DATA = {
     projects: [
         {
             title: "Cherry Studio",
-            href: "https://www.cherry-ai.com",
+            href: "#",
             dates: "Feb 2025 - Present",
             active: true,
             description:
@@ -115,12 +123,12 @@ export const DATA = {
             links: [
                 {
                     type: "Website",
-                    href: "https://www.cherry-ai.com",
+                    href: "#",
                     icon: <Icons.globe className="size-3"/>,
                 },
                 {
                     type: "Source",
-                    href: "https://github.com/magicuidesign/magicui",
+                    href: "https://github.com/CherryHQ/cherry-studio",
                     icon: <Icons.github className="size-3"/>,
                 }
             ],
@@ -128,7 +136,7 @@ export const DATA = {
         },
         {
             title: "Cherry Studio App",
-            href: "https://github.com/CherryHQ/cherry-studio-app",
+            href: "#",
             dates: "Mar 2025 - Present",
             active: true,
             description:
@@ -142,7 +150,7 @@ export const DATA = {
             ],
             links: [
                 {
-                    type: "Website",
+                    type: "Source",
                     href: "https://github.com/CherryHQ/cherry-studio-app",
                     icon: <Icons.github className="size-3"/>,
                 },
@@ -150,8 +158,63 @@ export const DATA = {
             image: "/cherry-app.png"
         },
         {
+            title: "Note Gen",
+            href: "#",
+            dates: "Jun 2025 - Present",
+            active: true,
+            description:
+                "NoteGen is a cross-platform Markdown note-taking application dedicated to using AI to bridge recording and writing, organizing fragmented knowledge into a readable note.",
+            technologies: [
+                "Tauri",
+                "TypeScript",
+                "React",
+                "Node.js"
+            ],
+            links: [
+                {
+                    type: "Website",
+                    href: "https://notegen.top/en",
+                    icon: <Icons.globe className="size-3"/>,
+                },
+                {
+                    type: "Source",
+                    href: "https://github.com/codexu/note-gen",
+                    icon: <Icons.github className="size-3"/>,
+                },
+            ],
+            image: "/note-gen.png"
+        },
+        {
+            title: " Zoot Plus Backend",
+            href: "#",
+            dates: "Feb 2025 - Present",
+            active: true,
+            description:
+                "Backend for Zoot Plus, an Arknights homework collection website. Integration with MAA",
+            technologies: [
+                "Kotlin",
+                "Spring Boot",
+                "MongoDB",
+                "Redis",
+                "Docker",
+            ],
+            links: [
+                {
+                    type: "Website",
+                    href: "https://zoot.plus",
+                    icon: <Icons.globe className="size-3"/>,
+                },
+                {
+                    type: "Source",
+                    href: "https://github.com/ZOOT-Plus/ZootPlusBackend",
+                    icon: <Icons.github className="size-3"/>,
+                },
+            ],
+            image: "/zoot-plus.png"
+        },
+        {
             title: "NottinghamWall",
-            href: "https://github.com/CompPsyUnion/NottinghamWall",
+            href: "#",
             dates: "Jun 2024 - Dec 2024",
             active: true,
             description:
@@ -165,7 +228,7 @@ export const DATA = {
             ],
             links: [
                 {
-                    type: "Website",
+                    type: "Source",
                     href: "https://github.com/CompPsyUnion/NottinghamWall",
                     icon: <Icons.github className="size-3"/>,
                 },
@@ -190,6 +253,11 @@ export const DATA = {
             links: [
                 {
                     type: "Website",
+                    href: "https://linux.do/t/topic/527169",
+                    icon: <Icons.globe className="size-3"/>,
+                },
+                {
+                    type: "Source",
                     href: "https://github.com/Pleasurecruise/linux-do-mcp",
                     icon: <Icons.github className="size-3"/>,
                 },
