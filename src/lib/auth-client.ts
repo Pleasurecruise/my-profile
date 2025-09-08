@@ -4,7 +4,7 @@ import {
 // import { emailOTPClient } from "better-auth/client/plugins"
 
 export const authClient = createAuthClient({
-    baseURL: process.env.BETTER_AUTH_URL || "https://www.yiming1234.cn",
+    baseURL: process.env.BETTER_AUTH_URL,
     // plugins: [
     //     emailOTPClient()
     // ]
