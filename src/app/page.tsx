@@ -201,8 +201,8 @@ export default function Page() {
                                 </Link>
                             </p>
                         </div>
-                        <div className="w-full flex justify-center items-center">
-                            浙公网安备33020502001089号 | 浙ICP备2023040885号-2
+                        <div className="w-full flex justify-center items-center text-xs">
+                            Zhejiang Public Network Record No. 33020502001089 | Zhejiang ICP Record No.2023040885-2
                         </div>
                     </BlurFade>
                 </div>
