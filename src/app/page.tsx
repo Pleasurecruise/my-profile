@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import {TranslatesCard} from "../components/translates-card";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -179,6 +180,43 @@ export default function Page() {
                             </BlurFade>
                         ))}
                     </div>
+                </div>
+            </section>
+            <section id="translates">
+                <div className="space-y-12 w-full py-12">
+                    <BlurFade delay={BLUR_FADE_DELAY * 13}>
+                        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+                            <div className="space-y-2">
+                                <div className="inline-block rounded-lg bg-foreground text-background px-3 py-1 text-sm">
+                                    Documentation Translates
+                                </div>
+                                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                                    I contribute to CN translation
+                                </h2>
+                                <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                                    While learning different technology stacks, I browsed the official documentation and completed the missing Chinese translations, such as those for MDN, Flutter, React etc.
+                                </p>
+                            </div>
+                        </div>
+                    </BlurFade>
+                    <BlurFade delay={BLUR_FADE_DELAY * 14}>
+                        <ul className="mb-4 ml-4 divide-y divide-dashed border-l">
+                            {DATA.translates.map((project, id) => (
+                                <BlurFade
+                                    key={project.title + project.dates}
+                                    delay={BLUR_FADE_DELAY * 15 + id * 0.05}
+                                >
+                                    <TranslatesCard
+                                        title={project.title}
+                                        description={project.description}
+                                        dates={project.dates}
+                                        image={project.image}
+                                        links={project.links}
+                                    />
+                                </BlurFade>
+                            ))}
+                        </ul>
+                    </BlurFade>
                 </div>
             </section>
             <section id="contact">

@@ -264,5 +264,52 @@ export const DATA = {
             ],
             image: "/linux-do-mcp.png"
         }
+    ],
+    translates: [
+        {
+            title: "React",
+            dates: "2025 - Present",
+            description:
+                "Contributing to the React Chinese documentation project, helping translate official React documentation to make it accessible to Chinese developers. Contributed to pages including React Complier etc.",
+            image:
+                "/react.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/reactjs/zh-hans.react.dev/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "Flutter",
+            dates: "2024 - Present", 
+            description:
+                "Contributing to the Flutter Chinese community by translating Flutter documentation and guides. Helping Chinese developers better understand Flutter development concepts and best practices through high-quality translations.",
+            image:
+                "/flutter.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/cfug/flutter.cn/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "MDN Web Docs",
+            dates: "2024 - Present",
+            description:
+                "Contributing to MDN Web Docs Chinese translations, helping provide comprehensive web development resources in Chinese. Translating technical articles, API documentation, and tutorials to support the Chinese web development community.",
+            image:
+                "/mdn.png",
+            links: [
+                {
+                    title: "My Contributions", 
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/mdn/translated-content/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        }
     ]
 } as const;
