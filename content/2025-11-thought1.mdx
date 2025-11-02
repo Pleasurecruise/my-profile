@@ -1,0 +1,32 @@
+---
+title: "Some Protocols Born in the AI Era"
+publishedAt: "2025-11-02"
+---
+
+Since the AI metayear in 2020, many new concepts and products have emerged. Here, I will briefly discuss three significant new communication protocols that I find particularly interesting.
+
+### MCP
+
+MCP (Model Context Protocol) is a protocol that enables large models to interact with end users or other models. Through MCP, models can obtain context information, such as data from different platforms, to perform operations more efficiently. For example, users can interact with models using natural language instructions, and models can execute specific tasks through devices (e.g., "raise the platform by 2 meters" or "rotate the wrench 4 millimeters to the right"). The core idea of this protocol is to provide a standardized interface for models to interact and better operate tools in multi-platform environments. This standardization approach is very similar to ACP, decoupling the information interface required by agents, thereby enhancing generality and extensibility.
+
+### A2A
+
+A2A (Agent-to-Agent Protocol) is a protocol that supports interactions between end users or agents and working agents (e.g., maintenance agents, computation agents). The A2A protocol focuses on information exchange and collaborative decision-making between agents and is designed to create a natural, flexible, and efficient agent collaboration environment. For example, after adopting the A2A protocol, a smart assistant can collaborate with a programming agent (e.g., an agent supporting ACP) to achieve more complex task decomposition and collaboration.
+
+### ACP
+
+Agent Client Protocol (ACP) is a protocol used to connect code editors and Agents. It standardizes the communication between code editors (interactive programs used to view and edit source code) and coding Agents (programs that autonomously modify code using generative AI). This protocol allows developers to freely connect any third-party Agent in the editor without relying on official built-in tools. Its concept is similar to the Language Server Protocol (LSP), providing more flexible extensibility by decoupling the interaction methods between editors and Agents.
+
+### Analysis of Human-Agent Interaction Levels
+
+![Hierarchy of Human-Agent Interaction](/diagrams/human-agent-interaction-hierarchy.png)
+
+As shown in the diagram above, the MCP, ACP, and A2A protocols correspond to different interaction layers and have their own significance:
+
+1. **Device Interaction Layer (MCP)**: Used to connect large models with specific devices (e.g., a robotic arm), solving the problem of physical environment feedback and handling specific requests, thereby enhancing the ability of large models to process device-side tasks.
+
+2. **Basis Communication Layer (ACP)**: Provides a standard interface for communication between agents and clients (e.g., code editors), enabling client terminals to extend model functionality and decoupling models from tools, thus enhancing flexibility.
+
+3. **Semantic Collaboration Layer (A2A)**: Solves the problem of collaboration among multiple agents, such as engineering collaboration between a maintenance agent and a navigation agent. It supports complex environments by standardizing semantic and task-sharing mechanisms between agents.
+
+4. **Cognitive Coordination Layer**: Involves understanding user intentions and providing decision support by agents. Currently, this mainly relies on high-level model coordination capabilities, but more extensive standards and analysis may emerge at the protocol level in the future.

@@ -14,7 +14,7 @@ export const DATA = {
         "During my time at the school's computer enthusiasts association, I established the organization [CompPsyUnion](https://github.com/CompPsyUnion) on GitHub and was responsible for maintaining open-source activities. " +
         "In addition to the projects listed below, I have also actively contributed to many projects, such as [MirrorChyan](https://github.com/MirrorChyan/user-frontend), [blinko](https://github.com/blinkospace/blinko), [Hello Github](https://github.com/HelloGitHub-Team/geese) etc. " +
         "Skilled in both mobile and web development with expertise in TypeScript, Python, and database technologies.",
-    avatarUrl: "/me.png",
+    avatarUrl: "/profile/me.png",
     skills: [
         "React",
         "Typescript",
@@ -66,7 +66,7 @@ export const DATA = {
             badges: [],
             location: "Ningbo, China",
             title: "Algorithm Internship",
-            logoUrl: "/zju.png",
+            logoUrl: "/logos/zju.png",
             start: "Jun 2025",
             end: "Aug 2025",
             description:
@@ -77,7 +77,7 @@ export const DATA = {
             badges: [],
             location: "Remote",
             title: "Front-end Internship",
-            logoUrl: "/hrg.png",
+            logoUrl: "/projects/hrg.png",
             start: "Apr 2025",
             end: "May 2025",
             description:
@@ -89,7 +89,7 @@ export const DATA = {
             project: "FoSE SEP Project",
             subtitle: "Faculty of Science and Engineering Student Extra-curriculum Programme",
             href: "https://www.nottingham.ac.uk",
-            logoUrl: "/uon.png",
+            logoUrl: "/logos/uon.png",
             start: "Jun 2025",
             end: "Aug 2025",
             description:
@@ -101,7 +101,7 @@ export const DATA = {
             school: "University of Nottingham",
             href: "https://www.nottingham.ac.uk",
             degree: "BSc Computer Science with Artificial Intelligence",
-            logoUrl: "/uon.png",
+            logoUrl: "/logos/uon.png",
             start: "2023",
             end: "2027",
         }
@@ -132,7 +132,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 }
             ],
-            image: "/cherry.webp"
+            image: "/projects/cherry.webp"
         },
         {
             title: "Cherry Studio App",
@@ -155,7 +155,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/cherry-app.png"
+            image: "/projects/cherry-app.png"
         },
         {
             title: "Note Gen",
@@ -182,7 +182,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/note-gen.png"
+            image: "/projects/note-gen.png"
         },
         {
             title: " Zoot Plus Backend",
@@ -210,7 +210,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/zoot-plus.png"
+            image: "/projects/zoot-plus.png"
         },
         {
             title: "NottinghamWall",
@@ -233,7 +233,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/nottinghamwall.png"
+            image: "/projects/nottinghamwall.png"
         },
         {
             title: "Linux Do MCP Server",
@@ -262,7 +262,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/linux-do-mcp.png"
+            image: "/projects/linux-do-mcp.png"
         }
     ],
     translates: [
@@ -272,7 +272,7 @@ export const DATA = {
             description:
                 "Contributing to the React Chinese documentation project, helping translate official React documentation to make it accessible to Chinese developers. Contributed to pages including React Complier etc.",
             image:
-                "/react.png",
+                "/icons/react.png",
             links: [
                 {
                     title: "My Contributions",
@@ -287,7 +287,7 @@ export const DATA = {
             description:
                 "Contributing to the Flutter Chinese community by translating Flutter documentation and guides. Helping Chinese developers better understand Flutter development concepts and best practices through high-quality translations.",
             image:
-                "/flutter.png",
+                "/projects/flutter.png",
             links: [
                 {
                     title: "My Contributions",
@@ -302,7 +302,7 @@ export const DATA = {
             description:
                 "Contributing to MDN Web Docs Chinese translations, helping provide comprehensive web development resources in Chinese. Translating technical articles, API documentation, and tutorials to support the Chinese web development community.",
             image:
-                "/mdn.png",
+                "/logos/mdn.png",
             links: [
                 {
                     title: "My Contributions", 
@@ -311,5 +311,51 @@ export const DATA = {
                 },
             ],
         }
-    ]
+    ],
+    hackathons: [
+        {
+            title: "HackSheffield10",
+            dates: "November 29th - 30th, 2025",
+            location: "Sheffield, UK",
+            description:
+                "HackSheffield 10 is a hackathon hosted by Sheffield CompSoc at The University of Sheffield. The event welcomes students of all skill levels and disciplines to build projects, learn new skills, and collaborate.",
+            image:
+                "/hackathons/hacksheffield10-logo.svg",
+            mlh: "/hackathons/mlh-2026-badge.svg",
+            links: [
+                {
+                    title: "Website",
+                    icon: <Icons.globe className="h-4 w-4" />,
+                    href: "https://hacksheffield.uk/",
+                },
+            ],
+        },
+        {
+            title: "HackNotts' 25",
+            dates: "October 25th - 26th, 2025",
+            location: "Nottingham, UK",
+            description:
+                "Developed an interactive terminal-based AI chat application with support for multiple AI providers through a React-powered command-line interface.",
+            image:
+                "/hackathons/hacknotts25-logo.png",
+            mlh: "/hackathons/mlh-2026-badge.svg",
+            links: [
+                {
+                    title: "Website",
+                    icon: <Icons.globe className="h-4 w-4" />,
+                    href: "https://hacknotts.com",
+                },
+                {
+                    title: "Devpost",
+                    icon: <Icons.globe className="h-4 w-4" />,
+                    href: "https://hacknotts-25.devpost.com",
+                },
+                {
+                    title: "Project",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/Pleasurecruise/hacknotts-cli",
+                },
+            ],
+        },
+    ],
 } as const;
