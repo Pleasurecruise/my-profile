@@ -51,6 +51,13 @@ export const DATA = {
 
                 navbar: true,
             },
+            LinkedIn: {
+                name: "LinkedIn",
+                url: "https://www.linkedin.com/in/pleasure1234",
+                icon: Icons.linkedin,
+
+                navbar: true,
+            },
             email: {
                 name: "Send Email",
                 url: "#",
