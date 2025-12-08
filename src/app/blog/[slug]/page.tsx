@@ -17,7 +17,12 @@ export async function generateMetadata({
     slug: string;
   };
 }): Promise<Metadata | undefined> {
-  const post = await getPost(params.slug);
+  const slug = params.slug;
+  if (!slug) {
+    notFound();
+  }
+
+  const post = await getPost(slug);
 
   const {
     title,
@@ -58,7 +63,12 @@ export default async function Blog({
     slug: string;
   };
 }) {
-  const post = await getPost(params.slug);
+  const slug = params.slug;
+  if (!slug) {
+    notFound();
+  }
+
+  const post = await getPost(slug);
 
   if (!post) {
     notFound();

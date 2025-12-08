@@ -19,7 +19,7 @@ export default function ForgetPassword() {
 
     const forgetPassword = async () => {
         setLoading(true);
-        await authClient.forgetPassword({
+        await authClient.requestPasswordReset({
             email,
             redirectTo: "/password/reset",
             fetchOptions: {
