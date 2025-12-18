@@ -4,8 +4,8 @@ import {
 import { nextCookies } from "better-auth/next-js";
 import { cache } from "react";
 import { headers } from "next/headers";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/db";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import prisma from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 // import { username } from "better-auth/plugins"
 // import { emailOTP } from "better-auth/plugins"
@@ -73,8 +73,8 @@ export const auth = betterAuth({
 
     /** if no database is provided, the user data will be stored in memory.
      * Make sure to provide a database to persist user data **/
-    database: drizzleAdapter(db, {
-        provider: "pg", // or "mysql", "sqlite"
+    database: prismaAdapter(prisma, {
+        provider: "postgresql",
     })
 });
 

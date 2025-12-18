@@ -10,8 +10,10 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { db } from "@/db";
+import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+
+const db = prisma;
 
 /**
  * 1. CONTEXT
