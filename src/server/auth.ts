@@ -5,8 +5,8 @@ import { nextCookies } from "better-auth/next-js";
 import { cache } from "react";
 import { headers } from "next/headers";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import prisma from "@/lib/prisma";
-import { sendEmail } from "@/lib/email";
+import prisma from "@/server/prisma";
+import { sendEmail } from "@/server/email";
 // import { username } from "better-auth/plugins"
 // import { emailOTP } from "better-auth/plugins"
 

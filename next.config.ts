@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ['ali-oss'],
 };
 
 export default nextConfig;

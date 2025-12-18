@@ -1,57 +1,43 @@
-import { getBlogPosts, getPost } from "@/data/blog";
+import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
 import { DATA } from "@/data/resume";
-import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+import BlurFade from "@/components/magicui/blur-fade";
+
+const BLUR_FADE_DELAY = 0.04;
 
 export async function generateStaticParams() {
-  const posts = await getBlogPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+  const slugs = await getAllBlogSlugs();
+  return slugs.map((slug) => ({ slug: encodeURIComponent(slug) }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata | undefined> {
-  const slug = params.slug;
+  const { slug } = await params;
   if (!slug) {
     notFound();
   }
 
-  const post = await getPost(slug);
-
-  const {
-    title,
-    publishedAt: publishedTime,
-    summary: description,
-    image,
-  } = post.metadata;
-  const ogImage = image ? `${DATA.url}${image}` : `${DATA.url}/og?title=${title}`;
+  const post = await getBlogPost(slug);
+  if (!post) {
+    return undefined;
+  }
 
   return {
-    title,
-    description,
+    title: post.title,
     openGraph: {
-      title,
-      description,
+      title: post.title,
       type: "article",
-      publishedTime,
       url: `${DATA.url}/blog/${post.slug}`,
-      images: [
-        {
-          url: ogImage,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
-      images: [ogImage],
+      title: post.title,
     },
   };
 }
@@ -59,17 +45,14 @@ export async function generateMetadata({
 export default async function Blog({
   params,
 }: {
-  params: {
-    slug: string;
-  };
+  params: Promise<{ slug: string }>;
 }) {
-  const slug = params.slug;
+  const { slug } = await params;
   if (!slug) {
     notFound();
   }
 
-  const post = await getPost(slug);
-
+  const post = await getBlogPost(slug);
   if (!post) {
     notFound();
   }
@@ -83,13 +66,7 @@ export default async function Blog({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "BlogPosting",
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `${DATA.url}${post.metadata.image}`
-              : `${DATA.url}/og?title=${post.metadata.title}`,
+            headline: post.title,
             url: `${DATA.url}/blog/${post.slug}`,
             author: {
               "@type": "Person",
@@ -98,20 +75,25 @@ export default async function Blog({
           }),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
-        {post.metadata.title}
-      </h1>
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
-        <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {formatDate(post.metadata.publishedAt)}
-          </p>
-        </Suspense>
-      </div>
-      <article
-        className="prose dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.source }}
-      ></article>
+      <BlurFade delay={BLUR_FADE_DELAY}>
+        <div className="flex items-center gap-2 max-w-[650px]">
+          <Link
+            href="/blog"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ChevronLeft className="size-5" />
+          </Link>
+          <h1 className="title font-medium text-2xl tracking-tighter">
+            {post.title}
+          </h1>
+        </div>
+      </BlurFade>
+      <BlurFade delay={BLUR_FADE_DELAY}>
+        <article
+          className="prose dark:prose-invert mt-8"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+      </BlurFade>
     </section>
   );
 }
