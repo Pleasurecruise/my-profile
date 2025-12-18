@@ -65,7 +65,7 @@ export default function Navbar() {
         <DockIcon>
           <Tooltip>
             <TooltipTrigger asChild>
-              <ModeToggle className="rounded-full" />
+              <ModeToggle />
             </TooltipTrigger>
             <TooltipContent>
               <p>Theme</p>
