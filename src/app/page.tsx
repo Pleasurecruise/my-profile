@@ -1,5 +1,9 @@
+import { DraggableCardContainer, DraggableCardBody } from "@/components/aceternityui/draggable-card";
 import BlurFade from "@/components/magicui/blur-fade";
+import { Highlighter } from "@/components/magicui/highlighter";
+import { Tooltip } from "@/components/aceternityui/tooltip-card";
 import { DATA } from "@/data/resume";
+import { GALLERY_ITEMS } from "@/data/gallery";
 import { FRIENDS } from "@/data/links";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
@@ -18,7 +22,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
     return (
-        <main className="flex flex-col min-h-[100dvh] space-y-10">
+        <main className="flex flex-col min-h-[100dvh] space-y-4">
             <section id="hero">
                 <div className="mx-auto w-full max-w-2xl">
                     <BlurFade delay={BLUR_FADE_DELAY}>
@@ -55,40 +59,46 @@ export default function Page() {
                         </p>
                         <p className="text-[15px] leading-relaxed text-muted-foreground">
                             Passionate computer science student at{" "}
-                            <Link
-                                href="https://www.nottingham.ac.uk"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                            >
-                                UoN
-                                <ArrowUpRight className="w-3 h-3" />
-                            </Link>
+                            <Highlighter action="highlight" color="#87CEFA">
+                                <Link
+                                    href="https://www.nottingham.ac.uk"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                                >
+                                    UoN
+                                    <ArrowUpRight className="w-3 h-3" />
+                                </Link>
+                            </Highlighter>
                             {" "}with hands-on experience in{" "}
                             <span className="italic text-foreground" style={{ fontFamily: "var(--font-newsreader)" }}>full-stack</span>
                             {" "}development and{" "}
                             <span className="italic text-foreground" style={{ fontFamily: "var(--font-newsreader)" }}>AI</span>
                             {" "}technologies. Active contributor to open source projects mainly on{" "}
-                            <Link
-                                href="https://github.com/CherryHQ/cherry-studio"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                            >
-                                Cherry Studio
-                                <ArrowUpRight className="w-3 h-3" />
-                            </Link>
+                            <Highlighter action="highlight" color="#87CEFA">
+                                <Link
+                                    href="https://github.com/CherryHQ/cherry-studio"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                                >
+                                    Cherry Studio
+                                    <ArrowUpRight className="w-3 h-3" />
+                                </Link>
+                            </Highlighter>
                             . Building with React, Next.js, and TypeScript.
                         </p>
                         <p className="text-[15px] leading-relaxed text-muted-foreground">
                             Currently I am seeking a job opportunity. Click{" "}
-                            <Link
-                                href="/cv"
-                                className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                            >
-                                here
-                                <ArrowUpRight className="w-3 h-3" />
-                            </Link>
+                            <Highlighter action="highlight" color="#87CEFA">
+                                <Link
+                                    href="/cv"
+                                    className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                                >
+                                    here
+                                    <ArrowUpRight className="w-3 h-3" />
+                                </Link>
+                            </Highlighter>
                             {" "}to see my cv :3
                         </p>
                     </div>
@@ -100,9 +110,23 @@ export default function Page() {
                         <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
                             gallery
                         </span>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-2">
-                            Coming soon... :D
-                        </div>
+                        <DraggableCardContainer className="relative flex h-[600px] w-full items-center justify-center overflow-clip">
+                            <p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-black text-neutral-400 md:text-4xl dark:text-neutral-800">
+                                It is a great honor to have you visit my blog.
+                            </p>
+                            {GALLERY_ITEMS.map((item) => (
+                                <DraggableCardBody key={item.title} className={item.className} style={{ rotate: item.rotate }}>
+                                    <img
+                                        src={item.image}
+                                        alt={item.title}
+                                        className="pointer-events-none relative z-10 h-80 w-80 object-cover"
+                                    />
+                                    <h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
+                                        {item.title}
+                                    </h3>
+                                </DraggableCardBody>
+                            ))}
+                        </DraggableCardContainer>
                     </div>
                 </BlurFade>
             </section>
@@ -155,15 +179,30 @@ export default function Page() {
                                 </Link>
                             </li>
                             <li>
-                                {/*TODO: replace with a tooltip*/}
-                                <Link
-                                    href="#"
-                                    className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                                <Tooltip
+                                    content={
+                                        <div className="flex items-center justify-center">
+                                            <div className="h-[200px] w-[200px] overflow-hidden rounded-lg">
+                                                <Image
+                                                    src="/profile/wechat.png"
+                                                    alt="WeChat QR Code"
+                                                    width={200}
+                                                    height={200}
+                                                    className="h-full w-full object-cover object-center"
+                                                />
+                                            </div>
+                                        </div>
+                                    }
                                 >
-                                    <Icons.wechat className="w-5 h-5" />
-                                    <span>WeChat</span>
-                                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </Link>
+                                    <Link
+                                        href="#"
+                                        className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                                    >
+                                        <Icons.wechat className="w-5 h-5" />
+                                        <span>WeChat</span>
+                                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </Link>
+                                </Tooltip>
                             </li>
                             <li>
                                 <Link
@@ -175,16 +214,20 @@ export default function Page() {
                                     <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 </Link>
                             </li>
-                            {/*TODO: replace with a tooltip*/}
                             <li>
-                                <Link
-                                    href="#"
-                                    className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                                <Tooltip
+                                    containerClassName="text-neutral-600 dark:text-neutral-400 [&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
+                                    content="Add me on Discord: pleasure9876"
                                 >
-                                    <Icons.discord className="w-5 h-5" />
-                                    <span>Discord</span>
-                                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </Link>
+                                    <Link
+                                        href="#"
+                                        className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                                    >
+                                        <Icons.discord className="w-5 h-5" />
+                                        <span>Discord</span>
+                                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </Link>
+                                </Tooltip>
                             </li>
                         </ul>
                     </div>
@@ -216,6 +259,15 @@ export default function Page() {
                                 className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
                             >
                                 ICP No.2023040885-2
+                                <ArrowUpRight className="w-3 h-3" />
+                            </Link>
+                            <Link
+                                href="https://icp.gov.moe/?keyword=20240608"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
+                            >
+                                萌 ICP No.20240608
                                 <ArrowUpRight className="w-3 h-3" />
                             </Link>
                         </div>
