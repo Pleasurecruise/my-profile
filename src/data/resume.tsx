@@ -65,6 +65,13 @@ export const DATA = {
 
                 navbar: false,
             },
+            Instagram: {
+                name: "Instagram",
+                url: "https://www.instagram.com/yiming0305",
+                icon: Icons.instagram,
+
+                navbar: false,
+            },
         },
     },
     work: [

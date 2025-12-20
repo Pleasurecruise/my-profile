@@ -11,7 +11,7 @@ export default async function Moment() {
         <section>
             <BlurFade delay={BLUR_FADE_DELAY}>
                 <h1 className="font-medium text-2xl mb-8 tracking-tighter">
-                    Share My Moment
+                    Forward Posts on X
                 </h1>
                 <div className="flex justify-center">
                     <MomentClient tweets={tweets} />
