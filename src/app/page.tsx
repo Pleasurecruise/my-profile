@@ -2,9 +2,11 @@ import { DraggableCardContainer, DraggableCardBody } from "@/components/aceterni
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
+import { TravelGlobe } from "@/components/travel-globe";
 import { DATA } from "@/data/resume";
 import { GALLERY_ITEMS } from "@/data/gallery";
 import { FRIENDS } from "@/data/links";
+import { TRAVEL_LOCATIONS } from "@/data/travel";
 import { Icons } from "@/components/icons";
 import Link from "next/link";
 import Image from "next/image";
@@ -127,6 +129,16 @@ export default function Page() {
                                 </DraggableCardBody>
                             ))}
                         </DraggableCardContainer>
+                    </div>
+                </BlurFade>
+            </section>
+            <section id="travel">
+                <BlurFade delay={BLUR_FADE_DELAY * 5}>
+                    <div className="space-y-4 mx-auto w-full max-w-2xl">
+                        <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                            travel
+                        </span>
+                        <TravelGlobe locations={TRAVEL_LOCATIONS} />
                     </div>
                 </BlurFade>
             </section>

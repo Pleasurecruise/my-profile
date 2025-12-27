@@ -30,6 +30,12 @@ export const GALLERY_ITEMS = [
         rotate: "2deg",
     },
     {
+        title: "My Way to School",
+        image: "/photos/waytoschool.jpg",
+        className: "absolute top-16 right-[20%]",
+        rotate: "5deg",
+    },
+    {
         title: "Where I Live",
         image: "/photos/whereilive.jpg",
         className: "absolute top-24 left-[45%]",

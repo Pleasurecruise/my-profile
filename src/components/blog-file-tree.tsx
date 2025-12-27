@@ -27,6 +27,7 @@ function TreeNode({ node }: { node: BlogTreeNode }) {
 
   const handleClick = () => {
     const slug = encodeURIComponent(node.path);
+    sessionStorage.setItem("blog:navigate-from-tree", "true");
     router.push(`/blog/${slug}`);
   };
 

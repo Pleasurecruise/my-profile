@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
+import { BlogContent } from "@/components/blog-content";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -89,9 +90,9 @@ export default async function Blog({
         </div>
       </BlurFade>
       <BlurFade delay={BLUR_FADE_DELAY}>
-        <article
+        <BlogContent
+          content={post.content}
           className="prose dark:prose-invert mt-8"
-          dangerouslySetInnerHTML={{ __html: post.content }}
         />
       </BlurFade>
     </section>
