@@ -25,4 +25,9 @@ export const FRIENDS: FriendLink[] = [
         url: "https://hakadao.cc",
         avatar: "https://avatars.githubusercontent.com/u/33394391",
     },
+    {
+        name: "tcdw",
+        url: "https://tcdw.net",
+        avatar: "https://avatars.githubusercontent.com/u/8687182",
+    },
 ];
