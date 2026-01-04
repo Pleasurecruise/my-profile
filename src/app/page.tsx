@@ -250,9 +250,14 @@ export default function Page() {
                     <div className={`mx-auto w-full max-w-2xl ${newsreader.variable}`}>
                         <p className="text-lg text-muted-foreground/30 mb-4">
                             credits for{" "}
-                            <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                            <Link
+                                href="https://github.com/dillionverma/portfolio"
+                                target="_blank"
+                                className="italic hover:underline"
+                                style={{ fontFamily: "var(--font-newsreader)" }}
+                            >
                                 dillionverma portfolio
-                            </span>
+                            </Link>
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-8">
                             <Link
