@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import parse, { HTMLReactParserOptions, Element, DOMNode } from "html-react-parser";
+import parse, { HTMLReactParserOptions, Element, DOMNode, domToReact } from "html-react-parser";
 import { Terminal, AnimatedSpan } from "@/components/magicui/terminal";
 
 interface BlogContentProps {
@@ -37,19 +37,27 @@ export function BlogContent({ content, className }: BlogContentProps) {
   const parsedContent = useMemo(() => {
     const options: HTMLReactParserOptions = {
       replace: (domNode) => {
-        if (
-          domNode.type === "tag" &&
-          (domNode as Element).name === "pre"
-        ) {
-          const preElement = domNode as Element;
-          const codeChild = preElement.children.find(
-            (child): child is Element =>
-              child.type === "tag" && (child as Element).name === "code"
-          );
+        if (domNode.type === "tag") {
+          const element = domNode as Element;
 
-          if (codeChild) {
-            const code = getTextContent(codeChild);
-            return <CodeBlockWrapper code={code} />;
+          if (element.name === "pre") {
+            const codeChild = element.children.find(
+              (child): child is Element =>
+                child.type === "tag" && (child as Element).name === "code"
+            );
+
+            if (codeChild) {
+              const code = getTextContent(codeChild);
+              return <CodeBlockWrapper code={code} />;
+            }
+          }
+
+          if (element.name === "table") {
+            return (
+              <div className="overflow-x-auto scrollbar-hide">
+                <table>{domToReact(element.children as DOMNode[], options)}</table>
+              </div>
+            );
           }
         }
         return undefined;

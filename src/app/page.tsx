@@ -148,7 +148,7 @@ export default function Page() {
                         <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
                             friends
                         </span>
-                        <ul className="space-y-3 mt-2">
+                        <ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3 mt-2">
                             {FRIENDS.map((friend) => (
                                 <li key={friend.url}>
                                     <Link

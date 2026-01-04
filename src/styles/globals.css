@@ -82,7 +82,13 @@ h3 code {
 }
 
 pre {
-    @apply !px-0 rounded-lg overflow-x-auto py-4
+    @apply !px-0 rounded-lg overflow-x-auto py-4;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+pre::-webkit-scrollbar {
+    display: none;
 }
 
 pre [data-line] {
@@ -160,6 +166,15 @@ html {
 
 html::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
 
 * {

@@ -7,6 +7,9 @@ import { ChevronLeft } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { BlogContent } from "@/components/blog-content";
 
+export const revalidate = 604800;
+export const dynamicParams = true;
+
 const BLUR_FADE_DELAY = 0.04;
 
 export async function generateStaticParams() {

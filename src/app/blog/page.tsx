@@ -7,6 +7,8 @@ export const metadata = {
   description: "My thoughts on software development, life, and more.",
 };
 
+export const revalidate = 604800;
+
 const BLUR_FADE_DELAY = 0.04;
 
 export default async function BlogPage() {
