@@ -1,16 +1,21 @@
 'use client'
 
+import {
+  PromptInput,
+  PromptInputSubmit,
+  PromptInputTextarea,
+  PromptInputToolbar,
+  PromptInputTools,
+} from "@/components/ui/shadcn-io/ai/prompt-input"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Send } from "lucide-react"
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void
   disabled?: boolean
+  loading?: boolean
 }
 
-export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
+export function ChatInput({ onSendMessage, disabled = false, loading }: ChatInputProps) {
   const [message, setMessage] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,22 +34,25 @@ export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full gap-2">
-      <Input
+    <PromptInput onSubmit={handleSubmit} className="w-full">
+      <PromptInputTextarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={disabled ? "Waiting for response..." : "Input your message here..."}
         disabled={disabled}
-        className="flex-1"
       />
-      <Button 
-        type="submit" 
-        disabled={!message.trim() || disabled}
-        size="icon"
-      >
-        <Send className="h-4 w-4" />
-      </Button>
-    </form>
+      <PromptInputToolbar>
+        <div className="text-xs text-muted-foreground px-2">
+          Shift+Enter for newline
+        </div>
+        <PromptInputTools>
+          <PromptInputSubmit
+            disabled={!message.trim() || disabled}
+            status={loading ? "submitted" : undefined}
+          />
+        </PromptInputTools>
+      </PromptInputToolbar>
+    </PromptInput>
   )
 }

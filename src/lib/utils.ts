@@ -35,3 +35,12 @@ export function formatDate(date: string) {
         return `${fullDate} (${yearsAgo}y ago)`;
     }
 }
+
+export function formatTime(date?: Date): string {
+    if (!date) return "";
+    return date.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+    });
+}
