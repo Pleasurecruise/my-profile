@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { MagicTweet } from "@/components/magicui/tweet-card";
-import { ShinyButton } from "@/components/magicui/shiny-button";
-import { Shuffle } from "lucide-react";
 import type { Tweet } from "react-tweet/api";
 
 interface MomentClientProps {
@@ -11,47 +9,61 @@ interface MomentClientProps {
 }
 
 export function MomentClient({ tweets }: MomentClientProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [viewedIndices, setViewedIndices] = useState<Set<number>>(
-    new Set([0])
-  );
+  const [columnCount, setColumnCount] = useState(3);
 
-  const handleShuffle = useCallback(() => {
-    const availableIndices = tweets
-      .map((_, i) => i)
-      .filter((i) => !viewedIndices.has(i));
+  useEffect(() => {
+    const getColumnCount = () => {
+      const width = window.innerWidth;
+      if (width < 640) return 1;
+      if (width < 1024) return 2;
+      if (width < 1280) return 3;
+      return 4;
+    };
 
-    if (availableIndices.length === 0) {
-      const randomIndex = Math.floor(Math.random() * tweets.length);
-      setViewedIndices(new Set([randomIndex]));
-      setCurrentIndex(randomIndex);
-    } else {
-      const randomIndex =
-        availableIndices[Math.floor(Math.random() * availableIndices.length)];
-      setViewedIndices((prev) => new Set([...prev, randomIndex]));
-      setCurrentIndex(randomIndex);
-    }
-  }, [tweets, viewedIndices]);
+    setColumnCount(getColumnCount());
 
-  const currentTweet = tweets[currentIndex];
+    const handleResize = () => {
+      setColumnCount(getColumnCount());
+    };
 
-  if (!currentTweet) {
-    return null;
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const columns = useMemo(() => {
+    const result: Tweet[][] = Array.from({ length: columnCount }, () => []);
+
+    tweets.forEach((tweet, index) => {
+      const columnIndex = index % columnCount;
+      result[columnIndex].push(tweet);
+    });
+
+    return result;
+  }, [tweets, columnCount]);
+
+  if (tweets.length === 0) {
+    return (
+      <div className="text-center text-muted-foreground py-12">
+        No moments yet
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="w-full max-w-lg h-[60vh] overflow-auto">
-        <MagicTweet tweet={currentTweet} />
-      </div>
-      <div className="flex items-center gap-3">
-        <ShinyButton onClick={handleShuffle} className="gap-2">
-          <Shuffle className="h-4 w-4 inline-block mr-1" />
-          Shuffle
-        </ShinyButton>
-        <span className="text-sm text-muted-foreground">
-          {viewedIndices.size} / {tweets.length}
-        </span>
+    <div className="w-full">
+      <div className="flex gap-4">
+        {columns.map((columnTweets, columnIndex) => (
+          <div
+            key={columnIndex}
+            className="flex-1 flex flex-col gap-4"
+            style={{ minWidth: 0 }}
+          >
+            {columnTweets.map((tweet, tweetIndex) => {
+              const key = tweet.id_str ?? `${columnIndex}-${tweetIndex}`;
+              return <MagicTweet key={key} tweet={tweet} />;
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );

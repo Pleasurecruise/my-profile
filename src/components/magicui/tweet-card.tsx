@@ -194,7 +194,7 @@ export const TweetMedia = ({ tweet }: { tweet: EnrichedTweet }) => {
         </video>
       )}
       {tweet.photos && (
-        <div className="relative flex transform-gpu snap-x snap-mandatory gap-4 overflow-x-auto">
+        <div className="relative flex transform-gpu snap-x snap-mandatory gap-4 overflow-x-auto scrollbar-hide">
           <div className="shrink-0 snap-center sm:w-2" />
           {tweet.photos.map((photo) => (
             <img
@@ -239,7 +239,7 @@ export const MagicTweet = ({
   return (
     <div
       className={cn(
-        "relative flex size-full max-w-lg flex-col gap-2 overflow-hidden rounded-lg border p-4 backdrop-blur-md",
+        "relative flex w-full flex-col gap-2 overflow-hidden rounded-lg border p-4 backdrop-blur-md",
         className,
       )}
       {...props}

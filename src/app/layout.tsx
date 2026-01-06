@@ -64,16 +64,18 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
         <body
             className={cn(
-                "min-h-screen bg-background font-sans antialiased max-w-2xl mx-auto py-12 sm:py-24 px-6",
+                "min-h-screen bg-background font-sans antialiased",
                 fontSans.variable
             )}
         >
         <TRPCReactProvider>
             <ThemeProvider attribute="class" defaultTheme="light">
                 <TooltipProvider delayDuration={0}>
-                    {children}
-                    <Navbar/>
-                    <Toaster/>
+                    <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-24">
+                        {children}
+                        <Navbar/>
+                        <Toaster/>
+                    </div>
                 </TooltipProvider>
             </ThemeProvider>
         </TRPCReactProvider>

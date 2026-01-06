@@ -1,171 +1,182 @@
 "use client";
 
-import createGlobe from "cobe";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import mapboxgl, {type Map} from "mapbox-gl";
+import {useEffect, useRef} from "react";
+import {useTheme} from "next-themes";
+import {cn} from "@/lib/utils";
 
 export interface TravelLocation {
-  name: string;
-  location: [number, number];
-  size?: number;
+    name: string;
+    location: Readonly<[number, number]>;
+    size?: number;
 }
 
 interface TravelGlobeProps {
-  locations: TravelLocation[];
-  className?: string;
+    locations: ReadonlyArray<TravelLocation>;
+    className?: string;
 }
 
-const DRAG_SENSITIVITY = 0.01;
+const ROTATION_SPEED = 0.05;
+const RESUME_DELAY_MS = 4000;
 
-export function TravelGlobe({ locations, className }: TravelGlobeProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const focusRef = useRef<[number, number]>([0, 0]);
-  const pointerInteracting = useRef<{ x: number; y: number } | null>(null);
-  const currentAngles = useRef({ phi: 0, theta: 0.3 });
-  const [activeLocation, setActiveLocation] = useState<string | null>(null);
+export function TravelGlobe({locations, className}: TravelGlobeProps) {
+    const {resolvedTheme} = useTheme();
+    const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const mapRef = useRef<Map | null>(null);
+    const markersRef = useRef<mapboxgl.Marker[]>([]);
+    const animationIdRef = useRef<number | null>(null);
+    const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const isUserInteractingRef = useRef(false);
 
-  const locationToAngles = (lat: number, long: number): [number, number] => {
-    return [
-      Math.PI - ((long * Math.PI) / 180 - Math.PI / 2),
-      (lat * Math.PI) / 180,
-    ];
-  };
+    const isDark = resolvedTheme === "dark";
+    const mapStyle = `mapbox://styles/mapbox/${isDark ? "dark" : "light"}-v10`;
 
-  const updatePointerInteraction = (value: { x: number; y: number } | null) => {
-    pointerInteracting.current = value;
-    if (canvasRef.current) {
-      canvasRef.current.style.cursor = value !== null ? "grabbing" : "grab";
-    }
-  };
+    const toLngLat = (location: Readonly<[number, number]>) =>
+        [location[1], location[0]] as [number, number];
 
-  const handlePointerDown = (clientX: number, clientY: number) => {
-    pointerInteracting.current = { x: clientX, y: clientY };
-    updatePointerInteraction({ x: clientX, y: clientY });
-    focusRef.current = [0, 0];
-    setActiveLocation(null);
-  };
+    useEffect(() => {
+        if (!mapContainerRef.current) return;
 
-  const handlePointerMove = (clientX: number, clientY: number) => {
-    if (pointerInteracting.current !== null) {
-      const deltaX = clientX - pointerInteracting.current.x;
-      const deltaY = clientY - pointerInteracting.current.y;
-
-      currentAngles.current.phi += deltaX * DRAG_SENSITIVITY;
-      currentAngles.current.theta += deltaY * DRAG_SENSITIVITY;
-
-      pointerInteracting.current = { x: clientX, y: clientY };
-    }
-  };
-
-  useEffect(() => {
-    let width = 0;
-    const doublePi = Math.PI * 2;
-
-    const onResize = () => {
-      if (canvasRef.current) {
-        width = canvasRef.current.offsetWidth;
-      }
-    };
-
-    window.addEventListener("resize", onResize);
-    onResize();
-
-    const globe = createGlobe(canvasRef.current!, {
-      devicePixelRatio: 2,
-      width: width * 2,
-      height: width * 2,
-      phi: 0,
-      theta: 0.3,
-      dark: 1,
-      diffuse: 3,
-      mapSamples: 16000,
-      mapBrightness: 1.2,
-      baseColor: [1, 1, 1],
-      markerColor: [251 / 255, 100 / 255, 21 / 255],
-      glowColor: [1.2, 1.2, 1.2],
-      markers: locations.map((loc) => ({
-        location: loc.location,
-        size: loc.size ?? 0.08,
-      })),
-      onRender: (state) => {
-        const [focusPhi, focusTheta] = focusRef.current;
-        const isIdle = focusPhi === 0 && focusTheta === 0;
-        const isDragging = pointerInteracting.current !== null;
-
-        if (isDragging) {
-        } else if (isIdle) {
-          currentAngles.current.phi += 0.005;
-        } else {
-          const distPositive =
-            (focusPhi - currentAngles.current.phi + doublePi) % doublePi;
-          const distNegative =
-            (currentAngles.current.phi - focusPhi + doublePi) % doublePi;
-
-          if (distPositive < distNegative) {
-            currentAngles.current.phi += distPositive * 0.08;
-          } else {
-            currentAngles.current.phi -= distNegative * 0.08;
-          }
-          currentAngles.current.theta =
-            currentAngles.current.theta * 0.92 + focusTheta * 0.08;
+        const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+        if (!token) {
+            console.error("Missing NEXT_PUBLIC_MAPBOX_TOKEN for Mapbox GL.");
+            return;
         }
 
-        state.phi = currentAngles.current.phi;
-        state.theta = currentAngles.current.theta;
-        state.width = width * 2;
-        state.height = width * 2;
-      },
-    });
+        mapboxgl.accessToken = token;
 
-    setTimeout(() => {
-      if (canvasRef.current) {
-        canvasRef.current.style.opacity = "1";
-      }
-    });
+        const map = new mapboxgl.Map({
+            container: mapContainerRef.current,
+            style: mapStyle,
+            center: [100, 30],
+            zoom: 1.6,
+            projection: "globe",
+            attributionControl: false,
+            dragRotate: true,
+            touchPitch: true,
+        });
 
-    return () => {
-      globe.destroy();
-      window.removeEventListener("resize", onResize);
-    };
-  }, [locations]);
+        mapRef.current = map;
 
-  const handleLocationClick = (loc: TravelLocation) => {
-    focusRef.current = locationToAngles(loc.location[0], loc.location[1]);
-    setActiveLocation(loc.name);
-  };
+        const handleResize = () => map.resize();
+        window.addEventListener("resize", handleResize);
 
-  return (
-    <div className={cn("w-full", className)}>
-      <div className="relative mx-auto aspect-square w-full max-w-[400px]">
-        <canvas
-          ref={canvasRef}
-          className="h-full w-full cursor-grab opacity-0 transition-opacity duration-1000 [contain:layout_paint_size]"
-          onPointerDown={(e) => handlePointerDown(e.clientX, e.clientY)}
-          onPointerUp={() => updatePointerInteraction(null)}
-          onPointerOut={() => updatePointerInteraction(null)}
-          onMouseMove={(e) => handlePointerMove(e.clientX, e.clientY)}
-          onTouchMove={(e) =>
-            e.touches[0] &&
-            handlePointerMove(e.touches[0].clientX, e.touches[0].clientY)
-          }
-        />
-      </div>
-      <div className="mt-4 flex flex-wrap justify-center gap-2">
-        {locations.map((loc) => (
-          <button
-            key={loc.name}
-            onClick={() => handleLocationClick(loc)}
-            className={cn(
-              "rounded-lg px-3 py-1.5 text-sm transition-colors",
-              "bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700",
-              activeLocation === loc.name &&
-                "bg-neutral-200 dark:bg-neutral-700"
-            )}
-          >
-            📍 {loc.name}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+        const handleInteractionStart = () => {
+            isUserInteractingRef.current = true;
+            if (resumeTimeoutRef.current) {
+                clearTimeout(resumeTimeoutRef.current);
+                resumeTimeoutRef.current = null;
+            }
+        };
+
+        const handleInteractionEnd = () => {
+            resumeTimeoutRef.current = setTimeout(() => {
+                isUserInteractingRef.current = false;
+                resumeTimeoutRef.current = null;
+            }, RESUME_DELAY_MS);
+        };
+
+        map.on("mousedown", handleInteractionStart);
+        map.on("touchstart", handleInteractionStart);
+        map.on("mouseup", handleInteractionEnd);
+        map.on("touchend", handleInteractionEnd);
+
+        const rotate = () => {
+            if (!mapRef.current) return;
+            if (!isUserInteractingRef.current) {
+                const center = mapRef.current.getCenter();
+                center.lng += ROTATION_SPEED;
+                mapRef.current.setCenter(center);
+            }
+            animationIdRef.current = requestAnimationFrame(rotate);
+        };
+        rotate();
+
+        return () => {
+            if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+            if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+            window.removeEventListener("resize", handleResize);
+            markersRef.current.forEach((marker) => marker.remove());
+            markersRef.current = [];
+            map.remove();
+            mapRef.current = null;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const handleStyleLoad = () => {
+            map.setProjection("globe");
+        };
+
+        if (map.isStyleLoaded()) {
+            map.setProjection("globe");
+        }
+        map.once("style.load", handleStyleLoad);
+        map.setStyle(mapStyle);
+
+        return () => {
+            map.off("style.load", handleStyleLoad);
+        };
+    }, [mapStyle, resolvedTheme]);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        markersRef.current.forEach((marker) => marker.remove());
+        markersRef.current = [];
+
+        locations.forEach((loc) => {
+            const el = document.createElement("div");
+            const size = loc.size ? Math.max(6, loc.size * 120) : 8;
+            el.style.width = `${size}px`;
+            el.style.height = `${size}px`;
+            el.style.borderRadius = "9999px";
+            el.style.background = "#fb6415";
+            el.style.boxShadow = "0 0 10px rgba(251,100,21,0.6)";
+            el.style.border = "2px solid rgba(255,255,255,0.8)";
+
+            const popup = new mapboxgl.Popup({
+                closeButton: false,
+                closeOnMove: false,
+                offset: 10,
+            }).setText(loc.name);
+
+            el.addEventListener("mouseenter", () => {
+                popup.setLngLat(toLngLat(loc.location)).addTo(map);
+            });
+
+            el.addEventListener("mouseleave", () => {
+                popup.remove();
+            });
+
+            el.addEventListener("click", () => {
+                map.flyTo({
+                    center: toLngLat(loc.location),
+                    zoom: 2.6,
+                    speed: 0.9,
+                    curve: 1.2,
+                    essential: true,
+                });
+            });
+
+            const marker = new mapboxgl.Marker({element: el, anchor: "center"})
+                .setLngLat(toLngLat(loc.location))
+                .addTo(map);
+
+            markersRef.current.push(marker);
+        });
+    }, [locations]);
+
+    return (
+        <div className={cn("w-full", className)}>
+            <div className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-2xl shadow-sm">
+                <div ref={mapContainerRef} className="h-full w-full"/>
+            </div>
+        </div>
+    );
 }
