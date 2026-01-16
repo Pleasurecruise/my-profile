@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { MagicTweet } from "@/components/magicui/tweet-card";
+import { Marquee } from "@/components/magicui/marquee";
 import type { Tweet } from "react-tweet/api";
 
 interface MomentClientProps {
@@ -50,18 +51,25 @@ export function MomentClient({ tweets }: MomentClientProps) {
   }
 
   return (
-    <div className="w-full">
-      <div className="flex gap-4">
+    <div className="w-full h-[70vh] overflow-hidden">
+      <div className="flex gap-4 h-full">
         {columns.map((columnTweets, columnIndex) => (
-          <div
-            key={columnIndex}
-            className="flex-1 flex flex-col gap-4"
-            style={{ minWidth: 0 }}
-          >
-            {columnTweets.map((tweet, tweetIndex) => {
-              const key = tweet.id_str ?? `${columnIndex}-${tweetIndex}`;
-              return <MagicTweet key={key} tweet={tweet} />;
-            })}
+          <div key={columnIndex} className="flex-1 h-full overflow-hidden">
+            <Marquee
+              vertical
+              reverse={columnIndex % 2 === 1}
+              pauseOnHover
+              className="h-full"
+            >
+              {columnTweets.map((tweet, tweetIndex) => {
+                const key = tweet.id_str ?? `${columnIndex}-${tweetIndex}`;
+                return (
+                  <div key={key} className="py-4">
+                    <MagicTweet tweet={tweet} />
+                  </div>
+                );
+              })}
+            </Marquee>
           </div>
         ))}
       </div>

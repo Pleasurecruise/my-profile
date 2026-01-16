@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/u/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'img-cn.static.isla.fan',
+      },
     ],
   },
   serverExternalPackages: ['ali-oss'],

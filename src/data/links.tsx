@@ -30,4 +30,9 @@ export const FRIENDS: FriendLink[] = [
         url: "https://tcdw.net",
         avatar: "https://avatars.githubusercontent.com/u/8687182",
     },
+    {
+        name: "Hikaru Lab",
+        url: "https://www.mengxiblog.top",
+        avatar: "https://img-cn.static.isla.fan/2025/10/19/68f4824b7c228.png"
+    }
 ];
