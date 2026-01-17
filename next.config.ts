@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'img-cn.static.isla.fan',
       },
+      {
+        protocol: 'https',
+        hostname: 'gravatar.com',
+      },
     ],
   },
   serverExternalPackages: ['ali-oss'],

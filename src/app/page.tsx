@@ -3,6 +3,7 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
 import { TravelGlobe } from "@/components/travel-globe";
+import { CodeBlock, CodeBlockCopyButton } from "@/components/ui/shadcn-io/ai/code-block";
 import { DATA } from "@/data/resume";
 import { GALLERY_ITEMS } from "@/data/gallery";
 import { FRIENDS } from "@/data/links";
@@ -170,6 +171,39 @@ export default function Page() {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                </BlurFade>
+            </section>
+            <section id="friend-link">
+                <BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+                    <div className="space-y-4 mx-auto w-full max-w-2xl">
+                        <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                            add my link
+                        </span>
+                        <p className="text-[15px] text-muted-foreground">
+                            Feel free to exchange links!👏🏻 Just add my link and submit yours via{" "}
+                            <Link
+                                href="https://github.com/Pleasurecruise/my-profile/pulls"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-foreground hover:underline"
+                            >
+                                GitHub
+                            </Link>
+                            .
+                        </p>
+                        <CodeBlock
+                            code={`{
+    name: "Pleasure1234",
+    url: "https://yiming1234.cn",
+    avatar: "https://yiming1234.cn/profile/me.png",
+    description: "Any shortcomings are kindly overlooked🙏"
+}`}
+                            language="json"
+                            className="ml-0.5"
+                        >
+                            <CodeBlockCopyButton />
+                        </CodeBlock>
                     </div>
                 </BlurFade>
             </section>
