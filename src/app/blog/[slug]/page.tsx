@@ -34,14 +34,18 @@ export async function generateMetadata({
 
   return {
     title: post.title,
+    description: `Read "${post.title}" on ${DATA.name}'s blog`,
     openGraph: {
       title: post.title,
+      description: `Read "${post.title}" on ${DATA.name}'s blog`,
       type: "article",
       url: `${DATA.url}/blog/${post.slug}`,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
+      description: `Read "${post.title}" on ${DATA.name}'s blog`,
+      creator: "@Pleasure9876",
     },
   };
 }
