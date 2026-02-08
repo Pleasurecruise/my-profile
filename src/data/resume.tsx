@@ -328,6 +328,33 @@ export const DATA = {
     ],
     hackathons: [
         {
+            title: "LeedsHack 2026",
+            dates: "February 7th - 8th, 2026",
+            location: "Leeds, UK",
+            description:
+                "An interactive AI-powered digital pet for LeedsHack 2026.",
+            image:
+                "/hackathons/leedshack2026-logo.svg",
+            mlh: "/hackathons/mlh-2026-badge.svg",
+            links: [
+                {
+                    title: "Website",
+                    icon: <Icons.globe className="h-4 w-4" />,
+                    href: "https://leedshack.com",
+                },
+                {
+                    title: "Devpost",
+                    icon: <Icons.globe className="h-4 w-4" />,
+                    href: "https://leedshack-2026.devpost.com",
+                },
+                {
+                    title: "Project",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/Pleasurecruise/leedshack-digitalpet",
+                },
+            ],
+        },
+        {
             title: "HackSheffield10",
             dates: "November 29th - 30th, 2025",
             location: "Sheffield, UK",
