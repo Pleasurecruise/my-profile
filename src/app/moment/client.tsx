@@ -21,6 +21,7 @@ export function MomentClient({ tweets }: MomentClientProps) {
       return 4;
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setColumnCount(getColumnCount());
 
     const handleResize = () => {

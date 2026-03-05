@@ -15,7 +15,6 @@ import Image from "next/image";
 import { Loader2, X } from "lucide-react";
 import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import BlurFade from "@/components/magicui/blur-fade";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -29,7 +28,7 @@ export default function SignUp() {
     const [image, setImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
+    const [emailSent, setEmailSent] = useState(false);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -42,6 +41,21 @@ export default function SignUp() {
             reader.readAsDataURL(file);
         }
     };
+
+    if (emailSent) {
+        return (
+            <BlurFade delay={BLUR_FADE_DELAY}>
+                <Card className="z-50 rounded-md rounded-t-none max-w-md mx-auto my-auto h-fit">
+                    <CardHeader>
+                        <CardTitle className="text-lg md:text-xl">Check your email</CardTitle>
+                        <CardDescription className="text-xs md:text-sm">
+                            A verification link has been sent to <strong>{email}</strong>. Please click the link to activate your account.
+                        </CardDescription>
+                    </CardHeader>
+                </Card>
+            </BlurFade>
+        );
+    }
 
     return (
         <BlurFade delay={BLUR_FADE_DELAY}>
@@ -170,7 +184,7 @@ export default function SignUp() {
                                         toast.error(ctx.error.message);
                                     },
                                     onSuccess: async () => {
-                                        router.push("/chat");
+                                        setEmailSent(true);
                                     },
                                 },
                             });

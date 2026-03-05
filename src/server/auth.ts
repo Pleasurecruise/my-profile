@@ -29,28 +29,29 @@ export const auth = betterAuth({
     ],
     emailAndPassword: {
         enabled: true,
-        requireEmailVerification: false,
+        requireEmailVerification: true,
         sendResetPassword: async ({user, url}, request) => {
             await sendEmail({
                 to: user.email,
                 subject: "Reset your password",
-                html: `<a href="${url}">Click the link to verify your email</a>`
+                html: `<a href="${url}">Click the link to reset your password</a>`
             });
         },
         onPasswordReset: async ({ user }, request) => {
-            // your logic here
             console.log(`Password for user ${user.email} has been reset.`);
         },
     },
-    // emailVerification: {
-    //     sendVerificationEmail: async ( { user, url, token }, request) => {
-    //         await sendEmail({
-    //             to: user.email,
-    //             subject: "Verify your email address",
-    //             html: `<a href="${url}">Click the link to verify your email</a>`
-    //         });
-    //     },
-    // },
+    emailVerification: {
+        sendOnSignUp: true,
+        autoSignInAfterVerification: true,
+        sendVerificationEmail: async ({ user, url, token }, request) => {
+            await sendEmail({
+                to: user.email,
+                subject: "Verify your email address",
+                html: `<a href="${url}">Click the link to verify your email</a>`
+            });
+        },
+    },
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,

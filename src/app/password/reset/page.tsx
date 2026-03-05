@@ -1,9 +1,10 @@
 import ResetPassword from "./_components/ResetPassword";
 
-export default function ResetPasswordPage({
+export default async function ResetPasswordPage({
                                               searchParams,
                                           }: {
-    searchParams: { token?: string };
+    searchParams: Promise<{ token?: string }>;
 }) {
-    return <ResetPassword token={searchParams.token} />;
+    const { token } = await searchParams;
+    return <ResetPassword token={token} />;
 }
