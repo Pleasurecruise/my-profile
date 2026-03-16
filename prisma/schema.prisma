@@ -64,3 +64,12 @@ model Verification {
 
   @@map("verification")
 }
+
+model AmIOkStatus {
+  id         Int      @id @default(1)
+  apps       String[]
+  deviceName String   @default("MacBook")
+  updatedAt  DateTime @updatedAt
+
+  @@map("am_i_ok_status")
+}
