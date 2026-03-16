@@ -9,7 +9,8 @@ export type SlashCommandResult =
     | { kind: "navigate"; path: string }
     | { kind: "dino" }
     | { kind: "clear" }
-    | { kind: "sudo"; command: string };
+    | { kind: "sudo"; command: string }
+    | { kind: "fetch"; url: string; format: (data: unknown) => string };
 
 export type Line =
     | { type: "motd" }

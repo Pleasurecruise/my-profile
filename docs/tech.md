@@ -1,85 +1,108 @@
 # Tech Stack
 
-## 🎯 Core Framework
-- **Next.js 15.5.2**
-- **React 18.3.1**
-- **TypeScript 5**
+## Core Framework
 
-## 🎨 UI Design & Styling
-- **Tailwind CSS 3.4.17** - Utility-first CSS framework
-- **Radix UI** - Accessible UI primitive components
-  - React Avatar, Dialog, Tabs, Tooltip and more components
-- **Shadcn UI** - Design system based on Radix UI with New York style
-- **Magic UI** - Special effect components
-- **Lucide React** - Modern icon library
-- **Framer Motion** - High-performance animation library for page animations
-- **next-themes** - Dark/light theme switching
+| Package | Version |
+|---------|---------|
+| Next.js | 16.1.6 |
+| React | 19.2.4 |
+| TypeScript | 5.x |
 
-## 🔐 Authentication & Authorization
-- **Better Auth 1.3.7**
-- **NextJS Cookies** - Better Auth adapter for Next.js
+## UI & Styling
 
-## 📊 Database & ORM
-- **PostgreSQL** - Production-grade relational database
-- **Drizzle ORM 0.44.5** - Lightweight TypeScript ORM
-- **Drizzle Kit** - Database migration and management tools
-- **Database Schema**:
-  - user: User information table
-  - session: Session management table
-  - account: Third-party account linking table
-  - verification: Email verification table
+- **TailwindCSS 4.2.1** — utility-first CSS, configured via CSS variables (no `tailwind.config.ts`)
+- **Radix UI** — accessible primitives (Avatar, Dialog, Tabs, Tooltip, Select, etc.)
+- **shadcn/ui** — component library built on Radix (New York style)
+- **Magic UI** — special effect components (`blur-fade`, `dock`, etc.)
+- **Framer Motion 12** / **Motion 12** — animations and page transitions
+- **Lucide React** — icon library
+- **next-themes** — dark/light theme switching
+- **tw-animate-css** — additional Tailwind animation utilities
 
-## 🌐 API & Communication
-- **tRPC 11.5.0** - End-to-end type-safe API solution
-  - @trpc/client - Client-side
-  - @trpc/server - Server-side
-  - @trpc/react-query - React Query integration
-- **React Query** - Server state management and caching
-- **SuperJSON** - Enhanced JSON serialization
+## Authentication
 
-## 📧 Email Service
-- **Nodemailer** - Email sending service for password reset functionality
+- **Better Auth 1.5.5** — OAuth + email authentication
+- **@better-auth/prisma-adapter** — Prisma integration
 
-## 🤖 AI Integration
-- **OpenAI SDK** - OpenAI API integration capabilities
+## Database & ORM
 
-## 📝 Content Management
-- **Gray Matter** - Markdown file frontmatter parsing
-- **React Markdown** - Markdown rendering component
-- **Remark/Rehype Ecosystem**:
-  - remark-gfm: GitHub Flavored Markdown support
-  - rehype-pretty-code: Code syntax highlighting
-  - shiki: Code highlighting engine
-- **Unified** - Document processing pipeline
+- **PostgreSQL** — production database
+- **Prisma 7.5.0** — ORM and migrations
+- **@prisma/adapter-pg** — direct Postgres adapter
 
-## 🛠️ Development Tools
-- **ESLint 9** - Code quality linting
-- **PostCSS** - CSS post-processor
-- **TSX** - TypeScript executor
-- **dotenv** - Environment variable management
+## API Layer
 
-## 📦 Package Management & Build
-- **npm** - Package manager
-- **Turbopack** - Next.js next-generation bundler
-- **Type Definitions**: Complete TypeScript type support
+- **tRPC 11.13.4** — end-to-end type-safe API (`@trpc/client`, `@trpc/server`, `@trpc/react-query`)
+- **TanStack Query 5** — server state management and caching
+- **SuperJSON 2** — enhanced JSON serialization
+- **Vercel AI SDK 6** (`ai`) — streaming AI responses
 
-## 🔧 Configuration Files
-- `next.config.ts` - Next.js configuration with GitHub avatar domain support
-- `tailwind.config.ts` - Tailwind custom configuration
-- `drizzle.config.ts` - Database configuration
-- `components.json` - Shadcn/ui configuration
-- `tsconfig.json` - TypeScript compilation configuration
+## AI Integration
 
-## 📂 Project Structure
+- **OpenAI SDK 6** — chat completions
+- **Vercel AI SDK** — streaming UI for chat
+
+## Content (Blog)
+
+- **gray-matter** — MDX frontmatter parsing
+- **react-markdown 10** + **harden-react-markdown** — safe Markdown rendering
+- **rehype-pretty-code 0.14** + **shiki 4** — syntax highlighting
+- **remark-gfm** — GitHub Flavored Markdown
+- **remark-math** + **rehype-katex** — LaTeX math rendering
+- **unified** — document processing pipeline
+
+## Maps & Visualization
+
+- **Mapbox GL 3.20** — interactive globe in Moments
+- **cobe 0.6** — 3D globe WebGL component
+
+## Media & Storage
+
+- **ali-oss** — Alibaba Cloud OSS for image/media uploads
+
+## Email
+
+- **Nodemailer 8** — password reset emails
+
+## Other
+
+- **Embla Carousel** — carousel component
+- **rough-notation** — hand-drawn style annotations
+- **react-tweet** — embedded tweets
+- **react-chrome-dino-ts** — Dino game in terminal
+- **sonner** — toast notifications
+- **zod 4** — schema validation
+
+## Development Tools
+
+- **pnpm 10** — package manager
+- **Turbopack** — Next.js bundler (dev + build)
+- **ESLint 10** — linting (`eslint-config-next`)
+- **PostCSS** — CSS processing
+- **tsx** — TypeScript script runner
+
+## Project Structure
+
 ```
 src/
-├── app/          # Next.js App Router pages
-├── components/   # React components
-│   ├── ui/       # Shadcn UI components
-│   └── magicui/  # Magic UI components
-├── lib/          # Utility functions and configurations
-├── db/           # Database schema and connections
-├── server/       # API routes
-├── trpc/         # tRPC configuration
-└── styles/       # Style files
+├── app/               # Next.js App Router pages
+│   ├── _terminal/     # Interactive terminal
+│   ├── am-i-ok/       # Real-time activity status
+│   ├── api/           # API routes
+│   ├── about/
+│   ├── blog/
+│   ├── chat/
+│   ├── cv/
+│   └── moment/
+├── components/
+│   ├── ui/            # shadcn/ui
+│   └── magicui/       # Magic UI
+├── data/
+│   └── resume.tsx     # Portfolio data
+├── db/                # Prisma schema + client
+├── trpc/              # tRPC router
+└── lib/               # Utilities
+content/               # Blog MDX posts
+scripts/               # macOS LaunchAgent scripts
+docs/                  # Documentation
 ```

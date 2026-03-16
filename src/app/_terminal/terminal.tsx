@@ -102,6 +102,26 @@ export function Terminal() {
                 return;
             }
 
+            if (result.kind === "fetch") {
+                setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "output", text: "fetching..." }]);
+                const { url, format } = result;
+                fetch(url)
+                    .then((r) => r.json())
+                    .then((data: unknown) => {
+                        setLines((prev) => [
+                            ...prev.slice(0, -1),
+                            { type: "output", text: format(data) },
+                        ]);
+                    })
+                    .catch(() => {
+                        setLines((prev) => [
+                            ...prev.slice(0, -1),
+                            { type: "error", text: "fetch failed." },
+                        ]);
+                    });
+                return;
+            }
+
             if (result.kind === "sudo") {
                 setLines((prev) => [...prev, { type: "input", text: cmd }]);
                 setSudoState({ command: result.command, attempts: 0 });
