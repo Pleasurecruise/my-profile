@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar";
+import NavbarWrapper from "@/components/navbar-wrapper";
 import {ThemeProvider} from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import {TooltipProvider} from "@/components/ui/tooltip";
@@ -8,6 +8,7 @@ import {cn} from "@/lib/utils";
 import type {Metadata} from "next";
 import {Inter as FontSans} from "next/font/google";
 import "@/styles/globals.css";
+import "react-chrome-dino-ts/index.css";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -71,11 +72,11 @@ export default function RootLayout({
             )}
         >
         <TRPCReactProvider>
-            <ThemeProvider attribute="class" defaultTheme="light">
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                 <TooltipProvider delayDuration={0}>
                     <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-24">
                         {children}
-                        <Navbar/>
+                        <NavbarWrapper/>
                         <Toaster/>
                     </div>
                 </TooltipProvider>

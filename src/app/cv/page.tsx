@@ -32,7 +32,7 @@ export default function Page() {
                                 <TypingAnimation
                                     delay={BLUR_FADE_DELAY * 2000 + 400}
                                     duration={30}
-                                    className="max-w-[600px] md:text-xl"
+                                    className="max-w-[600px] md:text-xl leading-snug"
                                 >
                                     {DATA.description}
                                 </TypingAnimation>

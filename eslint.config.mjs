@@ -5,6 +5,11 @@ const eslintConfig = [
   ...coreWebVitals,
   ...typescript,
   {
+    settings: {
+      react: { version: "19.0" },
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",

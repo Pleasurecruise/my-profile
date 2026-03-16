@@ -5,8 +5,8 @@ export const DATA = {
     name: "Yiming Wang",
     initials: "Pleasurecruise",
     url: "https://yiming1234.cn",
-    location: "Ningbo, China",
-    locationLink: "https://www.google.com/maps/place/ningbo",
+    location: "Nottingham, UK",
+    locationLink: "https://www.google.com/maps/place/nottingham",
     description:
         "Junior undergraduate student. I love to participate in open source projects. Active on X.",
     summary:
@@ -29,13 +29,15 @@ export const DATA = {
         "Docker"
     ],
     navbar: [
-        {href: "/", icon: HomeIcon, label: "Home"},
+        {href: "/about", icon: HomeIcon, label: "About"},
         {href: "/blog", icon: NotebookIcon, label: "Blog"},
         {href: "/moment", icon: BoxIcon,label: "Moment"},
         {href: "/chat", icon: BotMessageSquareIcon, label: "Chat"}
     ],
     contact: {
-        email: "3196812536@qq.com",
+        email: "pleasure9876@qq.com",
+        telegram: "@Pleasure12345678",
+        wechat: "W3196812536",
         social: {
             GitHub: {
                 name: "GitHub",

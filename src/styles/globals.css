@@ -206,6 +206,17 @@ html::-webkit-scrollbar {
     display: none;
 }
 
+.react-terminal-wrapper,
+.react-terminal {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.react-terminal-wrapper::-webkit-scrollbar,
+.react-terminal::-webkit-scrollbar {
+    display: none;
+}
+
 a {
     color: inherit;
     text-decoration: none;
