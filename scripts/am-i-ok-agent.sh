@@ -28,7 +28,7 @@ else
   PAYLOAD="{\"apps\": [\"${APP1}\"], \"device\": \"MacBook\"}"
 fi
 
-curl -s -L -X POST "${BASE_URL}/api/am-i-ok" \
+curl -s --location-trusted -X POST "${BASE_URL}/api/am-i-ok" \
   -H "Authorization: Bearer ${AM_I_OK_SECRET}" \
   -H "Content-Type: application/json" \
   -d "$PAYLOAD" \

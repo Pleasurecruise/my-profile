@@ -16,7 +16,7 @@
     <key>AM_I_OK_SECRET</key>
     <string>your_secret_here</string>
     <key>BETTER_AUTH_URL</key>
-    <string>https://yiming1234.cn</string>
+    <string>https://www.yiming1234.cn</string>
   </dict>
 
   <key>StartInterval</key>

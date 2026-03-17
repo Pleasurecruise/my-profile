@@ -1,0 +1,3 @@
+{
+  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- src/ public/ prisma/ package.json pnpm-lock.yaml next.config.ts prisma.config.ts components.json postcss.config.mjs tsconfig.json"
+}
