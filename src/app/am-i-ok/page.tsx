@@ -138,7 +138,7 @@ export default function AmIOkPage() {
       <BlurFade delay={0.04}>
         {loading ? (
           <div className="rounded-xl border p-6 h-36 animate-pulse bg-muted/30" />
-        ) : !status ? (
+        ) : !status || !online ? (
           <div className="rounded-xl border p-6 text-muted-foreground text-sm">
             No status yet.
           </div>
