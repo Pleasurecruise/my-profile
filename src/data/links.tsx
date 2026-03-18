@@ -39,5 +39,10 @@ export const FRIENDS: FriendLink[] = [
         name: "溴化锂的笔记本",
         url: "https://nvme0n1p.dev",
         avatar: "https://gravatar.com/avatar/29d64df3ca2a9dac5a7fffa5372fb80fb3270ceb223de2af0c33cdc4b2cbe954?v=1687917579000&size=256&d=initials"
+    },
+    {
+        name: "Innei",
+        url: "https://innei.in",
+        avatar: "https://avatars.githubusercontent.com/u/41265413",
     }
 ];
