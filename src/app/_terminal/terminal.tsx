@@ -40,7 +40,6 @@ export function Terminal() {
             document.body.style.overflow = "";
             cancelStreamTimers();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

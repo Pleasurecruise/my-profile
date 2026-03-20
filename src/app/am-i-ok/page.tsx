@@ -170,6 +170,7 @@ export default function AmIOkPage() {
                       <div className="h-8 w-px bg-border" />
                     )}
                     {icon ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={icon.url}
                         alt={appName}

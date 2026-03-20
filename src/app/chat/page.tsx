@@ -193,6 +193,7 @@ export default function ChatPage() {
         if (streamingMessage) {
             void resumeStreamingMessage(streamingMessage)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, isLoading])
 
     return (

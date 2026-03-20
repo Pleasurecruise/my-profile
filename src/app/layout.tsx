@@ -2,6 +2,7 @@ import NavbarWrapper from "@/components/navbar-wrapper";
 import {ThemeProvider} from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import {TooltipProvider} from "@/components/ui/tooltip";
+import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import {TRPCReactProvider} from "@/trpc/react";
 import {DATA} from "@/data/resume";
 import {cn} from "@/lib/utils";
@@ -18,8 +19,8 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
     metadataBase: new URL(DATA.url),
     title: {
-        default: DATA.name,
-        template: `%s | ${DATA.name}`,
+        default: "Pleasure1234",
+        template: `%s | Pleasure1234`,
     },
     description: DATA.description,
     openGraph: {
@@ -74,6 +75,7 @@ export default function RootLayout({
         <TRPCReactProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                 <TooltipProvider delayDuration={0}>
+                    <ScrollProgress />
                     <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-24">
                         {children}
                         <NavbarWrapper/>

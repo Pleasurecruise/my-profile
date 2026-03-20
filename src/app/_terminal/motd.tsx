@@ -134,7 +134,7 @@ export function MOTD() {
                 Type <span className="text-yellow-400">/help</span> to see available commands.
             </p>
             <p className="mt-3 text-zinc-500">
-                Recommend to visit <span className="text-yellow-400">/go about</span>.
+                Recommend to visit <span className="text-yellow-400">/go home</span>.
             </p>
         </div>
     );

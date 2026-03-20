@@ -1,5 +1,16 @@
 import {Icons} from "@/components/icons";
-import {HomeIcon, NotebookIcon, BotMessageSquareIcon, BoxIcon} from "lucide-react";
+import {HomeIcon, NotebookIcon, BotMessageSquareIcon, FeatherIcon} from "lucide-react";
+import { ReactLight } from "@/components/ui/svgs/reactLight";
+import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
+import { Typescript } from "@/components/ui/svgs/typescript";
+import { Nodejs } from "@/components/ui/svgs/nodejs";
+import { Python } from "@/components/ui/svgs/python";
+import { Golang } from "@/components/ui/svgs/golang";
+import { Postgresql } from "@/components/ui/svgs/postgresql";
+import { Docker } from "@/components/ui/svgs/docker";
+import { Java } from "@/components/ui/svgs/java";
+import { MongoDB } from "@/components/ui/svgs/mongodb";
+import { MySQL } from "@/components/ui/svgs/mysql";
 
 export const DATA = {
     name: "Yiming Wang",
@@ -11,27 +22,27 @@ export const DATA = {
         "Junior undergraduate student. I love to participate in open source projects. Active on X.",
     summary:
         "Passionate computer science student at UoN with hands-on experience in full-stack development and AI technologies. Proficient in modern web development frameworks like React, Next.js, and Vue, with internship experience in algorithm development and front-end engineering. " +
-        "During my time at the school's computer enthusiasts association, I established the organization [CompPsyUnion](https://github.com/CompPsyUnion) on GitHub and was responsible for maintaining open-source activities. " +
-        "In addition to the projects listed below, I have also actively contributed to many projects, such as [MirrorChyan](https://github.com/MirrorChyan/user-frontend), [blinko](https://github.com/blinkospace/blinko), [Hello Github](https://github.com/HelloGitHub-Team/geese) etc. " +
+        "Active open source contributor with merged PRs across multiple projects, including [Cherry Studio](https://github.com/CherryHQ/cherry-studio), [Dify](https://github.com/langgenius/dify), [note-gen](https://github.com/codexu/note-gen), [Docmost](https://github.com/docmost/docmost), [Blinko](https://github.com/blinkospace/blinko), [LobeHub](https://github.com/lobehub/lobehub), [Zoot Plus](https://github.com/ZOOT-Plus/ZootPlusBackend) etc. " +
+        "Founded the organization [CompPsyUnion](https://github.com/CompPsyUnion) on GitHub and was responsible for maintaining open-source activities. " +
         "Skilled in both mobile and web development with expertise in TypeScript, Python, and database technologies.",
-    avatarUrl: "/profile/me.png",
+    avatarUrl: "https://avatars.githubusercontent.com/u/144885467",
     skills: [
-        "React",
-        "Typescript",
-        "Next.js",
-        "Node.js",
-        "Java",
-        "Python",
-        "Go",
-        "Postgres",
-        "MongoDB",
-        "MySQL",
-        "Docker"
+        { name: "React", icon: ReactLight },
+        { name: "Typescript", icon: Typescript },
+        { name: "Next.js", icon: NextjsIconDark },
+        { name: "Node.js", icon: Nodejs },
+        { name: "Java", icon: Java },
+        { name: "Python", icon: Python },
+        { name: "Go", icon: Golang },
+        { name: "Postgres", icon: Postgresql },
+        { name: "Docker", icon: Docker },
+        { name: "MongoDB", icon: MongoDB },
+        { name: "MySQL", icon: MySQL },
     ],
     navbar: [
-        {href: "/about", icon: HomeIcon, label: "About"},
+        {href: "/home", icon: HomeIcon, label: "Home"},
         {href: "/blog", icon: NotebookIcon, label: "Blog"},
-        {href: "/moment", icon: BoxIcon,label: "Moment"},
+        {href: "/story", icon: FeatherIcon, label: "Story"},
         {href: "/chat", icon: BotMessageSquareIcon, label: "Chat"}
     ],
     contact: {
@@ -129,7 +140,7 @@ export const DATA = {
             dates: "Feb 2025 - Present",
             active: true,
             description:
-                "A cross-platform desktop client supporting multiple LLM providers including OpenAI, Anthropic, and Gemini. Features 300+ pre-configured AI assistants, document processing capabilities, and support for both cloud and local models via Ollama.",
+                "A cross-platform desktop client supporting multiple LLM providers including OpenAI, Anthropic, and Gemini. Contributions cover features, bug fixes, refactoring, dependency upgrades, and security patches.",
             technologies: [
                 "Electron",
                 "TypeScript",
@@ -148,7 +159,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 }
             ],
-            image: "/projects/cherry.webp"
+            image: "https://github.com/user-attachments/assets/36dddb2c-e0fb-4a5f-9411-91447bab6e18"
         },
         {
             title: "Cherry Studio App",
@@ -174,61 +185,6 @@ export const DATA = {
             image: "/projects/cherry-app.png"
         },
         {
-            title: "Note Gen",
-            href: "#",
-            dates: "Jun 2025 - Present",
-            active: true,
-            description:
-                "NoteGen is a cross-platform Markdown note-taking application dedicated to using AI to bridge recording and writing, organizing fragmented knowledge into a readable note.",
-            technologies: [
-                "Tauri",
-                "TypeScript",
-                "React",
-                "Node.js"
-            ],
-            links: [
-                {
-                    type: "Website",
-                    href: "https://notegen.top/en",
-                    icon: <Icons.globe className="size-3"/>,
-                },
-                {
-                    type: "Source",
-                    href: "https://github.com/codexu/note-gen",
-                    icon: <Icons.github className="size-3"/>,
-                },
-            ],
-            image: "/projects/note-gen.png"
-        },
-        {
-            title: " Zoot Plus Backend",
-            href: "#",
-            dates: "Feb 2025 - Present",
-            active: true,
-            description:
-                "Backend for Zoot Plus, an Arknights homework collection website. Integration with MAA",
-            technologies: [
-                "Kotlin",
-                "Spring Boot",
-                "MongoDB",
-                "Redis",
-                "Docker",
-            ],
-            links: [
-                {
-                    type: "Website",
-                    href: "https://zoot.plus",
-                    icon: <Icons.globe className="size-3"/>,
-                },
-                {
-                    type: "Source",
-                    href: "https://github.com/ZOOT-Plus/ZootPlusBackend",
-                    icon: <Icons.github className="size-3"/>,
-                },
-            ],
-            image: "/projects/zoot-plus.png"
-        },
-        {
             title: "NottinghamWall",
             href: "#",
             dates: "Jun 2024 - Dec 2024",
@@ -249,7 +205,7 @@ export const DATA = {
                     icon: <Icons.github className="size-3"/>,
                 },
             ],
-            image: "/projects/nottinghamwall.png"
+            image: "https://github.com/user-attachments/assets/26226271-e5d5-41cd-86db-7693ec98581a"
         },
         {
             title: "Linux Do MCP Server",
@@ -287,8 +243,7 @@ export const DATA = {
             dates: "2025 - Present",
             description:
                 "Contributing to the React Chinese documentation project, helping translate official React documentation to make it accessible to Chinese developers. Contributed to pages including React Complier etc.",
-            image:
-                "/icons/react.png",
+            image: "https://cdn.simpleicons.org/react",
             links: [
                 {
                     title: "My Contributions",
@@ -299,11 +254,10 @@ export const DATA = {
         },
         {
             title: "Flutter",
-            dates: "2024 - Present", 
+            dates: "2024 - Present",
             description:
                 "Contributing to the Flutter Chinese community by translating Flutter documentation and guides. Helping Chinese developers better understand Flutter development concepts and best practices through high-quality translations.",
-            image:
-                "/projects/flutter.png",
+            image: "https://cdn.simpleicons.org/flutter",
             links: [
                 {
                     title: "My Contributions",
@@ -317,16 +271,115 @@ export const DATA = {
             dates: "2024 - Present",
             description:
                 "Contributing to MDN Web Docs Chinese translations, helping provide comprehensive web development resources in Chinese. Translating technical articles, API documentation, and tutorials to support the Chinese web development community.",
-            image:
-                "/logos/mdn.png",
+            image: "https://github.com/mdn.png",
             links: [
                 {
-                    title: "My Contributions", 
+                    title: "My Contributions",
                     icon: <Icons.github className="h-4 w-4" />,
                     href: "https://github.com/mdn/translated-content/commits/main/?author=Pleasurecruise",
                 },
             ],
         }
+    ],
+    contributions: [
+        {
+            title: "Cherry Studio",
+            dates: "Feb 2025 - Present",
+            description:
+                "Cross-platform desktop AI client supporting 300+ LLM providers. Contributions cover features, bug fixes, refactoring, dependency upgrades, and security patches.",
+            image: "https://github.com/CherryHQ.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/CherryHQ/cherry-studio/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "note-gen",
+            dates: "2025 - Present",
+            description:
+                "Cross-platform Markdown note-taking app with AI integration. Contributions include i18n improvements, title extraction, file handling, and export fixes.",
+            image: "https://raw.githubusercontent.com/codexu/note-gen/refs/heads/dev/public/app-icon.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/codexu/note-gen/commits/dev/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "Dify",
+            dates: "2025 - Present",
+            description:
+                "Production-ready LLM application development platform. Contributions include UI fixes, content-type handling improvements, and plugin task header styling.",
+            image: "https://github.com/langgenius.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/langgenius/dify/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "Docmost",
+            dates: "2025 - Present",
+            description:
+                "Open-source collaborative wiki and documentation platform. Contributions include combobox prop fixes and search-and-replace empty term handling.",
+            image: "https://github.com/docmost.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/docmost/docmost/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "Blinko",
+            dates: "2025 - Present",
+            description:
+                "Open-source note-taking app focused on quick capture and AI-powered organization.",
+            image: "https://github.com/blinkospace.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/blinkospace/blinko/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "LobeHub",
+            dates: "2025 - Present",
+            description:
+                "Open-source community ecosystem for AI-powered tools and extensions.",
+            image: "https://github.com/lobehub.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/lobehub/lobehub/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
+        {
+            title: "Zoot Plus Backend",
+            dates: "2025 - Present",
+            description:
+                "Backend service for the Arknights homework collection site.",
+            image: "https://github.com/ZOOT-Plus.png",
+            links: [
+                {
+                    title: "My Contributions",
+                    icon: <Icons.github className="h-4 w-4" />,
+                    href: "https://github.com/ZOOT-Plus/ZootPlusBackend/commits/main/?author=Pleasurecruise",
+                },
+            ],
+        },
     ],
     hackathons: [
         {

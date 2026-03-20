@@ -101,7 +101,7 @@ function buildTreeNodes(paths: string[]) {
   return sortTreeNodes(rootNodes);
 }
 
-async function markdownToHtml(markdown: string): Promise<string> {
+export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -187,7 +187,7 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
       title,
       content,
     };
-  } catch (error) {
+  } catch {
     // Silently return null during build when blog post is unavailable
     return null;
   }

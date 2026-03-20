@@ -27,18 +27,18 @@ export const TOP_COMMANDS: SelectorItem[] = [
 ];
 
 export const GO_DESTINATIONS: SelectorItem[] = [
-    { label: "about",   value: "/go about",   desc: "About page" },
+    { label: "home",    value: "/go home",    desc: "Home" },
     { label: "blog",    value: "/go blog",    desc: "Blog" },
     { label: "chat",    value: "/go chat",    desc: "AI chat" },
-    { label: "moment",  value: "/go moment",  desc: "Moments" },
+    { label: "story",   value: "/go story",   desc: "My personal story" },
     { label: "cv",      value: "/go cv",      desc: "CV / Resume" },
 ];
 
 const GO_ROUTES: Record<string, string> = {
-    about: "/about",
+    home: "/home",
     blog: "/blog",
     chat: "/chat",
-    moment: "/moment",
+    story: "/story",
     cv: "/cv",
 };
 
@@ -63,7 +63,7 @@ const HELP_TEXT = `Available slash commands:
   /links       - Friend links
   /am-i-ok     - What am I doing right now
   /dino        - Play Chrome Dino
-  /go <page>   - Navigate  (about | blog | chat | moment | cv)
+  /go <page>   - Navigate  (home | blog | chat | story | cv)
   /reload      - Reload the page`;
 
 export function resolveCommand(slug: string, rest: string): SlashCommandResult | null {
@@ -416,7 +416,7 @@ export function resolveCommand(slug: string, rest: string): SlashCommandResult |
                         `drwxr-xr-x  visitor  visitors   blog/`,
                         `drwxr-xr-x  visitor  visitors   chat/`,
                         `drwxr-xr-x  visitor  visitors   cv/`,
-                        `drwxr-xr-x  visitor  visitors   moment/`,
+                        `drwxr-xr-x  visitor  visitors   story/`,
                         `-rw-r--r--  visitor  visitors   package.json`,
                         `-rw-r--r--  visitor  visitors   README.md`,
                         `-rw-r--r--  visitor  visitors   tailwind.config.ts`,
@@ -426,7 +426,7 @@ export function resolveCommand(slug: string, rest: string): SlashCommandResult |
             }
             return {
                 kind: "text",
-                text: `about/  blog/  chat/  cv/  moment/  package.json  README.md  tailwind.config.ts  tsconfig.json`,
+                text: `blog/  chat/  cv/  home/  story/  package.json  README.md  tailwind.config.ts  tsconfig.json`,
             };
         }
 

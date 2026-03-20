@@ -32,11 +32,11 @@ export default function Error({
       
       <BlurFade delay={BLUR_FADE_DELAY * 2}>
         <div className="flex flex-col sm:flex-row gap-4">
-          <Button onClick={reset}>
+          <Button variant="outline" onClick={reset}>
             Refresh
           </Button>
           
-          <Button variant="outline" onClick={() => window.location.href = '/'}>
+          <Button variant="outline" onClick={() => window.location.href = '/home'}>
             Return Home
           </Button>
         </div>
