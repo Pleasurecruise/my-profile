@@ -6,9 +6,19 @@
 
 或许你能够通过下面的信息 来更好的了解我哦
 
-<a href="https://bonjour.bio/pleasure1234">
-  <img src="/profile/profile.png" alt="picture" width="420" />
-</a>
+<div style="display:inline-flex;flex-direction:column;align-items:center;gap:16px;padding:24px;border:1px solid #e5e7eb;border-radius:16px;max-width:420px;background:#fff;">
+  <img src="https://cdn.bonjour.bio/cloudstorage/47314939-4311-4d6e-ad52-6eca2df7b6c2" alt="Pleasure1234" style="width:96px;height:96px;border-radius:50%;object-fit:cover;" />
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
+    <div style="font-size:1.2rem;font-weight:700;">Pleasure1234</div>
+    <div style="font-size:0.85rem;color:#6b7280;">Core Developer @ CherryHQ · 前端小白, etc. · 中国 浙江省 宁波市 · 他</div>
+    <div style="font-size:0.9rem;color:#374151;text-align:left;line-height:1.8;">
+      🔭 诺丁汉大学计算机本科在读<br/>
+      😎 开源爱好者，给 Cherry Studio Dify LobeHub 等项目都贡献过代码，为校内计算机爱好者协会在 GitHub 创立了组织<br/>
+      👨‍💻 黑客松爱好者，在🇬🇧参加过多个大学黑客松<br/>
+      🌱 全栈 &amp; AI 开发，熟悉 React / Next / Vue，有算法与前端实习经历
+    </div>
+  </div>
+</div>
 
 ### 名字的由来
 

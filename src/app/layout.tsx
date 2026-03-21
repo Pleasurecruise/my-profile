@@ -26,10 +26,10 @@ export const metadata: Metadata = {
     },
     description: DATA.description,
     openGraph: {
-        title: `${DATA.name}`,
+        title: "Pleasure1234 的小站",
         description: DATA.description,
         url: DATA.url,
-        siteName: `${DATA.name}`,
+        siteName: "Pleasure1234 的小站",
         locale: "en_US",
         type: "website",
     },
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
         },
     },
     twitter: {
-        title: `${DATA.name}`,
+        title: "Pleasure1234 的小站",
         description: DATA.description,
         card: "summary_large_image",
         creator: "@Pleasure9876",
