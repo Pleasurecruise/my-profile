@@ -1,11 +1,11 @@
 import { ImageResponse } from 'next/og'
 import { DATA } from '@/data/resume'
+import { NextRequest } from 'next/server'
 
-export const alt = 'Pleasure1234'
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url)
+  const title = searchParams.get('title') ?? 'Pleasure1234'
 
-export default async function Image() {
   return new ImageResponse(
     (
       <div
@@ -21,6 +21,7 @@ export default async function Image() {
           overflow: 'hidden',
         }}
       >
+        {/* Blobs via SVG feGaussianBlur */}
         <svg
           style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px' }}
           width="1200"
@@ -38,6 +39,7 @@ export default async function Image() {
           <circle cx="1200" cy="630" r="350" fill="#f59e0b" opacity="0.6" filter="url(#blur2)" />
         </svg>
 
+        {/* Accent line */}
         <div style={{
           position: 'absolute',
           top: 80,
@@ -47,7 +49,15 @@ export default async function Image() {
           background: 'linear-gradient(to right, #6366f1cc, transparent)',
         }} />
 
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 56 }}>
+        {/* Main content: logo + text */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 56,
+        }}>
+          {/* Logo */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`${DATA.url}/profile/me.png`}
             alt="Pleasure1234"
@@ -60,16 +70,17 @@ export default async function Image() {
             }}
           />
 
+          {/* Text */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{
               display: 'flex',
-              fontSize: 80,
+              fontSize: title.length > 20 ? 56 : 80,
               fontWeight: 700,
               color: '#ffffff',
               lineHeight: 1.15,
               marginBottom: 24,
             }}>
-              Pleasure1234
+              {title}
             </div>
 
             <div style={{
@@ -83,6 +94,6 @@ export default async function Image() {
         </div>
       </div>
     ),
-    { ...size }
+    { width: 1200, height: 630 }
   )
 }

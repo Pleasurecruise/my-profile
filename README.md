@@ -8,11 +8,15 @@ Next.js 16 · React 19 · TypeScript · TailwindCSS v4 · tRPC · Prisma · Post
 
 ## Features
 
+- **Home** — landing page with Vanta animated cloud background
 - **Blog** — MDX with syntax highlighting and math rendering
 - **Chat** — AI assistant powered by OpenAI
 - **Moments** — personal feed with Mapbox globe
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **Am I OK** — real-time activity status pushed from macOS
+- **CV** — resume page with work, projects, and hackathons
+- **Story** — personal story page with interactive map
+- **llms.txt** — LLM-friendly site summary at `/llms.txt`
 
 ## Getting Started
 
@@ -27,13 +31,14 @@ pnpm dev
 
 See `.env.example` for all required variables. Key ones:
 
-| Variable | Purpose |
-|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `BETTER_AUTH_SECRET` | Auth secret key |
-| `OPENAI_API_KEY` | AI chat |
-| `NEXT_PUBLIC_MAPBOX_TOKEN` | Globe visualization |
-| `AM_I_OK_SECRET` | Status push API token |
+| Variable | Purpose                            |
+|----------|------------------------------------|
+| `DATABASE_URL` | PostgreSQL connection string       |
+| `BETTER_AUTH_SECRET` | Auth secret key                    |
+| `OPENAI_API_KEY` | AI chat                            |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Globe visualization                |
+| `AM_I_OK_SECRET` | Status push API token              |
+| `ALI_OSS_*` | Alibaba Cloud OSS for blog uploads |
 
 ## Commands
 

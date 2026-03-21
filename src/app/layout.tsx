@@ -7,7 +7,7 @@ import {TRPCReactProvider} from "@/trpc/react";
 import {DATA} from "@/data/resume";
 import {cn} from "@/lib/utils";
 import type {Metadata} from "next";
-import {Inter as FontSans} from "next/font/google";
+import {JetBrains_Mono as FontSans} from "next/font/google";
 import { VantaClouds2Client } from "@/components/vanta-clouds2-client";
 import Script from "next/script";
 import "@/styles/globals.css";
@@ -82,7 +82,7 @@ export default function RootLayout({
                 <TooltipProvider delayDuration={0}>
                     <VantaClouds2Client />
                     <ScrollProgress />
-                    <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-24">
+                    <div className="mx-auto w-full max-w-2xl px-6 pt-12 pb-24 sm:py-24">
                         {children}
                         <NavbarWrapper/>
                         <Toaster/>

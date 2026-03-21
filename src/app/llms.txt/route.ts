@@ -32,11 +32,9 @@ React, TypeScript, Next.js, Node.js, Java, Python, Go, PostgreSQL, MongoDB, MySQ
 
 ## Notable Projects
 
-- Cherry Studio — Cross-platform desktop AI client supporting 300+ LLM providers (Electron, React, TypeScript)
+- Cherry Studio — Cross-platform desktop AI client supporting multiple LLM providers (Electron, React, TypeScript)
 - Cherry Studio App — Official mobile version of Cherry Studio (React Native, Expo, TypeScript)
-- NoteGen — Cross-platform Markdown note-taking app with AI integration (Tauri, React, TypeScript)
-- Zoot Plus Backend — Backend for Arknights homework collection site (Kotlin, Spring Boot, MongoDB)
-- NottinghamWall — Campus WeChat mini-program for University of Nottingham students (Vue3, SpringBoot)
+- NottinghamWall — Campus WeChat mini-program for University of Nottingham Ningbo students (Vue3, UniApp, SpringBoot)
 - Linux Do MCP Server — MCP server for Linux DO community forum API (TypeScript, Python)
 
 ## Open Source Contributions (100+ merged PRs across 12 projects)
@@ -61,6 +59,12 @@ React, TypeScript, Next.js, Node.js, Java, Python, Go, PostgreSQL, MongoDB, MySQ
 - X (Twitter): https://x.com/Pleasure9876
 - LinkedIn: https://www.linkedin.com/in/pleasure1234
 
+## Hackathons
+
+- LeedsHack 2026 — University of Leeds
+- HackSheffield 10 — University of Sheffield
+- HackNotts 25 — University of Nottingham
+
 ## Pages
 
 - Home: https://yiming1234.cn/home
@@ -68,6 +72,8 @@ React, TypeScript, Next.js, Node.js, Java, Python, Go, PostgreSQL, MongoDB, MySQ
 - Story: https://yiming1234.cn/story
 - CV: https://yiming1234.cn/cv
 - Chat: https://yiming1234.cn/chat
+- Moments: https://yiming1234.cn/moment
+- Am I OK: https://yiming1234.cn/am-i-ok
 `;
 
     return new Response(content, {

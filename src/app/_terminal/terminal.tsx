@@ -281,7 +281,7 @@ export function Terminal() {
 
     return (
         <main
-            className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-8 sm:-mb-20"
+            className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-20"
             onClick={() => inputRef.current?.focus()}
         >
             <div className="flex flex-col flex-1 w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 min-h-0">
@@ -376,7 +376,17 @@ export function Terminal() {
                         )}
                         <form ref={formRef} onSubmit={sudoState ? handleSudoSubmit : handleSubmit} className="flex gap-2 items-center px-4 py-2.5">
                             <span className={`${sudoState ? "text-yellow-300" : "text-green-400"} shrink-0`}>
-                                {sudoState ? "[sudo] password for visitor:" : PROMPT}
+                                {sudoState ? (
+                                    <>
+                                        <span className="hidden sm:inline">[sudo] password for visitor:</span>
+                                        <span className="sm:hidden">[sudo] passwd:</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="hidden sm:inline">{PROMPT}</span>
+                                        <span className="sm:hidden">~$</span>
+                                    </>
+                                )}
                             </span>
                             <input
                                 ref={inputRef}

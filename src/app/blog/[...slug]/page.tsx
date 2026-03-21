@@ -41,14 +41,14 @@ export async function generateMetadata({
       description: `Read "${post.title}" on ${DATA.name}'s blog`,
       type: "article",
       url: `${DATA.url}/blog/${post.slug}`,
-      images: ["https://avatars.githubusercontent.com/u/144885467"],
+      images: [`${DATA.url}/og?title=${encodeURIComponent(post.title)}&tag=Blog`],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: `Read "${post.title}" on ${DATA.name}'s blog`,
       creator: "@Pleasure9876",
-      images: ["https://avatars.githubusercontent.com/u/144885467"],
+      images: [`${DATA.url}/og?title=${encodeURIComponent(post.title)}&tag=Blog`],
     },
   };
 }

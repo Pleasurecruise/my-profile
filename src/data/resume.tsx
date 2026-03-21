@@ -1,5 +1,5 @@
 import {Icons} from "@/components/icons";
-import {HomeIcon, NotebookIcon, BotMessageSquareIcon, FeatherIcon} from "lucide-react";
+import {SproutIcon, HourglassIcon, BotMessageSquareIcon, FeatherIcon} from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
 import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
@@ -40,8 +40,8 @@ export const DATA = {
         { name: "MySQL", icon: MySQL },
     ],
     navbar: [
-        {href: "/home", icon: HomeIcon, label: "Home"},
-        {href: "/blog", icon: NotebookIcon, label: "Blog"},
+        {href: "/home", icon: SproutIcon, label: "Home"},
+        {href: "/blog", icon: HourglassIcon, label: "Blog"},
         {href: "/story", icon: FeatherIcon, label: "Story"},
         {href: "/chat", icon: BotMessageSquareIcon, label: "Chat"}
     ],
