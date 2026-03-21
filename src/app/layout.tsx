@@ -8,6 +8,8 @@ import {DATA} from "@/data/resume";
 import {cn} from "@/lib/utils";
 import type {Metadata} from "next";
 import {Inter as FontSans} from "next/font/google";
+import { VantaClouds2Client } from "@/components/vanta-clouds2-client";
+import Script from "next/script";
 import "@/styles/globals.css";
 import "react-chrome-dino-ts/index.css";
 
@@ -66,15 +68,19 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+        <head>
+            <Script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js" strategy="beforeInteractive" />
+        </head>
         <body
             className={cn(
-                "min-h-screen bg-background font-sans antialiased",
+                "min-h-screen font-sans antialiased",
                 fontSans.variable
             )}
         >
         <TRPCReactProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                 <TooltipProvider delayDuration={0}>
+                    <VantaClouds2Client />
                     <ScrollProgress />
                     <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-24">
                         {children}
