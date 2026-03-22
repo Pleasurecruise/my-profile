@@ -284,10 +284,20 @@ export function Terminal() {
             className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-20"
             onClick={() => inputRef.current?.focus()}
         >
-            <div className="flex flex-col flex-1 w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 min-h-0">
-                <div className="flex flex-col flex-1 bg-zinc-900 rounded-lg border border-zinc-700 shadow-2xl overflow-hidden min-h-0">
+<div className="flex flex-col flex-1 w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 min-h-0">
+                <div className="relative flex flex-col flex-1 min-h-0">
+<div className="relative flex flex-col flex-1
+                        bg-white/[0.08] dark:bg-black/[0.25]
+                        rounded-lg border border-white/20 dark:border-white/10
+                        [box-shadow:0_8px_40px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)_inset]
+                        dark:[box-shadow:0_8px_40px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.06)_inset]
+                        overflow-hidden min-h-0"
+                    >
                     {/* Title bar */}
-                    <div className="flex items-center gap-2 px-4 py-2.5 bg-zinc-800 border-b border-zinc-700 shrink-0">
+                    <div className="relative flex items-center gap-2 px-4 py-2.5 border-b border-white/10 shrink-0">
+                        {/* Title bar specular highlight */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+                        <div className="absolute top-px left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none" />
                         <span className="w-3 h-3 rounded-full bg-red-500" />
                         <span className="w-3 h-3 rounded-full bg-yellow-500" />
                         <span className="w-3 h-3 rounded-full bg-green-500" />
@@ -303,7 +313,7 @@ export function Terminal() {
                             if (line.type === "motd") return (
                                 <div key={i}>
                                     <MOTD />
-                                    {lines.length > 1 && <div className="border-t border-zinc-700 my-3" />}
+                                    {lines.length > 1 && <div className="border-t border-white/10 my-3" />}
                                 </div>
                             );
                             if (line.type === "input") return (
@@ -350,7 +360,7 @@ export function Terminal() {
                     </div>
 
                     {/* Fixed bottom: selector + input */}
-                    <div className="shrink-0 border-t border-zinc-700 font-mono text-sm" onClick={() => inputRef.current?.focus()}>
+                    <div className="shrink-0 border-t border-white/10 font-mono text-sm" onClick={() => inputRef.current?.focus()}>
                         {!sudoState && selectorItems.length > 0 && (
                             <div className="px-4 pt-2 pb-1">
                                 {selectorItems.map((item, i) => (
@@ -402,6 +412,7 @@ export function Terminal() {
                                 autoCapitalize="off"
                             />
                         </form>
+                    </div>
                     </div>
                 </div>
             </div>
