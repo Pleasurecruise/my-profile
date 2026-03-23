@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { DATA } from "@/data/resume";
@@ -55,8 +54,8 @@ export default function HackathonsSection() {
                 )}
                 {hackathon.links && hackathon.links.length > 0 && (
                   <div className="mt-1 flex flex-row flex-wrap items-start gap-2">
-                    {hackathon.links.map((link, idx) => (
-                      <Link href={link.href} key={idx} target="_blank" rel="noopener noreferrer">
+                    {hackathon.links.map((link) => (
+                      <Link href={link.href} key={link.href} target="_blank" rel="noopener noreferrer">
                         <Badge className="flex items-center gap-1.5 text-xs bg-primary text-primary-foreground">
                           {link.icon}
                           {link.title}

@@ -92,7 +92,6 @@ export default function Page() {
                                 >
                                     <div className="flex items-center gap-x-3 flex-1 min-w-0">
                                         {education.logoUrl ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 src={education.logoUrl}
                                                 alt={education.school}
@@ -166,7 +165,6 @@ export default function Page() {
                                 >
                                     <div className="flex items-center gap-x-3 flex-1 min-w-0">
                                         {contribution.image ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
                                             <img
                                                 src={contribution.image}
                                                 alt={contribution.title}

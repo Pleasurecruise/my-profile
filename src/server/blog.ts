@@ -82,7 +82,10 @@ function buildTreeNodes(paths: string[]) {
         folderMap.set(currentPath, folderNode);
         currentChildren.push(folderNode);
       }
-      currentChildren = folderNode.children ?? (folderNode.children = []);
+      if (!folderNode.children) {
+        folderNode.children = [];
+      }
+      currentChildren = folderNode.children;
     }
 
     const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;

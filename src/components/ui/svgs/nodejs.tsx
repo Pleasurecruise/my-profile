@@ -2,6 +2,7 @@ import type { SVGProps } from "react";
 
 const Nodejs = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} viewBox="0 0 256 292" xmlnsXlink="http://www.w3.org/1999/xlink">
+    <title>Node.js</title>
     <defs>
       <linearGradient id="nodejs-a" x1="68.188%" x2="27.823%" y1="17.487%" y2="89.755%">
         <stop offset="0%" stopColor="#41873F" />

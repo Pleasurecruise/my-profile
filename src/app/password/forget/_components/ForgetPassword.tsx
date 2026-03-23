@@ -41,8 +41,7 @@ export default function ForgetPassword() {
     };
 
     return (
-        <>
-            <BlurFade delay={BLUR_FADE_DELAY}>
+        <BlurFade delay={BLUR_FADE_DELAY}>
                 <Card className="max-w-md w-full h-fit mx-auto my-auto">
                     <CardHeader>
                         <CardTitle className="text-lg md:text-xl">Forget Password</CardTitle>
@@ -86,6 +85,5 @@ export default function ForgetPassword() {
                     </CardContent>
                 </Card>
             </BlurFade>
-        </>
     );
 }

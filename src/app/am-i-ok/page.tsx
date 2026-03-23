@@ -162,15 +162,14 @@ export default function AmIOkPage() {
             </div>
 
             <div className="flex items-center gap-4">
-              {apps.map((appName, i) => {
+              {apps.map((appName, appIndex) => {
                 const icon = getAppIcon(appName);
                 return (
-                  <div key={i} className="flex items-center gap-3">
-                    {i > 0 && (
+                  <div key={appName} className="flex items-center gap-3">
+                    {appIndex > 0 && (
                       <div className="h-8 w-px bg-border" />
                     )}
                     {icon ? (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={icon.url}
                         alt={appName}
@@ -184,7 +183,7 @@ export default function AmIOkPage() {
                     )}
                     <div>
                       <p className="text-xs text-muted-foreground">
-                        {i === 0 ? "Currently using" : "Also open"}
+                        {appIndex === 0 ? "Currently using" : "Also open"}
                       </p>
                       <p className="text-lg font-semibold leading-tight">{appName}</p>
                     </div>

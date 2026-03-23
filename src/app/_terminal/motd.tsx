@@ -41,11 +41,16 @@ function McArt() {
         });
     }, []);
 
+    const lineCounts = new Map<string, number>();
+
     return (
         <div className="my-2 leading-none text-base select-none ml-8">
-            {lines.map((row, i) => (
-                <div key={i}>{row}</div>
-            ))}
+            {lines.map((row) => {
+                const nextCount = (lineCounts.get(row) ?? 0) + 1;
+                lineCounts.set(row, nextCount);
+
+                return <div key={`${row}:${nextCount}`}>{row}</div>;
+            })}
         </div>
     );
 }

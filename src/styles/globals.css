@@ -116,10 +116,6 @@
     }
 }
 
-h3 code {
-    @apply !text-lg md:!text-xl;
-}
-
 pre {
     @apply !px-0 rounded-lg overflow-x-auto py-4;
     -ms-overflow-style: none;
@@ -136,6 +132,10 @@ pre [data-line] {
 
 code {
     @apply text-sm md:text-base !leading-loose;
+}
+
+h3 code {
+    @apply !text-lg md:!text-xl;
 }
 
 pre > code {
@@ -158,12 +158,6 @@ code[data-line-numbers] {
     counter-reset: line;
 }
 
-code[data-line-numbers] > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    @apply inline-block w-4 mr-4 text-right text-gray-500;
-}
-
 code > [data-line]::before {
     counter-increment: line;
     content: counter(line);
@@ -172,6 +166,12 @@ code > [data-line]::before {
     margin-right: 2rem;
     text-align: right;
     color: gray;
+}
+
+code[data-line-numbers] > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply inline-block w-4 mr-4 text-right text-gray-500;
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {

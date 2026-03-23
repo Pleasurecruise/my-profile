@@ -12,7 +12,9 @@ const PROMPT = `${HOSTNAME}:~$`;
 
 export function Terminal() {
     const router = useRouter();
-    const [lines, setLines] = useState<Line[]>([{ type: "motd" }]);
+    const idRef = useRef(0);
+    const nextId = () => ++idRef.current;
+    const [lines, setLines] = useState<Line[]>([{ id: nextId(), type: "motd" }]);
     const [input, setInput] = useState("");
     const [history, setHistory] = useState<string[]>([]);
     const [historyIdx, setHistoryIdx] = useState(-1);
@@ -88,50 +90,50 @@ export function Terminal() {
                 if (!hasSlash) {
                     setLines((prev) => [
                         ...prev,
-                        { type: "input", text: cmd },
-                        { type: "error", text: `Commands start with /  —  try /help to see what's available.` },
+                        { id: nextId(), type: "input", text: cmd },
+                        { id: nextId(), type: "error", text: `Commands start with /  —  try /help to see what's available.` },
                     ]);
                 } else {
                     setLines((prev) => [
                         ...prev,
-                        { type: "input", text: cmd },
-                        { type: "error", text: `/${slug}: command not found. Type /help for available commands.` },
+                        { id: nextId(), type: "input", text: cmd },
+                        { id: nextId(), type: "error", text: `/${slug}: command not found. Type /help for available commands.` },
                     ]);
                 }
                 return;
             }
 
             if (result.kind === "fetch") {
-                setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "output", text: "fetching..." }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }, { id: nextId(), type: "output", text: "fetching..." }]);
                 const { url, format } = result;
                 fetch(url)
                     .then((r) => r.json())
                     .then((data: unknown) => {
                         setLines((prev) => [
                             ...prev.slice(0, -1),
-                            { type: "output", text: format(data) },
+                            { id: nextId(), type: "output", text: format(data) },
                         ]);
                     })
                     .catch(() => {
                         setLines((prev) => [
                             ...prev.slice(0, -1),
-                            { type: "error", text: "fetch failed." },
+                            { id: nextId(), type: "error", text: "fetch failed." },
                         ]);
                     });
                 return;
             }
 
             if (result.kind === "sudo") {
-                setLines((prev) => [...prev, { type: "input", text: cmd }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }]);
                 setSudoState({ command: result.command, attempts: 0 });
                 return;
             }
 
             if (result.kind === "stream") {
-                setLines((prev) => [...prev, { type: "input", text: cmd }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }]);
                 result.items.forEach(({ text, delay }) => {
                     const id = setTimeout(() => {
-                        setLines((prev) => [...prev, { type: "output", text }]);
+                        setLines((prev) => [...prev, { id: nextId(), type: "output", text }]);
                         streamTimersRef.current = streamTimersRef.current.filter((t) => t !== id);
                     }, delay);
                     streamTimersRef.current.push(id);
@@ -141,30 +143,30 @@ export function Terminal() {
                 setLines([]);
             } else if (result.kind === "navigate") {
                 if (result.path === "__reload__") {
-                    setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "output", text: "Reloading..." }]);
+                    setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }, { id: nextId(), type: "output", text: "Reloading..." }]);
                     setTimeout(() => window.location.reload(), 800);
                     return;
                 }
                 setLines((prev) => [
                     ...prev,
-                    { type: "output", text: `redirecting to ${result.path} ...` },
+                    { id: nextId(), type: "output", text: `redirecting to ${result.path} ...` },
                 ]);
                 router.push(result.path);
             } else if (result.kind === "text") {
-                setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "output", text: result.text }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }, { id: nextId(), type: "output", text: result.text }]);
             } else if (result.kind === "links") {
-                setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "links", items: result.items }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }, { id: nextId(), type: "links", items: result.items }]);
             } else if (result.kind === "dino") {
                 if (hasActiveDino) {
                     setLines((prev) => [
                         ...prev,
-                        { type: "input", text: cmd },
-                        { type: "output", text: "Dino is already running. Use the Exit button in the game panel, or /clear to reset the terminal." },
+                        { id: nextId(), type: "input", text: cmd },
+                        { id: nextId(), type: "output", text: "Dino is already running. Use the Exit button in the game panel, or /clear to reset the terminal." },
                     ]);
                     return;
                 }
 
-                setLines((prev) => [...prev, { type: "input", text: cmd }, { type: "dino", session: Date.now() }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "input", text: cmd }, { id: nextId(), type: "dino", session: Date.now() }]);
                 requestAnimationFrame(() => {
                     inputRef.current?.blur();
                 });
@@ -180,13 +182,13 @@ export function Terminal() {
             setInput("");
             const newAttempts = sudoState.attempts + 1;
             if (newAttempts < 3) {
-                setLines((prev) => [...prev, { type: "output", text: "Sorry, try again." }]);
+                setLines((prev) => [...prev, { id: nextId(), type: "output", text: "Sorry, try again." }]);
                 setSudoState({ ...sudoState, attempts: newAttempts });
             } else {
                 setLines((prev) => [
                     ...prev,
-                    { type: "output", text: "Sorry, try again." },
-                    { type: "error", text: "sudo: 3 incorrect password attempts\nThis incident will be reported." },
+                    { id: nextId(), type: "output", text: "Sorry, try again." },
+                    { id: nextId(), type: "error", text: "sudo: 3 incorrect password attempts\nThis incident will be reported." },
                 ]);
                 setSudoState(null);
             }
@@ -280,10 +282,7 @@ export function Terminal() {
     };
 
     return (
-        <main
-            className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-20"
-            onClick={() => inputRef.current?.focus()}
-        >
+        <main className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-20">
 <div className="flex flex-col flex-1 w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 min-h-0">
                 <div className="relative flex flex-col flex-1 min-h-0">
 <div className="relative flex flex-col flex-1
@@ -309,24 +308,24 @@ export function Terminal() {
                         className="p-4 flex-1 overflow-y-auto font-mono text-sm text-zinc-100 cursor-text min-h-0"
                         style={{ scrollbarWidth: "thin", scrollbarColor: "#52525b transparent" }}
                     >
-                        {lines.map((line, i) => {
+                        {lines.map((line) => {
                             if (line.type === "motd") return (
-                                <div key={i}>
+                                <div key={line.id}>
                                     <MOTD />
                                     {lines.length > 1 && <div className="border-t border-white/10 my-3" />}
                                 </div>
                             );
                             if (line.type === "input") return (
-                                <div key={i} className="flex gap-2 mt-2 first:mt-0">
+                                <div key={line.id} className="flex gap-2 mt-2 first:mt-0">
                                     <span className="text-green-400 shrink-0">{PROMPT}</span>
                                     <span className="text-white">{line.text}</span>
                                 </div>
                             );
                             if (line.type === "output") return (
-                                <div key={i} className="whitespace-pre-wrap text-zinc-300 leading-5">{line.text}</div>
+                                <div key={line.id} className="whitespace-pre-wrap text-zinc-300 leading-5">{line.text}</div>
                             );
                             if (line.type === "links") return (
-                                <div key={i}>
+                                <div key={line.id}>
                                     {line.items.map((item) => (
                                         <div key={item.label} className="flex gap-2 text-zinc-300 leading-5">
                                             <span className="text-zinc-500 shrink-0">{item.label}</span>
@@ -353,22 +352,24 @@ export function Terminal() {
                                 <DinoGame key={line.session} onExit={() => closeDino(line.session)} />
                             );
                             if (line.type === "error") return (
-                                <p key={i} className="text-red-400 whitespace-pre-wrap leading-5">{line.text}</p>
+                                <p key={line.id} className="text-red-400 whitespace-pre-wrap leading-5">{line.text}</p>
                             );
+                            return null;
                         })}
                         <div ref={bottomRef} />
                     </div>
 
                     {/* Fixed bottom: selector + input */}
-                    <div className="shrink-0 border-t border-white/10 font-mono text-sm" onClick={() => inputRef.current?.focus()}>
+                    <div className="shrink-0 border-t border-white/10 font-mono text-sm">
                         {!sudoState && selectorItems.length > 0 && (
                             <div className="px-4 pt-2 pb-1">
                                 {selectorItems.map((item, i) => (
-                                    <div
+                                    <button
+                                        type="button"
                                         key={item.value}
                                         className="flex items-center gap-2 text-xs cursor-pointer select-none leading-5"
                                         onMouseEnter={() => setSelectorIdx(i)}
-                                        onClick={(e) => { e.stopPropagation(); selectItem(item); }}
+                                        onClick={() => selectItem(item)}
                                     >
                                         <span className="w-3 shrink-0 text-yellow-400">
                                             {i === selectorIdx ? "❯" : ""}
@@ -377,7 +378,7 @@ export function Terminal() {
                                             {item.label}
                                         </span>
                                         <span className="text-zinc-600 truncate">{item.desc}</span>
-                                    </div>
+                                    </button>
                                 ))}
                                 <div className="mt-0.5 ml-5 text-zinc-700 text-xs flex gap-3">
                                     <span>↑↓</span><span>↵ confirm</span><span>esc</span>
@@ -400,7 +401,6 @@ export function Terminal() {
                             </span>
                             <input
                                 ref={inputRef}
-                                autoFocus
                                 type={sudoState ? "password" : "text"}
                                 className="flex-1 bg-transparent outline-none border-0 text-white caret-green-400"
                                 value={input}

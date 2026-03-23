@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
@@ -79,10 +78,10 @@ export function ProjectCard({
         </Link>
         {links && links.length > 0 && (
           <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-            {links.map((link, idx) => (
+            {links.map((link) => (
               <Link
                 href={link.href}
-                key={idx}
+                key={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}

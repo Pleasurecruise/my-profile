@@ -590,7 +590,7 @@ export function resolveCommand(slug: string, rest: string): SlashCommandResult |
         case "yes":
             return {
                 kind: "text",
-                text: Array(16).fill("y").join("\n") + "\n... (^C to stop — just kidding, use /clear)",
+                text: `${Array(16).fill("y").join("\n")}\n... (^C to stop — just kidding, use /clear)`,
             };
 
         default:

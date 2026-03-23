@@ -13,9 +13,9 @@ export type SlashCommandResult =
     | { kind: "fetch"; url: string; format: (data: unknown) => string };
 
 export type Line =
-    | { type: "motd" }
-    | { type: "input"; text: string }
-    | { type: "output"; text: string }
-    | { type: "links"; items: { label: string; url: string }[] }
-    | { type: "dino"; session: number }
-    | { type: "error"; text: string };
+    | { id: number; type: "motd" }
+    | { id: number; type: "input"; text: string }
+    | { id: number; type: "output"; text: string }
+    | { id: number; type: "links"; items: { label: string; url: string }[] }
+    | { id: number; type: "dino"; session: number }
+    | { id: number; type: "error"; text: string };

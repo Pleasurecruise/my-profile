@@ -2,6 +2,7 @@ import type { SVGProps } from "react";
 
 const NextjsIconDark = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} viewBox="0 0 180 180">
+    <title>Next.js</title>
     <mask height="180" id=":r8:mask0_408_134" maskUnits="userSpaceOnUse" width="180" x="0" y="0" style={{ maskType: "alpha" }}>
       <circle cx="90" cy="90" fill="black" r="90" />
     </mask>

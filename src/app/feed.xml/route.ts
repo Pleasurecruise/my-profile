@@ -35,7 +35,7 @@ export async function GET() {
   const rssItems = validPosts
     .map((post) => {
       const link = `${siteUrl}/blog/${encodeURIComponent(post.slug)}`;
-      const description = stripHtml(post.content).slice(0, 200) + "...";
+      const description = `${stripHtml(post.content).slice(0, 200)}...`;
 
       return `    <item>
       <title>${escapeXml(post.title)}</title>

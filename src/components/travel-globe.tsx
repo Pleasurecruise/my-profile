@@ -1,6 +1,6 @@
 "use client";
 
-import mapboxgl, {type Map} from "mapbox-gl";
+import mapboxgl, {type Map as MapboxMap} from "mapbox-gl";
 import {useEffect, useRef} from "react";
 import {useTheme} from "next-themes";
 import {cn} from "@/lib/utils";
@@ -22,7 +22,7 @@ const RESUME_DELAY_MS = 4000;
 export function TravelGlobe({locations, className}: TravelGlobeProps) {
     const {resolvedTheme} = useTheme();
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const mapRef = useRef<Map | null>(null);
+    const mapRef = useRef<MapboxMap | null>(null);
     const markersRef = useRef<mapboxgl.Marker[]>([]);
     const animationIdRef = useRef<number | null>(null);
     const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,12 +96,11 @@ export function TravelGlobe({locations, className}: TravelGlobeProps) {
             if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
             if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
             window.removeEventListener("resize", handleResize);
-            markersRef.current.forEach((marker) => marker.remove());
+            markersRef.current.forEach((marker) => { marker.remove(); });
             markersRef.current = [];
             map.remove();
             mapRef.current = null;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -121,13 +120,15 @@ export function TravelGlobe({locations, className}: TravelGlobeProps) {
         return () => {
             map.off("style.load", handleStyleLoad);
         };
-    }, [mapStyle, resolvedTheme]);
+    }, [mapStyle]);
 
     useEffect(() => {
         const map = mapRef.current;
         if (!map) return;
 
-        markersRef.current.forEach((marker) => marker.remove());
+        markersRef.current.forEach((marker) => {
+            marker.remove();
+        });
         markersRef.current = [];
 
         locations.forEach((loc) => {

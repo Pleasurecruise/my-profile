@@ -22,6 +22,7 @@ export default async function Image() {
         }}
       >
         <svg
+          aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px' }}
           width="1200"
           height="630"

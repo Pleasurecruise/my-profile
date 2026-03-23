@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import parse, { HTMLReactParserOptions, Element, DOMNode, domToReact } from "html-react-parser";
+import parse, { type HTMLReactParserOptions, type Element, type DOMNode, domToReact } from "html-react-parser";
 import { Terminal, AnimatedSpan } from "@/components/magicui/terminal";
 
 interface BlogContentProps {
@@ -11,14 +11,20 @@ interface BlogContentProps {
 
 function CodeBlockWrapper({ code }: { code: string }) {
   const lines = code.split("\n");
+  const lineCounts = new Map<string, number>();
 
   return (
       <Terminal sequence={false}>
-        {lines.map((line, index) => (
-          <AnimatedSpan key={index}>
-            {line || "\u00A0"}
-          </AnimatedSpan>
-        ))}
+        {lines.map((line) => {
+          const nextCount = (lineCounts.get(line) ?? 0) + 1;
+          lineCounts.set(line, nextCount);
+
+          return (
+            <AnimatedSpan key={`${line}:${nextCount}`}>
+              {line || "\u00A0"}
+            </AnimatedSpan>
+          );
+        })}
       </Terminal>
   );
 }

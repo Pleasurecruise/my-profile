@@ -2,6 +2,7 @@ import type { SVGProps } from "react";
 
 const Golang = (props: SVGProps<SVGSVGElement>) => (
   <svg {...props} viewBox="0 0 207 78">
+    <title>Go</title>
     <g fill="currentColor" fillRule="evenodd">
       <path d="m16.2 24.1c-.4 0-.5-.2-.3-.5l2.1-2.7c.2-.3.7-.5 1.1-.5h35.7c.4 0 .5.3.3.6l-1.7 2.6c-.2.3-.7.6-1 .6z" />
       <path d="m1.1 33.3c-.4 0-.5-.2-.3-.5l2.1-2.7c.2-.3.7-.5 1.1-.5h45.6c.4 0 .6.3.5.6l-.8 2.4c-.1.4-.5.6-.9.6z" />

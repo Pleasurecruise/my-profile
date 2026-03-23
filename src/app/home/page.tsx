@@ -119,7 +119,6 @@ export default function Page() {
                             </p>
                             {GALLERY_ITEMS.map((item) => (
                                 <DraggableCardBody key={item.title} className={item.className} style={{ rotate: item.rotate }}>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={item.image}
                                         alt={item.title}

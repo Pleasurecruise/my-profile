@@ -35,7 +35,6 @@ export function VantaClouds2() {
         return () => {
             if (vantaEffect) vantaEffect.destroy();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [vantaEffect]);
 
     useEffect(() => {

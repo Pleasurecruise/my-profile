@@ -30,10 +30,7 @@ export function DinoGame({ onExit }: DinoGameProps) {
     }, [exiting, onExit]);
 
     return (
-        <section
-            className="mb-4 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950/80"
-            onClick={(e) => e.stopPropagation()}
-        >
+        <section className="mb-4 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950/80">
             <div className="flex flex-col gap-3 border-b border-zinc-700 bg-zinc-900/80 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">arcade mode</p>

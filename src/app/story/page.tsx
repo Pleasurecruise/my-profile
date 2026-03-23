@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { join } from "path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import BlurFade from "@/components/magicui/blur-fade";
 import { BlogContent } from "@/components/blog-content";
 import { markdownToHtml } from "@/server/blog";
@@ -14,7 +14,7 @@ const BLUR_FADE_DELAY = 0.04;
 const MAP_SPLIT_MARKER = "### 选择这个方向的原因";
 
 export default async function StoryPage() {
-    const filePath = join(process.cwd(), "src/data/story.md");
+    const filePath = join(process.cwd(), "content/story.md");
     const markdown = readFileSync(filePath, "utf-8");
 
     const splitIndex = markdown.indexOf(MAP_SPLIT_MARKER);

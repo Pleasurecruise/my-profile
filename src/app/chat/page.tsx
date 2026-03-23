@@ -193,7 +193,6 @@ export default function ChatPage() {
         if (streamingMessage) {
             void resumeStreamingMessage(streamingMessage)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messages, isLoading])
 
     return (
@@ -217,6 +216,7 @@ export default function ChatPage() {
                                 </Avatar>
                                 <div className="absolute top-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                     <button
+                                        type="button"
                                         onClick={signOut}
                                         className="h-8 w-8 bg-destructive text-destructive-foreground rounded-full flex items-center justify-center shadow-lg transition-colors hover:bg-destructive/90"
                                         title="Sign out"
@@ -227,6 +227,7 @@ export default function ChatPage() {
                             </div>
                         ) : (
                             <button
+                                type="button"
                                 onClick={() => router.push('/login')}
                                 className="h-8 w-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center transition-colors shadow-sm hover:bg-primary/90"
                                 title="Sign in"

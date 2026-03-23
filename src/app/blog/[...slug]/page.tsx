@@ -71,22 +71,18 @@ export default async function Blog({
 
   return (
     <section id="blog">
-      <script
-        type="application/ld+json"
-        suppressHydrationWarning
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            url: `${DATA.url}/blog/${post.slug}`,
-            author: {
-              "@type": "Person",
-              name: DATA.name,
-            },
-          }),
-        }}
-      />
+      <script type="application/ld+json" suppressHydrationWarning>
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          url: `${DATA.url}/blog/${post.slug}`,
+          author: {
+            "@type": "Person",
+            name: DATA.name,
+          },
+        })}
+      </script>
       <BlurFade delay={BLUR_FADE_DELAY}>
         <div className="flex items-center gap-2 max-w-[650px]">
           <Link

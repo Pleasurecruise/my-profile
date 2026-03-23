@@ -6,7 +6,7 @@ import BlurFade from "@/components/magicui/blur-fade";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function Error({
+export default function AppError({
   error,
   reset,
 }: {

@@ -1,0 +1,145 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+	"vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+	"files": { "ignoreUnknown": false },
+	"formatter": { "enabled": true, "indentStyle": "tab" },
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"useExhaustiveDependencies": "off"
+			},
+			"performance": {
+				"noImgElement": "off"
+			},
+			"style": {
+				"noNonNullAssertion": "off"
+			}
+		},
+		"includes": [
+			"**",
+			"!.next/**",
+			"!out/**",
+			"!build/**",
+			"!next-env.d.ts",
+			"!node_modules/**",
+			"!src/generated/prisma/**",
+			"!src/components/magicui/**",
+			"!src/components/aceternityui/**",
+			"!src/components/ui/shadcn-io/**",
+			"!src/components/ui/file-tree.tsx"
+		]
+	},
+	"css": { "parser": { "cssModules": false, "allowWrongLineComments": false, "tailwindDirectives": true } },
+	"javascript": { "formatter": { "quoteStyle": "double" }, "globals": [] },
+	"overrides": [
+		{
+			"includes": ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
+			"javascript": {
+				"globals": [
+					"onanimationend", "exports", "ongamepadconnected", "onlostpointercapture",
+					"onanimationiteration", "onkeyup", "onmousedown", "onanimationstart",
+					"onslotchange", "onprogress", "ontransitionstart", "onpause", "onended",
+					"onpointerover", "onscrollend", "onformdata", "ontransitionrun",
+					"onanimationcancel", "ondrag", "onchange", "onbeforeinstallprompt",
+					"onbeforexrselect", "onmessage", "ontransitioncancel", "onpointerdown",
+					"onabort", "onpointerout", "oncuechange", "ongotpointercapture",
+					"onscrollsnapchanging", "onsearch", "onsubmit", "onstalled", "onsuspend",
+					"onreset", "onerror", "onresize", "onmouseenter", "ongamepaddisconnected",
+					"ondragover", "onbeforetoggle", "onmouseover", "onpagehide", "onmousemove",
+					"onratechange", "oncommand", "onmessageerror", "onwheel", "ondevicemotion",
+					"onauxclick", "ontransitionend", "onpaste", "onpageswap", "ononline",
+					"ondeviceorientationabsolute", "onkeydown", "onclose", "onselect",
+					"onpageshow", "onpointercancel", "onbeforematch", "onpointerrawupdate",
+					"ondragleave", "onscrollsnapchange", "onseeked", "onwaiting",
+					"onbeforeunload", "onplaying", "onvolumechange", "ondragend", "onstorage",
+					"onloadeddata", "onfocus", "onoffline", "onplay", "onafterprint",
+					"onclick", "oncut", "onmouseout", "ondblclick", "oncanplay", "onloadstart",
+					"onappinstalled", "onpointermove", "ontoggle", "oncontextmenu", "onblur",
+					"oncancel", "onbeforeprint", "oncontextrestored", "onloadedmetadata",
+					"onpointerup", "onlanguagechange", "oncopy", "onselectstart", "onscroll",
+					"onload", "ondragstart", "onbeforeinput", "oncanplaythrough", "oninput",
+					"oninvalid", "ontimeupdate", "ondurationchange", "onselectionchange",
+					"onmouseup", "location", "onkeypress", "onpointerleave", "oncontextlost",
+					"ondrop", "onsecuritypolicyviolation", "oncontentvisibilityautostatechange",
+					"ondeviceorientation", "onseeking", "onrejectionhandled", "onunload",
+					"onmouseleave", "onhashchange", "onpointerenter", "onmousewheel",
+					"onunhandledrejection", "ondragenter", "onpopstate", "onpagereveal",
+					"onemptied"
+				]
+			},
+			"linter": {
+				"rules": {
+					"a11y": {
+						"noAriaUnsupportedElements": "error",
+						"useAltText": "error",
+						"useAriaPropsForRole": "error",
+						"useAriaPropsSupportedByRole": "error",
+						"useValidAriaProps": "error",
+						"useValidAriaValues": "error"
+					},
+					"correctness": {
+						"noChildrenProp": "error",
+						"noNextAsyncClientComponent": "error",
+						"useExhaustiveDependencies": "off",
+						"useHookAtTopLevel": "error",
+						"useJsxKeyInIterable": "error"
+					},
+					"performance": {
+						"noImgElement": "off",
+						"noUnwantedPolyfillio": "error",
+						"useGoogleFontPreconnect": "error"
+					},
+					"security": { "noDangerouslySetInnerHtmlWithChildren": "error" },
+					"style": { "noHeadElement": "error" },
+					"suspicious": {
+						"noArrayIndexKey": "off",
+						"noCommentText": "error",
+						"noDocumentImportInPage": "error",
+						"noDuplicateJsxProps": "error",
+						"noHeadImportInDocument": "error",
+						"useGoogleFontDisplay": "error"
+					}
+				}
+			}
+		},
+		{ "includes": ["**/*.ts", "**/*.tsx"], "javascript": { "globals": [] } },
+		{
+			"includes": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+			"linter": {
+				"rules": {
+					"complexity": { "noArguments": "error" },
+					"correctness": {
+						"noConstAssign": "off",
+						"noGlobalObjectCalls": "off",
+						"noInvalidBuiltinInstantiation": "off",
+						"noInvalidConstructorSuper": "off",
+						"noSetterReturn": "off",
+						"noUndeclaredVariables": "off",
+						"noUnreachable": "off",
+						"noUnreachableSuper": "off"
+					},
+					"style": { "useConst": "error" },
+					"suspicious": {
+						"noClassAssign": "off",
+						"noDuplicateClassMembers": "off",
+						"noDuplicateObjectKeys": "off",
+						"noDuplicateParameters": "off",
+						"noFunctionAssign": "off",
+						"noImportAssign": "off",
+						"noRedeclare": "off",
+						"noUnsafeNegation": "off",
+						"noVar": "error",
+						"noWith": "off",
+						"useGetterReturn": "off"
+					}
+				}
+			}
+		}
+	],
+	"assist": {
+		"enabled": true,
+		"actions": { "source": { "organizeImports": "on" } }
+	}
+}

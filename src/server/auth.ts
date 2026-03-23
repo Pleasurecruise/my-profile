@@ -1,6 +1,7 @@
 import {
     betterAuth
 } from 'better-auth';
+
 import { nextCookies } from "better-auth/next-js";
 import { cache } from "react";
 import { headers } from "next/headers";
@@ -55,7 +56,7 @@ export const auth = betterAuth({
     socialProviders: {
         github: {
             clientId: process.env.GITHUB_CLIENT_ID!,
-            clientSecret: process.env.GITHUB_CLIENT_SECRET!
+            clientSecret: process.env.GITHUB_CLIENT_SECRET!,
         },
         google: {
             clientId: process.env.GOOGLE_CLIENT_ID!,

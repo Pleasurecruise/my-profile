@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { DATA } from '@/data/resume'
-import { NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
       >
         {/* Blobs via SVG feGaussianBlur */}
         <svg
+          aria-hidden="true"
           style={{ position: 'absolute', top: 0, left: 0, width: '1200px', height: '630px' }}
           width="1200"
           height="630"
@@ -57,7 +58,6 @@ export async function GET(req: NextRequest) {
           gap: 56,
         }}>
           {/* Logo */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`${DATA.url}/profile/me.png`}
             alt="Pleasure1234"
