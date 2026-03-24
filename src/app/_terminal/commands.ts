@@ -27,7 +27,6 @@ export const TOP_COMMANDS: SelectorItem[] = [
 ];
 
 export const GO_DESTINATIONS: SelectorItem[] = [
-	{ label: "home", value: "/go home", desc: "Home" },
 	{ label: "blog", value: "/go blog", desc: "Blog" },
 	{ label: "chat", value: "/go chat", desc: "AI chat" },
 	{ label: "story", value: "/go story", desc: "My personal story" },
@@ -35,7 +34,6 @@ export const GO_DESTINATIONS: SelectorItem[] = [
 ];
 
 const GO_ROUTES: Record<string, string> = {
-	home: "/home",
 	blog: "/blog",
 	chat: "/chat",
 	story: "/story",
@@ -63,7 +61,7 @@ const HELP_TEXT = `Available slash commands:
   /links       - Friend links
   /am-i-ok     - What am I doing right now
   /dino        - Play Chrome Dino
-  /go <page>   - Navigate  (home | blog | chat | story | cv)
+  /go <page>   - Navigate  (blog | chat | story | cv)
   /reload      - Reload the page`;
 
 export function resolveCommand(
@@ -513,7 +511,7 @@ export function resolveCommand(
 			}
 			return {
 				kind: "text",
-				text: `blog/  chat/  cv/  home/  story/  package.json  README.md  tailwind.config.ts  tsconfig.json`,
+				text: `blog/  chat/  cv/  story/  package.json  README.md  tailwind.config.ts  tsconfig.json`,
 			};
 		}
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono as FontSans } from "next/font/google";
 import Script from "next/script";
+import { FloatingTerminal } from "@/components/floating-terminal";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import NavbarWrapper from "@/components/navbar-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -85,6 +86,7 @@ export default function RootLayout({
 							<div className="mx-auto w-full max-w-2xl px-6 pt-12 pb-24 sm:py-24">
 								{children}
 								<NavbarWrapper />
+								<FloatingTerminal />
 								<Toaster />
 							</div>
 						</TooltipProvider>

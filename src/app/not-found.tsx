@@ -22,7 +22,7 @@ export default function NotFound() {
 			<BlurFade delay={BLUR_FADE_DELAY * 2}>
 				<div className="flex flex-col sm:flex-row gap-4">
 					<Button variant="outline" asChild>
-						<Link href="/home">Return Home</Link>
+						<Link href="/">Return Home</Link>
 					</Button>
 
 					<Button variant="outline" asChild>

@@ -38,7 +38,7 @@ export default function AppError({
 
 					<Button
 						variant="outline"
-						onClick={() => (window.location.href = "/home")}
+						onClick={() => (window.location.href = "/")}
 					>
 						Return Home
 					</Button>

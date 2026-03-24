@@ -261,6 +261,7 @@ export const Card = ({
 					src={card.src}
 					alt={card.title}
 					fill
+					sizes="(max-width: 768px) 80vw, 384px"
 					className="absolute inset-0 z-10 object-cover"
 				/>
 			</motion.button>

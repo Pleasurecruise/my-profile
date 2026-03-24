@@ -46,7 +46,7 @@ export const DATA = {
 		{ name: "MySQL", icon: MySQL },
 	],
 	navbar: [
-		{ href: "/home", icon: SproutIcon, label: "Home" },
+		{ href: "/", icon: SproutIcon, label: "Home" },
 		{ href: "/blog", icon: HourglassIcon, label: "Blog" },
 		{ href: "/story", icon: FeatherIcon, label: "Story" },
 		{ href: "/gallery", icon: CameraIcon, label: "Gallery" },

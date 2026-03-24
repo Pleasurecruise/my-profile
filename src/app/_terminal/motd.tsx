@@ -122,13 +122,13 @@ export function MOTD() {
 				<p>
 					<span className="text-yellow-400">👋</span> Hi! I&apos;m{" "}
 					<span className="text-green-400 font-bold">Pleasure1234</span>{" "}
-					<span className="text-zinc-500">(@Pleasurecruise)</span>
+					<span className="text-zinc-400">(@Pleasurecruise)</span>
 				</p>
-				<p className="text-zinc-500">
+				<p className="text-zinc-400">
 					Keywords:{" "}
 					<span className="text-zinc-400">TypeScript, React, Next.js</span>
 				</p>
-				<p className="text-zinc-500 ml-9">
+				<p className="text-zinc-400 ml-9">
 					<span className="text-zinc-400">Agents, Open Source, Hackathon</span>
 				</p>
 				<p>
@@ -150,7 +150,7 @@ export function MOTD() {
 					{link("https://github.com/codexu/note-gen", "note-gen")} ·{" "}
 					{link("https://github.com/jackwener/twitter-cli", "twitter-cli")}
 				</p>
-				<p className="text-zinc-500">
+				<p className="text-zinc-400">
 					📍 {DATA.location} · 🎓 2027 · 💼 {DATA.projects.length} projects · 🏆{" "}
 					{DATA.hackathons.length} hackathons
 				</p>
@@ -162,43 +162,43 @@ export function MOTD() {
 			</p>
 			<div className="ml-2 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0.5 text-zinc-300">
 				<p>
-					<span className="text-zinc-500">
+					<span className="text-zinc-400">
 						Browser:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</span>
 					{browser}
 				</p>
 				<p>
-					<span className="text-zinc-500">
+					<span className="text-zinc-400">
 						Platform:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</span>
 					{platform}
 				</p>
 				<p>
-					<span className="text-zinc-500">
+					<span className="text-zinc-400">
 						Resolution:&nbsp;&nbsp;&nbsp;&nbsp;
 					</span>
 					{resolution}
 				</p>
 				<p>
-					<span className="text-zinc-500">
+					<span className="text-zinc-400">
 						Language:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					</span>
 					{language}
 				</p>
 				<p>
-					<span className="text-zinc-500">
+					<span className="text-zinc-400">
 						IP Address:&nbsp;&nbsp;&nbsp;&nbsp;
 					</span>
 					{ip}
 				</p>
 			</div>
 
-			<p className="mt-3 text-zinc-500">
+			<p className="mt-3 text-zinc-400">
 				Type <span className="text-yellow-400">/help</span> to see available
 				commands.
 			</p>
-			<p className="mt-3 text-zinc-500">
-				Recommend to visit <span className="text-yellow-400">/go home</span>.
+			<p className="mt-3 text-zinc-400">
+				Recommend to visit <span className="text-yellow-400">/go blog</span>.
 			</p>
 		</div>
 	);

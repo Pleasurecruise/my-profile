@@ -10,7 +10,12 @@ import type { Line, SelectorItem } from "./types";
 const HOSTNAME = "pleasure1234@website";
 const PROMPT = `${HOSTNAME}:~$`;
 
-export function Terminal() {
+interface TerminalProps {
+	onClose?: () => void;
+	onDragStart?: (e: React.PointerEvent) => void;
+}
+
+export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 	const router = useRouter();
 	const idRef = useRef(0);
 	const nextId = () => ++idRef.current;
@@ -38,13 +43,7 @@ export function Terminal() {
 	const hasActiveDino = lines.some((line) => line.type === "dino");
 
 	useEffect(() => {
-		document.documentElement.style.overflow = "hidden";
-		document.body.style.overflow = "hidden";
-		return () => {
-			document.documentElement.style.overflow = "";
-			document.body.style.overflow = "";
-			cancelStreamTimers();
-		};
+		return () => cancelStreamTimers();
 	}, []);
 
 	useEffect(() => {
@@ -178,7 +177,10 @@ export function Terminal() {
 						{ id: nextId(), type: "input", text: cmd },
 						{ id: nextId(), type: "output", text: "Reloading..." },
 					]);
-					setTimeout(() => window.location.reload(), 800);
+					setTimeout(() => {
+						onClose?.();
+						window.location.reload();
+					}, 800);
 					return;
 				}
 				setLines((prev) => [
@@ -343,198 +345,197 @@ export function Terminal() {
 	};
 
 	return (
-		<main className="flex flex-col h-[calc(100dvh-2rem)] -mt-8 sm:-mt-20 -mb-20">
-			<div className="flex flex-col flex-1 w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 min-h-0">
-				<div className="relative flex flex-col flex-1 min-h-0">
-					<div
-						className="relative flex flex-col flex-1
-                        bg-white/[0.08] dark:bg-black/[0.25]
-                        rounded-lg border border-white/20 dark:border-white/10
-                        [box-shadow:0_8px_40px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)_inset]
-                        dark:[box-shadow:0_8px_40px_rgba(0,0,0,0.5),0_1px_0_rgba(255,255,255,0.06)_inset]
-                        overflow-hidden min-h-0"
-					>
-						{/* Title bar */}
-						<div className="relative flex items-center gap-2 px-4 py-2.5 border-b border-white/10 shrink-0">
-							{/* Title bar specular highlight */}
-							<div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-							<div className="absolute top-px left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none" />
-							<span className="w-3 h-3 rounded-full bg-red-500" />
-							<span className="w-3 h-3 rounded-full bg-yellow-500" />
-							<span className="w-3 h-3 rounded-full bg-green-500" />
-							<span className="ml-3 text-xs text-zinc-400 font-mono select-none">
-								{HOSTNAME}:~
-							</span>
-						</div>
+		<div className="flex flex-col w-full h-full">
+			<div
+				className="relative flex flex-col flex-1
+                    bg-zinc-900
+                    rounded-xl border border-zinc-700/60
+                    shadow-2xl
+                    overflow-hidden min-h-0"
+			>
+				{/* Title bar */}
+				<div
+					className="relative flex items-center gap-2 px-4 py-2.5 border-b border-white/10 shrink-0"
+					onPointerDown={onDragStart}
+					style={{ cursor: onDragStart ? "grab" : undefined }}
+				>
+					<button
+						type="button"
+						className="w-3 h-3 rounded-full bg-red-500 cursor-pointer hover:brightness-125 transition-all"
+						onClick={onClose}
+						title="Close"
+					/>
+					<span className="w-3 h-3 rounded-full bg-yellow-500" />
+					<span className="w-3 h-3 rounded-full bg-green-500" />
+					<span className="ml-3 text-xs text-zinc-400 font-mono select-none">
+						{HOSTNAME}:~
+					</span>
+				</div>
 
-						{/* Terminal output */}
-						<div
-							className="p-4 flex-1 overflow-y-auto font-mono text-sm text-zinc-100 cursor-text min-h-0"
-							style={{
-								scrollbarWidth: "thin",
-								scrollbarColor: "#52525b transparent",
-							}}
-						>
-							{lines.map((line) => {
-								if (line.type === "motd")
-									return (
-										<div key={line.id}>
-											<MOTD />
-											{lines.length > 1 && (
-												<div className="border-t border-white/10 my-3" />
-											)}
-										</div>
-									);
-								if (line.type === "input")
-									return (
-										<div key={line.id} className="flex gap-2 mt-2 first:mt-0">
-											<span className="text-green-400 shrink-0">{PROMPT}</span>
-											<span className="text-white">{line.text}</span>
-										</div>
-									);
-								if (line.type === "output")
-									return (
+				{/* Terminal output */}
+				<div
+					className="p-4 flex-1 overflow-y-auto font-mono text-sm text-zinc-100 cursor-text min-h-0"
+					style={{
+						scrollbarWidth: "thin",
+						scrollbarColor: "#52525b transparent",
+					}}
+				>
+					{lines.map((line) => {
+						if (line.type === "motd")
+							return (
+								<div key={line.id}>
+									<MOTD />
+									{lines.length > 1 && (
+										<div className="border-t border-white/10 my-3" />
+									)}
+								</div>
+							);
+						if (line.type === "input")
+							return (
+								<div key={line.id} className="flex gap-2 mt-2 first:mt-0">
+									<span className="text-green-400 shrink-0">{PROMPT}</span>
+									<span className="text-white">{line.text}</span>
+								</div>
+							);
+						if (line.type === "output")
+							return (
+								<div
+									key={line.id}
+									className="whitespace-pre-wrap text-zinc-300 leading-5"
+								>
+									{line.text}
+								</div>
+							);
+						if (line.type === "links")
+							return (
+								<div key={line.id}>
+									{line.items.map((item) => (
 										<div
-											key={line.id}
-											className="whitespace-pre-wrap text-zinc-300 leading-5"
+											key={item.label}
+											className="flex gap-2 text-zinc-300 leading-5"
 										>
-											{line.text}
-										</div>
-									);
-								if (line.type === "links")
-									return (
-										<div key={line.id}>
-											{line.items.map((item) => (
-												<div
-													key={item.label}
-													className="flex gap-2 text-zinc-300 leading-5"
-												>
-													<span className="text-zinc-500 shrink-0">
-														{item.label}
-													</span>
-													{item.url.startsWith("wechat:") ? (
-														<span className="text-zinc-300 truncate">
-															{item.url.replace("wechat:", "")}
-														</span>
-													) : (
-														<a
-															href={item.url}
-															target={
-																item.url.startsWith("mailto:")
-																	? undefined
-																	: "_blank"
-															}
-															rel="noopener noreferrer"
-															onClick={(e) => e.stopPropagation()}
-															className="text-cyan-400 hover:underline truncate"
-														>
-															{item.url.startsWith("mailto:")
-																? item.url.replace("mailto:", "")
-																: item.url}
-														</a>
-													)}
-												</div>
-											))}
-										</div>
-									);
-								if (line.type === "dino")
-									return (
-										<DinoGame
-											key={line.session}
-											onExit={() => closeDino(line.session)}
-										/>
-									);
-								if (line.type === "error")
-									return (
-										<p
-											key={line.id}
-											className="text-red-400 whitespace-pre-wrap leading-5"
-										>
-											{line.text}
-										</p>
-									);
-								return null;
-							})}
-							<div ref={bottomRef} />
-						</div>
-
-						{/* Fixed bottom: selector + input */}
-						<div className="shrink-0 border-t border-white/10 font-mono text-sm">
-							{!sudoState && selectorItems.length > 0 && (
-								<div className="px-4 pt-2 pb-1">
-									{selectorItems.map((item, i) => (
-										<button
-											type="button"
-											key={item.value}
-											className="flex items-center gap-2 text-xs cursor-pointer select-none leading-5"
-											onMouseEnter={() => setSelectorIdx(i)}
-											onClick={() => selectItem(item)}
-										>
-											<span className="w-3 shrink-0 text-yellow-400">
-												{i === selectorIdx ? "❯" : ""}
-											</span>
-											<span
-												className={
-													i === selectorIdx ? "text-white" : "text-zinc-500"
-												}
-											>
+											<span className="text-zinc-500 shrink-0">
 												{item.label}
 											</span>
-											<span className="text-zinc-600 truncate">
-												{item.desc}
-											</span>
-										</button>
+											{item.url.startsWith("wechat:") ? (
+												<span className="text-zinc-300 truncate">
+													{item.url.replace("wechat:", "")}
+												</span>
+											) : (
+												<a
+													href={item.url}
+													target={
+														item.url.startsWith("mailto:")
+															? undefined
+															: "_blank"
+													}
+													rel="noopener noreferrer"
+													onClick={(e) => e.stopPropagation()}
+													className="text-cyan-400 hover:underline truncate"
+												>
+													{item.url.startsWith("mailto:")
+														? item.url.replace("mailto:", "")
+														: item.url}
+												</a>
+											)}
+										</div>
 									))}
-									<div className="mt-0.5 ml-5 text-zinc-700 text-xs flex gap-3">
-										<span>↑↓</span>
-										<span>↵ confirm</span>
-										<span>esc</span>
-									</div>
 								</div>
-							)}
-							<form
-								ref={formRef}
-								onSubmit={sudoState ? handleSudoSubmit : handleSubmit}
-								className="flex gap-2 items-center px-4 py-2.5"
-							>
-								<span
-									className={`${sudoState ? "text-yellow-300" : "text-green-400"} shrink-0`}
-								>
-									{sudoState ? (
-										<>
-											<span className="hidden sm:inline">
-												[sudo] password for visitor:
-											</span>
-											<span className="sm:hidden">[sudo] passwd:</span>
-										</>
-									) : (
-										<>
-											<span className="hidden sm:inline">{PROMPT}</span>
-											<span className="sm:hidden">~$</span>
-										</>
-									)}
-								</span>
-								<input
-									ref={inputRef}
-									type={sudoState ? "password" : "text"}
-									className="flex-1 bg-transparent outline-none border-0 text-white caret-green-400"
-									value={input}
-									onChange={(e) =>
-										sudoState
-											? setInput(e.target.value)
-											: updateInput(e.target.value)
-									}
-									onKeyDown={sudoState ? undefined : handleKeyDown}
-									spellCheck={false}
-									autoComplete="off"
-									autoCorrect="off"
-									autoCapitalize="off"
+							);
+						if (line.type === "dino")
+							return (
+								<DinoGame
+									key={line.session}
+									onExit={() => closeDino(line.session)}
 								/>
-							</form>
+							);
+						if (line.type === "error")
+							return (
+								<p
+									key={line.id}
+									className="text-red-400 whitespace-pre-wrap leading-5"
+								>
+									{line.text}
+								</p>
+							);
+						return null;
+					})}
+					<div ref={bottomRef} />
+				</div>
+
+				{/* Fixed bottom: selector + input */}
+				<div className="shrink-0 border-t border-white/10 font-mono text-sm">
+					{!sudoState && selectorItems.length > 0 && (
+						<div className="px-4 pt-2 pb-1">
+							{selectorItems.map((item, i) => (
+								<button
+									type="button"
+									key={item.value}
+									className="flex items-center gap-2 text-xs cursor-pointer select-none leading-5"
+									onMouseEnter={() => setSelectorIdx(i)}
+									onClick={() => selectItem(item)}
+								>
+									<span className="w-3 shrink-0 text-yellow-400">
+										{i === selectorIdx ? "❯" : ""}
+									</span>
+									<span
+										className={
+											i === selectorIdx ? "text-white" : "text-zinc-500"
+										}
+									>
+										{item.label}
+									</span>
+									<span className="text-zinc-400 truncate">{item.desc}</span>
+								</button>
+							))}
+							<div className="mt-0.5 ml-5 text-zinc-500 text-xs flex gap-3">
+								<span>↑↓</span>
+								<span>↵ confirm</span>
+								<span>esc</span>
+							</div>
 						</div>
-					</div>
+					)}
+					<form
+						ref={formRef}
+						onSubmit={sudoState ? handleSudoSubmit : handleSubmit}
+						className="flex gap-2 items-center px-4 py-2.5"
+					>
+						<span
+							className={`${sudoState ? "text-yellow-300" : "text-green-400"} shrink-0`}
+						>
+							{sudoState ? (
+								<>
+									<span className="hidden sm:inline">
+										[sudo] password for visitor:
+									</span>
+									<span className="sm:hidden">[sudo] passwd:</span>
+								</>
+							) : (
+								<>
+									<span className="hidden sm:inline">{PROMPT}</span>
+									<span className="sm:hidden">~$</span>
+								</>
+							)}
+						</span>
+						<input
+							ref={inputRef}
+							type={sudoState ? "password" : "text"}
+							className="flex-1 bg-transparent outline-none border-0 text-white caret-green-400"
+							value={input}
+							onChange={(e) =>
+								sudoState
+									? setInput(e.target.value)
+									: updateInput(e.target.value)
+							}
+							onKeyDown={sudoState ? undefined : handleKeyDown}
+							spellCheck={false}
+							autoComplete="off"
+							autoCorrect="off"
+							autoCapitalize="off"
+						/>
+					</form>
 				</div>
 			</div>
-		</main>
+		</div>
 	);
 }
