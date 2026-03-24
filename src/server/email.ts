@@ -1,31 +1,32 @@
 import nodemailer from "nodemailer";
+import { env } from "@/lib/env";
 
 const transporter = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    port: Number(process.env.MAIL_PORT),
-    secure: process.env.MAIL_SECURE === "true", // true for 465, false for other ports
-    auth: {
-        user: process.env.MAIL_AUTH_USER,
-        pass: process.env.MAIL_AUTH_PASS,
-    },
+	host: env.MAIL_HOST,
+	port: env.MAIL_PORT,
+	secure: env.MAIL_SECURE,
+	auth: {
+		user: env.MAIL_AUTH_USER,
+		pass: env.MAIL_AUTH_PASS,
+	},
 });
 
 type SendEmailOptions = {
-    to: string;
-    subject: string;
-    text?: string;
-    html?: string;
+	to: string;
+	subject: string;
+	text?: string;
+	html?: string;
 };
 
 export async function sendEmail({ to, subject, text, html }: SendEmailOptions) {
-    const info = await transporter.sendMail({
-        from: process.env.MAIL_FROM,
-        to,
-        subject,
-        text,
-        html,
-    });
+	const info = await transporter.sendMail({
+		from: env.MAIL_FROM,
+		to,
+		subject,
+		text,
+		html,
+	});
 
-    console.log("Email sent: %s", info.messageId);
-    return { success: true, messageId: info.messageId };
+	console.log("Email sent: %s", info.messageId);
+	return { success: true, messageId: info.messageId };
 }

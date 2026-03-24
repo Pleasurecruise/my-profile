@@ -5,16 +5,16 @@ import { MomentClient } from "./client";
 const BLUR_FADE_DELAY = 0.04;
 
 export default async function Moment() {
-    const tweets = await getAllMomentTweets();
+	const tweets = await getAllMomentTweets();
 
-    return (
-        <section>
-            <BlurFade delay={BLUR_FADE_DELAY}>
-                <h1 className="font-medium text-2xl mb-8 tracking-tighter">
-                    Forward Posts on X
-                </h1>
-                <MomentClient tweets={tweets} />
-            </BlurFade>
-        </section>
-    );
+	return (
+		<section>
+			<BlurFade delay={BLUR_FADE_DELAY}>
+				<h1 className="font-medium text-2xl mb-8 tracking-tighter">
+					Forward Posts on X
+				</h1>
+				<MomentClient tweets={tweets} />
+			</BlurFade>
+		</section>
+	);
 }

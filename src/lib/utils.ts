@@ -1,46 +1,52 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
+	return twMerge(clsx(inputs));
 }
 
+const dateInputSchema = z.string().trim().min(1);
+const isoDateSchema = z.iso.date();
+const normalizedDateSchema = z.coerce.date();
+
 export function formatDate(date: string) {
-    const currentDate = Date.now();
-    if (!date.includes("T")) {
-        date = `${date}T00:00:00`;
-    }
-    const targetDate = new Date(date).getTime();
-    const timeDifference = Math.abs(currentDate - targetDate);
-    const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+	const parsedInput = dateInputSchema.safeParse(date);
+	if (!parsedInput.success) {
+		return "Invalid date";
+	}
 
-    const fullDate = new Date(date).toLocaleString("en-us", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-    });
+	const normalizedInput = isoDateSchema.safeParse(parsedInput.data).success
+		? `${parsedInput.data}T00:00:00`
+		: parsedInput.data;
+	const parsedDate = normalizedDateSchema.safeParse(normalizedInput);
+	if (!parsedDate.success || Number.isNaN(parsedDate.data.getTime())) {
+		return "Invalid date";
+	}
 
-    if (daysAgo < 1) {
-        return "Today";
-    } else if (daysAgo < 7) {
-        return `${fullDate} (${daysAgo}d ago)`;
-    } else if (daysAgo < 30) {
-        const weeksAgo = Math.floor(daysAgo / 7);
-        return `${fullDate} (${weeksAgo}w ago)`;
-    } else if (daysAgo < 365) {
-        const monthsAgo = Math.floor(daysAgo / 30);
-        return `${fullDate} (${monthsAgo}mo ago)`;
-    } else {
-        const yearsAgo = Math.floor(daysAgo / 365);
-        return `${fullDate} (${yearsAgo}y ago)`;
-    }
+	const currentDate = Date.now();
+	const targetDate = parsedDate.data.getTime();
+	const timeDifference = Math.abs(currentDate - targetDate);
+	const daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+	const fullDate = parsedDate.data.toLocaleString("en-us", {
+		month: "long",
+		day: "numeric",
+		year: "numeric",
+	});
+
+	if (daysAgo < 1) return "Today";
+	if (daysAgo < 7) return `${fullDate} (${daysAgo}d ago)`;
+	if (daysAgo < 30) return `${fullDate} (${Math.floor(daysAgo / 7)}w ago)`;
+	if (daysAgo < 365) return `${fullDate} (${Math.floor(daysAgo / 30)}mo ago)`;
+	return `${fullDate} (${Math.floor(daysAgo / 365)}y ago)`;
 }
 
 export function formatTime(date?: Date): string {
-    if (!date) return "";
-    return date.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    });
+	if (!date) return "";
+	return date.toLocaleTimeString("en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	});
 }

@@ -37,7 +37,10 @@ export function MomentClient({ tweets }: MomentClientProps) {
 
 		tweets.forEach((tweet, index) => {
 			const columnIndex = index % columnCount;
-			result[columnIndex].push(tweet);
+			const column = result[columnIndex];
+			if (column) {
+				column.push(tweet);
+			}
 		});
 
 		return result;

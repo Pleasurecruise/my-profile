@@ -7,222 +7,233 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-    --radius-sm: calc(var(--radius) - 4px);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-lg: var(--radius);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
 
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
 
-    --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-sans:
+		var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-    --animate-marquee: marquee var(--duration) infinite linear;
-    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
-    @keyframes marquee {
-        from { transform: translateX(0); }
-        to { transform: translateX(calc(-100% - var(--gap))); }
-    }
-    @keyframes marquee-vertical {
-        from { transform: translateY(0); }
-        to { transform: translateY(calc(-100% - var(--gap))); }
-    }
+	--animate-marquee: marquee var(--duration) infinite linear;
+	--animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(calc(-100% - var(--gap)));
+		}
+	}
+	@keyframes marquee-vertical {
+		from {
+			transform: translateY(0);
+		}
+		to {
+			transform: translateY(calc(-100% - var(--gap)));
+		}
+	}
 }
 
 :root {
-    --radius: 0.5rem;
+	--radius: 0.5rem;
 
-    --background: hsl(0, 0%, 100%);
-    --foreground: hsl(210, 11.1%, 3.53%);
+	--background: hsl(0, 0%, 100%);
+	--foreground: hsl(210, 11.1%, 3.53%);
 
-    --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(210, 11.1%, 3.53%);
+	--card: hsl(0, 0%, 100%);
+	--card-foreground: hsl(210, 11.1%, 3.53%);
 
-    --popover: hsl(0, 0%, 100%);
-    --popover-foreground: hsl(210, 11.1%, 3.53%);
+	--popover: hsl(0, 0%, 100%);
+	--popover-foreground: hsl(210, 11.1%, 3.53%);
 
-    --primary: hsl(0, 0%, 9%);
-    --primary-foreground: hsl(0, 0%, 98%);
+	--primary: hsl(0, 0%, 9%);
+	--primary-foreground: hsl(0, 0%, 98%);
 
-    --secondary: hsl(0, 0%, 96.1%);
-    --secondary-foreground: hsl(0, 0%, 9%);
+	--secondary: hsl(0, 0%, 96.1%);
+	--secondary-foreground: hsl(0, 0%, 9%);
 
-    --muted: hsl(0, 0%, 96.1%);
-    --muted-foreground: hsl(0, 0%, 45.1%);
+	--muted: hsl(0, 0%, 96.1%);
+	--muted-foreground: hsl(0, 0%, 45.1%);
 
-    --accent: hsl(0, 0%, 96.1%);
-    --accent-foreground: hsl(0, 0%, 9%);
+	--accent: hsl(0, 0%, 96.1%);
+	--accent-foreground: hsl(0, 0%, 9%);
 
-    --destructive: hsl(0, 84.2%, 60.2%);
-    --destructive-foreground: hsl(0, 0%, 98%);
+	--destructive: hsl(0, 84.2%, 60.2%);
+	--destructive-foreground: hsl(0, 0%, 98%);
 
-    --border: hsl(0, 0%, 89.8%);
-    --input: hsl(0, 0%, 89.8%);
-    --ring: hsl(0, 0%, 3.9%);
+	--border: hsl(0, 0%, 89.8%);
+	--input: hsl(0, 0%, 89.8%);
+	--ring: hsl(0, 0%, 3.9%);
 }
 
 .dark {
-    --background: hsl(210, 11.1%, 3.53%);
-    --foreground: hsl(0, 0%, 98%);
+	--background: hsl(210, 11.1%, 3.53%);
+	--foreground: hsl(0, 0%, 98%);
 
-    --card: hsl(210, 11.1%, 3.53%);
-    --card-foreground: hsl(0, 0%, 98%);
+	--card: hsl(210, 11.1%, 3.53%);
+	--card-foreground: hsl(0, 0%, 98%);
 
-    --popover: hsl(210, 11.1%, 3.53%);
-    --popover-foreground: hsl(0, 0%, 98%);
+	--popover: hsl(210, 11.1%, 3.53%);
+	--popover-foreground: hsl(0, 0%, 98%);
 
-    --primary: hsl(0, 0%, 98%);
-    --primary-foreground: hsl(0, 0%, 9%);
+	--primary: hsl(0, 0%, 98%);
+	--primary-foreground: hsl(0, 0%, 9%);
 
-    --secondary: hsl(0, 0%, 14.9%);
-    --secondary-foreground: hsl(0, 0%, 98%);
+	--secondary: hsl(0, 0%, 14.9%);
+	--secondary-foreground: hsl(0, 0%, 98%);
 
-    --muted: hsl(0, 0%, 14.9%);
-    --muted-foreground: hsl(0, 0%, 63.9%);
+	--muted: hsl(0, 0%, 14.9%);
+	--muted-foreground: hsl(0, 0%, 63.9%);
 
-    --accent: hsl(0, 0%, 14.9%);
-    --accent-foreground: hsl(0, 0%, 98%);
+	--accent: hsl(0, 0%, 14.9%);
+	--accent-foreground: hsl(0, 0%, 98%);
 
-    --destructive: hsl(0, 62.8%, 30.6%);
-    --destructive-foreground: hsl(0, 0%, 98%);
+	--destructive: hsl(0, 62.8%, 30.6%);
+	--destructive-foreground: hsl(0, 0%, 98%);
 
-    --border: hsl(0, 0%, 14.9%);
-    --input: hsl(0, 0%, 14.9%);
-    --ring: hsl(0, 0%, 83.1%);
+	--border: hsl(0, 0%, 14.9%);
+	--input: hsl(0, 0%, 14.9%);
+	--ring: hsl(0, 0%, 83.1%);
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-transparent text-foreground;
-    }
+	* {
+		@apply border-border outline-ring/50;
+	}
+	body {
+		@apply bg-transparent text-foreground;
+	}
 }
 
 pre {
-    @apply !px-0 rounded-lg overflow-x-auto py-4;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+	@apply !px-0 rounded-lg overflow-x-auto py-4;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 pre::-webkit-scrollbar {
-    display: none;
+	display: none;
 }
 
 pre [data-line] {
-    @apply px-4;
+	@apply px-4;
 }
 
 code {
-    @apply text-sm md:text-base !leading-loose;
+	@apply text-sm md:text-base !leading-loose;
 }
 
 h3 code {
-    @apply !text-lg md:!text-xl;
+	@apply !text-lg md:!text-xl;
 }
 
 pre > code {
-    counter-reset: line;
+	counter-reset: line;
 }
 
 code[data-theme*=" "],
 code[data-theme*=" "] span {
-    color: var(--shiki-light);
-    background-color: var(--shiki-light-bg);
+	color: var(--shiki-light);
+	background-color: var(--shiki-light-bg);
 }
 
 .dark code[data-theme*=" "],
 .dark code[data-theme*=" "] span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
+	color: var(--shiki-dark);
+	background-color: var(--shiki-dark-bg);
 }
 
 code[data-line-numbers] {
-    counter-reset: line;
+	counter-reset: line;
 }
 
 code > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    display: inline-block;
-    width: 1rem;
-    margin-right: 2rem;
-    text-align: right;
-    color: gray;
+	counter-increment: line;
+	content: counter(line);
+	display: inline-block;
+	width: 1rem;
+	margin-right: 2rem;
+	text-align: right;
+	color: gray;
 }
 
 code[data-line-numbers] > [data-line]::before {
-    counter-increment: line;
-    content: counter(line);
-    @apply inline-block w-4 mr-4 text-right text-gray-500;
+	counter-increment: line;
+	content: counter(line);
+	@apply inline-block w-4 mr-4 text-right text-gray-500;
 }
 
 code[data-line-numbers-max-digits="2"] > [data-line]::before {
-    width: 2rem;
+	width: 2rem;
 }
 
 code[data-line-numbers-max-digits="3"] > [data-line]::before {
-    width: 3rem;
+	width: 3rem;
 }
 
 html,
 body {
-    max-width: 100vw;
-    overflow-x: hidden;
+	max-width: 100vw;
+	overflow-x: hidden;
 }
 
 html {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar {
-    display: none;
+	display: none;
 }
 
 .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+	display: none;
 }
 
 .react-terminal-wrapper,
 .react-terminal {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 }
 
 .react-terminal-wrapper::-webkit-scrollbar,
 .react-terminal::-webkit-scrollbar {
-    display: none;
+	display: none;
 }
 
 a {
-    color: inherit;
-    text-decoration: none;
+	color: inherit;
+	text-decoration: none;
 }
 
-::view-transition-old(root), ::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
 }

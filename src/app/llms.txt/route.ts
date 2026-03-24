@@ -1,7 +1,7 @@
 export const revalidate = false;
 
 export function GET() {
-    const content = `# Yiming Wang (Pleasure1234)
+	const content = `# Yiming Wang (Pleasure1234)
 
 > Personal portfolio website of Yiming Wang, a computer science student and full-stack developer.
 
@@ -76,9 +76,9 @@ React, TypeScript, Next.js, Node.js, Java, Python, Go, PostgreSQL, MongoDB, MySQ
 - Am I OK: https://yiming1234.cn/am-i-ok
 `;
 
-    return new Response(content, {
-        headers: {
-            "Content-Type": "text/plain; charset=utf-8",
-        },
-    });
+	return new Response(content, {
+		headers: {
+			"Content-Type": "text/plain; charset=utf-8",
+		},
+	});
 }

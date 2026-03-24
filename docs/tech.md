@@ -77,7 +77,7 @@
 
 - **pnpm 10** — package manager
 - **Turbopack** — Next.js bundler (dev + build)
-- **ESLint 10** — linting (`eslint-config-next`)
+- **Biome** — linting (`biome`)
 - **PostCSS** — CSS processing
 - **tsx** — TypeScript script runner
 
