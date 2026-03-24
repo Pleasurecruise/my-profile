@@ -1,10 +1,5 @@
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeStringify from "rehype-stringify";
-import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
 import { env } from "@/lib/env";
+import { createMarkdownProcessor } from "@/lib/mdx-plugins";
 import { getAliOssClient } from "@/server/ali-oss";
 
 export type BlogTreeNode = {
@@ -106,17 +101,7 @@ function buildTreeNodes(paths: string[]) {
 }
 
 export async function markdownToHtml(markdown: string): Promise<string> {
-	const result = await unified()
-		.use(remarkParse)
-		.use(remarkGfm)
-		.use(remarkRehype, { allowDangerousHtml: true })
-		.use(rehypePrettyCode, {
-			theme: "github-dark",
-			keepBackground: true,
-		})
-		.use(rehypeStringify, { allowDangerousHtml: true })
-		.process(markdown);
-
+	const result = await createMarkdownProcessor().process(markdown);
 	return String(result);
 }
 

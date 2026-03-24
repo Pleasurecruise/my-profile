@@ -1,5 +1,6 @@
 import {
 	BotMessageSquareIcon,
+	CameraIcon,
 	FeatherIcon,
 	HourglassIcon,
 	SproutIcon,
@@ -48,6 +49,7 @@ export const DATA = {
 		{ href: "/home", icon: SproutIcon, label: "Home" },
 		{ href: "/blog", icon: HourglassIcon, label: "Blog" },
 		{ href: "/story", icon: FeatherIcon, label: "Story" },
+		{ href: "/gallery", icon: CameraIcon, label: "Gallery" },
 		{ href: "/chat", icon: BotMessageSquareIcon, label: "Chat" },
 	],
 	contact: {

@@ -2,8 +2,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { BlogContent } from "@/components/blog-content";
 import BlurFade from "@/components/magicui/blur-fade";
+import { TravelGlobe } from "@/components/travel-globe";
+import { TRAVEL_LOCATIONS } from "@/data/travel";
 import { markdownToHtml } from "@/server/blog";
-import { StoryMap } from "./_components/map";
 
 export const metadata = {
 	title: "Story",
@@ -11,20 +12,22 @@ export const metadata = {
 };
 
 const BLUR_FADE_DELAY = 0.04;
-const MAP_SPLIT_MARKER = "### 选择这个方向的原因";
+const GLOBE_SPLIT_MARKER = "### 性格与爱好";
 
 export default async function StoryPage() {
 	const filePath = join(process.cwd(), "content/story.md");
 	const markdown = readFileSync(filePath, "utf-8");
 
-	const splitIndex = markdown.indexOf(MAP_SPLIT_MARKER);
+	const globeIndex = markdown.indexOf(GLOBE_SPLIT_MARKER);
 	const [before, after] =
-		splitIndex !== -1
-			? [markdown.slice(0, splitIndex), markdown.slice(splitIndex)]
+		globeIndex !== -1
+			? [markdown.slice(0, globeIndex), markdown.slice(globeIndex)]
 			: [markdown, ""];
 
-	const beforeContent = await markdownToHtml(before);
-	const afterContent = after ? await markdownToHtml(after) : "";
+	const [beforeContent, afterContent] = await Promise.all([
+		markdownToHtml(before),
+		after ? markdownToHtml(after) : Promise.resolve(""),
+	]);
 
 	return (
 		<main className="flex flex-col min-h-[100dvh]">
@@ -32,7 +35,7 @@ export default async function StoryPage() {
 				<BlurFade delay={BLUR_FADE_DELAY}>
 					<div className="prose dark:prose-invert max-w-2xl mx-auto">
 						<BlogContent content={beforeContent} />
-						<StoryMap />
+						<TravelGlobe locations={TRAVEL_LOCATIONS} />
 						{afterContent && <BlogContent content={afterContent} />}
 					</div>
 				</BlurFade>

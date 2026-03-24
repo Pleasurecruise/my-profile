@@ -2,23 +2,13 @@ import { ArrowUpRight } from "lucide-react";
 import { Newsreader } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import {
-	DraggableCardBody,
-	DraggableCardContainer,
-} from "@/components/aceternityui/draggable-card";
+import { ImagesBadge } from "@/components/aceternityui/images-badge";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
 import { Icons } from "@/components/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
-import { TravelGlobe } from "@/components/travel-globe";
-import {
-	CodeBlock,
-	CodeBlockCopyButton,
-} from "@/components/ui/shadcn-io/ai/code-block";
-import { GALLERY_ITEMS } from "@/data/gallery";
 import { FRIENDS } from "@/data/links";
 import { DATA } from "@/data/resume";
-import { TRAVEL_LOCATIONS } from "@/data/travel";
 
 const newsreader = Newsreader({
 	subsets: ["latin"],
@@ -31,7 +21,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
 	return (
-		<main className="flex flex-col min-h-[100dvh] space-y-4">
+		<main className="flex flex-col min-h-[100dvh]">
 			<section id="hero">
 				<div className="mx-auto w-full max-w-2xl">
 					<BlurFade delay={BLUR_FADE_DELAY}>
@@ -60,7 +50,7 @@ export default function Page() {
 					</BlurFade>
 				</div>
 			</section>
-			<section id="about">
+			<section id="about" className="mt-6">
 				<BlurFade delay={BLUR_FADE_DELAY * 2}>
 					<div
 						className={`mx-auto w-full max-w-2xl space-y-4 ${newsreader.variable}`}
@@ -110,6 +100,19 @@ export default function Page() {
 							. Building with React, Next.js, and TypeScript.
 						</p>
 						<p className="text-[15px] leading-relaxed text-muted-foreground">
+							Off the keyboard, I ride road bikes, get lost in music, and sink
+							hours into open-world games. A{" "}
+							<span
+								className="italic text-foreground"
+								style={{ fontFamily: "var(--font-newsreader)" }}
+							>
+								hackathon
+							</span>{" "}
+							enthusiast who has competed across universities in 🇬🇧 — someday I
+							hope to go full digital nomad, shipping open source from wherever
+							the road takes me.
+						</p>
+						<p className="text-[15px] leading-relaxed text-muted-foreground">
 							Currently I am seeking a job opportunity. Click{" "}
 							<Highlighter action="highlight" color="#87CEFA">
 								<Link
@@ -125,62 +128,18 @@ export default function Page() {
 					</div>
 				</BlurFade>
 			</section>
-			<section id="photos">
-				<BlurFade delay={BLUR_FADE_DELAY * 5}>
-					<div className="space-y-4 mx-auto w-full max-w-2xl">
-						<span
-							className="italic"
-							style={{ fontFamily: "var(--font-newsreader)" }}
-						>
-							Gallery
-						</span>
-						<DraggableCardContainer className="relative flex h-[600px] w-full items-center justify-center overflow-clip">
-							<p className="absolute top-1/2 mx-auto max-w-sm -translate-y-3/4 text-center text-2xl font-black text-neutral-400 md:text-4xl dark:text-neutral-800">
-								It is a great honor to have you visit my blog.
-							</p>
-							{GALLERY_ITEMS.map((item) => (
-								<DraggableCardBody
-									key={item.title}
-									className={item.className}
-									style={{ rotate: item.rotate }}
-								>
-									<img
-										src={item.image}
-										alt={item.title}
-										className="pointer-events-none relative z-10 h-80 w-80 object-cover"
-									/>
-									<h3 className="mt-4 text-center text-2xl font-bold text-neutral-700 dark:text-neutral-300">
-										{item.title}
-									</h3>
-								</DraggableCardBody>
-							))}
-						</DraggableCardContainer>
+			<section id="links" className="mt-16">
+				<BlurFade delay={BLUR_FADE_DELAY * 3}>
+					<div className="mx-auto w-full max-w-2xl mb-6">
+						<ImagesBadge
+							text="Friends"
+							images={FRIENDS.slice(0, 3).map((f) => f.avatar)}
+						/>
 					</div>
 				</BlurFade>
-			</section>
-			<section id="travel">
-				<BlurFade delay={BLUR_FADE_DELAY * 5}>
-					<div className="space-y-4 mx-auto w-full max-w-2xl">
-						<span
-							className="italic"
-							style={{ fontFamily: "var(--font-newsreader)" }}
-						>
-							Travel
-						</span>
-						<TravelGlobe locations={TRAVEL_LOCATIONS} />
-					</div>
-				</BlurFade>
-			</section>
-			<section id="links">
 				<BlurFade delay={BLUR_FADE_DELAY * 4}>
-					<div className="space-y-4 mx-auto w-full max-w-2xl">
-						<span
-							className="italic"
-							style={{ fontFamily: "var(--font-newsreader)" }}
-						>
-							Friends
-						</span>
-						<ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3 mt-2">
+					<div className="mx-auto w-full max-w-2xl">
+						<ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
 							{FRIENDS.map((friend) => (
 								<li key={friend.url}>
 									<Link
@@ -205,7 +164,7 @@ export default function Page() {
 					</div>
 				</BlurFade>
 			</section>
-			<section id="friend-link">
+			<section id="friend-link" className="mt-10">
 				<BlurFade delay={BLUR_FADE_DELAY * 4.5}>
 					<div className="space-y-4 mx-auto w-full max-w-2xl">
 						<span
@@ -227,31 +186,37 @@ export default function Page() {
 							</Link>
 							.
 						</p>
-						<CodeBlock
-							code={`{
-    name: "Pleasure1234",
-    url: "https://yiming1234.cn",
-    avatar: "https://yiming1234.cn/profile/me.png",
-    description: "Any shortcomings are kindly overlooked🙏"
-}`}
-							language="json"
-							className="ml-0.5"
-						>
-							<CodeBlockCopyButton />
-						</CodeBlock>
+						<ul className="space-y-1 text-[15px] text-muted-foreground ml-0.5">
+							<li>
+								<span className="text-foreground">name</span>: Pleasure1234
+							</li>
+							<li>
+								<span className="text-foreground">url</span>: yiming1234.cn
+							</li>
+							<li>
+								<span className="text-foreground">avatar</span>:
+								yiming1234.cn/profile/me.png
+							</li>
+							<li>
+								<span className="text-foreground">description</span>: Any
+								shortcomings are kindly overlooked 🙏
+							</li>
+						</ul>
 					</div>
 				</BlurFade>
 			</section>
-			<section id="contact">
+			<section id="contact" className="mt-16">
 				<BlurFade delay={BLUR_FADE_DELAY * 5}>
 					<div className="space-y-4 mx-auto w-full max-w-2xl">
-						<span
-							className="italic"
-							style={{ fontFamily: "var(--font-newsreader)" }}
-						>
-							connect
-						</span>
-						<ul className="space-y-3 mt-2">
+						<ImagesBadge
+							text="Connect"
+							images={[
+								"https://cdn.simpleicons.org/instagram",
+								"https://cdn.simpleicons.org/discord",
+								"https://cdn.simpleicons.org/wechat",
+							]}
+						/>
+						<ul className="space-y-3">
 							<li>
 								<Link
 									href={`mailto:${DATA.contact.email}`}
