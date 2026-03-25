@@ -12,7 +12,7 @@ export default async function AuthLayout({
 		headers: await headers(),
 	});
 	if (session?.user) {
-		return redirect("/");
+		return redirect("/chat");
 	}
 
 	return <div className="">{children}</div>;

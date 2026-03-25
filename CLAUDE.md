@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal portfolio website built with Next.js 16, React 19, TypeScript, TailwindCSS v4, and tRPC. Features a blog, AI chat, Moments feed, interactive terminal, real-time activity status, and authentication.
+Personal website built with Next.js 16, React 19, TypeScript, TailwindCSS v4, and tRPC. Features a blog, AI chat, Moments feed, interactive terminal, real-time activity status, and authentication.
 
 ## Package Manager
 
@@ -55,7 +55,7 @@ src/
 │   ├── ui/            # shadcn/ui components
 │   └── magicui/       # Magic UI components
 ├── data/
-│   └── resume.tsx     # All personal/portfolio data — edit here
+│   └── resume.tsx     # All personal data — edit here
 ├── db/                # Prisma schema and client
 ├── trpc/              # tRPC router and procedures
 └── lib/               # Utility functions
@@ -64,7 +64,7 @@ scripts/               # macOS LaunchAgent for am-i-ok status
 ```
 
 ### Data & Content
-- **Portfolio data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
+- **Site data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
 - **Blog posts**: MDX files in `content/`
 - **Database**: PostgreSQL via Prisma — handles auth sessions, moments, etc.
 

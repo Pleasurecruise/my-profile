@@ -4,13 +4,13 @@
 
 | Package | Version |
 |---------|---------|
-| Next.js | 16.1.6 |
+| Next.js | 16.2.1 |
 | React | 19.2.4 |
-| TypeScript | 5.x |
+| TypeScript | 6.x |
 
 ## UI & Styling
 
-- **TailwindCSS 4.2.1** — utility-first CSS, configured via CSS variables (no `tailwind.config.ts`)
+- **TailwindCSS 4.2.2** — utility-first CSS, configured via CSS variables (no `tailwind.config.ts`)
 - **Radix UI** — accessible primitives (Avatar, Dialog, Tabs, Tooltip, Select, etc.)
 - **shadcn/ui** — component library built on Radix (New York style)
 - **Magic UI** — special effect components (`blur-fade`, `dock`, etc.)
@@ -21,7 +21,7 @@
 
 ## Authentication
 
-- **Better Auth 1.5.5** — OAuth + email authentication
+- **Better Auth 1.5.6** — OAuth + email authentication
 - **@better-auth/prisma-adapter** — Prisma integration
 
 ## Database & ORM
@@ -93,12 +93,14 @@ src/
 │   ├── blog/
 │   ├── chat/
 │   ├── cv/
-│   └── moment/
+│   ├── gallery/
+│   ├── moment/
+│   └── story/
 ├── components/
 │   ├── ui/            # shadcn/ui
 │   └── magicui/       # Magic UI
 ├── data/
-│   └── resume.tsx     # Portfolio data
+│   └── resume.tsx     # Site data
 ├── db/                # Prisma schema + client
 ├── trpc/              # tRPC router
 └── lib/               # Utilities
