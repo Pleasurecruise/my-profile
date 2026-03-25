@@ -1,6 +1,7 @@
 "use client";
 
 import { SquareTerminal } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Terminal } from "@/app/_terminal/terminal";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
@@ -32,10 +33,16 @@ export function FloatingTerminal() {
 	const [open, setOpen] = useState(false);
 	const [mounted, setMounted] = useState(false);
 	const isMobile = useIsMobile();
+	const pathname = usePathname();
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 	const [size, setSize] = useState({ w: DEFAULT_W, h: DEFAULT_H });
 	const [active, setActive] = useState(false);
 	const interactionRef = useRef<InteractionType | null>(null);
+
+	// Close terminal on route change
+	useEffect(() => {
+		setOpen(false);
+	}, [pathname]);
 
 	// Keyboard shortcut Ctrl/Cmd + `
 	useEffect(() => {

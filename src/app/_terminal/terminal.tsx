@@ -183,14 +183,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 					}, 800);
 					return;
 				}
-				setLines((prev) => [
-					...prev,
-					{
-						id: nextId(),
-						type: "output",
-						text: `redirecting to ${result.path} ...`,
-					},
-				]);
+				onClose?.();
 				router.push(result.path);
 			} else if (result.kind === "text") {
 				setLines((prev) => [
