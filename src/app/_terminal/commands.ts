@@ -75,7 +75,7 @@ export function resolveCommand(
 		case "skills":
 			return {
 				kind: "text",
-				text: `Tech Stack:\n  ${DATA.skills.join("  |  ")}`,
+				text: `Tech Stack:\n  ${DATA.skills.map((s) => s.name).join("  |  ")}`,
 			};
 
 		case "social":

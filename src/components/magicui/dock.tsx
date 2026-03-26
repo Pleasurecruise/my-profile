@@ -106,7 +106,7 @@ const DockIcon = ({
 	const width = useSpring(widthSync, {
 		mass: 0.1,
 		stiffness: 150,
-		damping: 12,
+		damping: 20,
 	});
 
 	return (

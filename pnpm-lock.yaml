@@ -75,7 +75,7 @@ importers:
         specifier: 1.2.2
         version: 1.2.2(@types/react@19.2.14)(react@19.2.4)
       '@tabler/icons-react':
-        specifier: ^3.40.0
+        specifier: 3.40.0
         version: 3.40.0(react@19.2.4)
       '@tanstack/react-query':
         specifier: 5.95.2
@@ -120,8 +120,8 @@ importers:
         specifier: 5.2.17
         version: 5.2.17(@types/react@19.2.14)(react@19.2.4)
       katex:
-        specifier: 0.16.42
-        version: 0.16.42
+        specifier: 0.16.43
+        version: 0.16.43
       lucide-react:
         specifier: 1.7.0
         version: 1.7.0(react@19.2.4)
@@ -129,7 +129,7 @@ importers:
         specifier: 3.20.0
         version: 3.20.0(patch_hash=62daf1077f4f0e39f8376b918fd015716955d135ba19c6252597a552d801cdae)
       motion:
-        specifier: ^12.38.0
+        specifier: 12.38.0
         version: 12.38.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       next:
         specifier: 16.2.1
@@ -141,8 +141,8 @@ importers:
         specifier: 8.0.4
         version: 8.0.4
       openai:
-        specifier: 6.32.0
-        version: 6.32.0(zod@4.3.6)
+        specifier: 6.33.0
+        version: 6.33.0(zod@4.3.6)
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -2339,8 +2339,8 @@ packages:
   jstoxml@2.2.9:
     resolution: {integrity: sha512-OYWlK0j+roh+eyaMROlNbS5cd5R25Y+IUpdl7cNdB8HNrkgwQzIS7L9MegxOiWNBj9dQhA/yAxiMwCC5mwNoBw==}
 
-  katex@0.16.42:
-    resolution: {integrity: sha512-sZ4jqyEXfHTLEFK+qsFYToa3UZ0rtFcPGwKpyiRYh2NJn8obPWOQ+/u7ux0F6CAU/y78+Mksh1YkxTPXTh47TQ==}
+  katex@0.16.43:
+    resolution: {integrity: sha512-K7NL5JtGrFEglipOAjY4UYA69CnTuNmjArxeXF6+bw7h2OGySUPv6QWRjfb1gmutJ4Mw/qLeBqiROOEDULp4nA==}
     hasBin: true
 
   kdbush@4.0.2:
@@ -2761,8 +2761,8 @@ packages:
   oniguruma-to-es@4.3.5:
     resolution: {integrity: sha512-Zjygswjpsewa0NLTsiizVuMQZbp0MDyM6lIt66OxsF21npUDlzpHi1Mgb/qhQdkb+dWFTzJmFbEWdvZgRho8eQ==}
 
-  openai@6.32.0:
-    resolution: {integrity: sha512-j3k+BjydAf8yQlcOI7WUQMQTbbF5GEIMAE2iZYCOzwwB3S2pCheaWYp+XZRNAch4jWVc52PMDGRRjutao3lLCg==}
+  openai@6.33.0:
+    resolution: {integrity: sha512-xAYN1W3YsDXJWA5F277135YfkEk6H7D3D6vWwRhJ3OEkzRgcyK8z/P5P9Gyi/wB4N8kK9kM5ZjprfvyHagKmpw==}
     hasBin: true
     peerDependencies:
       ws: ^8.18.0
@@ -5342,7 +5342,7 @@ snapshots:
 
   jstoxml@2.2.9: {}
 
-  katex@0.16.42:
+  katex@0.16.43:
     dependencies:
       commander: 8.3.0
 
@@ -5710,7 +5710,7 @@ snapshots:
     dependencies:
       '@types/katex': 0.16.8
       devlop: 1.1.0
-      katex: 0.16.42
+      katex: 0.16.43
       micromark-factory-space: 2.0.1
       micromark-util-character: 2.1.1
       micromark-util-symbol: 2.0.1
@@ -5958,7 +5958,7 @@ snapshots:
       regex: 6.1.0
       regex-recursion: 6.0.2
 
-  openai@6.32.0(zod@4.3.6):
+  openai@6.33.0(zod@4.3.6):
     optionalDependencies:
       zod: 4.3.6
 
@@ -6270,7 +6270,7 @@ snapshots:
       '@types/katex': 0.16.8
       hast-util-from-html-isomorphic: 2.0.0
       hast-util-to-text: 4.0.2
-      katex: 0.16.42
+      katex: 0.16.43
       unist-util-visit-parents: 6.0.2
       vfile: 6.0.3
 

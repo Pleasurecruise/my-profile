@@ -48,7 +48,7 @@ export default function Navbar() {
 			<div className="z-50 pointer-events-auto relative mx-auto">
 				<Dock
 					direction="middle"
-					magnification={68}
+					magnification={52}
 					distance={120}
 					className="relative flex items-center px-4 gap-1
             bg-transparent dark:bg-transparent
