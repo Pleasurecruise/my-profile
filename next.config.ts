@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "gravatar.com",
 			},
+			{
+				protocol: "https",
+				hostname: "lh3.googleusercontent.com",
+			},
 		],
 	},
 	serverExternalPackages: ["ali-oss"],
