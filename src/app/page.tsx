@@ -21,7 +21,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
 	return (
-		<main className="flex flex-col min-h-[100dvh]">
+		<main className="flex flex-col min-h-dvh">
 			<section id="hero">
 				<div className="mx-auto w-full max-w-2xl">
 					<BlurFade delay={BLUR_FADE_DELAY}>
@@ -42,7 +42,7 @@ export default function Page() {
 								>
 									@Pleasurecruise
 								</Link>
-								<p className="text-[14px] text-muted-foreground">
+								<p className="text-[14px] text-foreground">
 									Full-stack Developer
 								</p>
 							</div>
@@ -55,12 +55,12 @@ export default function Page() {
 					<div
 						className={`mx-auto w-full max-w-2xl space-y-4 ${newsreader.variable}`}
 					>
-						<p className="text-[15px] leading-relaxed text-muted-foreground">
+						<p className="text-[15px] leading-relaxed text-foreground">
 							Any shortcomings are kindly overlooked. 🙏
 						</p>
-						<p className="text-[15px] leading-relaxed text-muted-foreground">
+						<p className="text-[15px] leading-relaxed text-foreground">
 							Passionate computer science student at{" "}
-							<Highlighter action="highlight" color="#87CEFA">
+							<Highlighter action="underline">
 								<Link
 									href="https://www.nottingham.ac.uk"
 									target="_blank"
@@ -86,7 +86,7 @@ export default function Page() {
 								AI
 							</span>{" "}
 							technologies. Active contributor to open source projects mainly on{" "}
-							<Highlighter action="highlight" color="#87CEFA">
+							<Highlighter action="underline">
 								<Link
 									href="https://github.com/CherryHQ/cherry-studio"
 									target="_blank"
@@ -99,7 +99,7 @@ export default function Page() {
 							</Highlighter>
 							. Building with React, Next.js, and TypeScript.
 						</p>
-						<p className="text-[15px] leading-relaxed text-muted-foreground">
+						<p className="text-[15px] leading-relaxed text-foreground">
 							Off the keyboard, I ride road bikes, get lost in music, and sink
 							hours into open-world games. A{" "}
 							<span
@@ -112,9 +112,9 @@ export default function Page() {
 							hope to go full digital nomad, shipping open source from wherever
 							the road takes me.
 						</p>
-						<p className="text-[15px] leading-relaxed text-muted-foreground">
+						<p className="text-[15px] leading-relaxed text-foreground">
 							Currently I am seeking a job opportunity. Click{" "}
-							<Highlighter action="highlight" color="#87CEFA">
+							<Highlighter action="underline">
 								<Link
 									href="/cv"
 									className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
@@ -229,7 +229,7 @@ export default function Page() {
 								<Tooltip
 									content={
 										<div className="flex items-center justify-center">
-											<div className="h-[200px] w-[200px] overflow-hidden rounded-lg">
+											<div className="h-50 w-50 overflow-hidden rounded-lg">
 												<Image
 													src="/profile/wechat.png"
 													alt="WeChat QR Code"

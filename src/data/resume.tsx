@@ -64,6 +64,13 @@ export const DATA = {
 
 				navbar: true,
 			},
+			Notion: {
+				name: "Notion",
+				url: "https://yiming1234.notion.site/me",
+				icon: Icons.notion,
+
+				navbar: true,
+			},
 			X: {
 				name: "X",
 				url: "https://x.com/Pleasure9876",

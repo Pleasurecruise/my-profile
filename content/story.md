@@ -103,6 +103,48 @@ ISTJ（内向·感知·思考·判断）被称为"物流师"或"检查者"。形
 
 梦想是能有一个属于自己的开源项目 或者是能够加入库/框架级的开源组织 当数字游牧人
 
+### 我的工具箱
+
+**设备**
+
+- 联想小新 —— 外出携带
+- Mac Mini M4 —— 居家办公
+- OPPO Reno 9 Pro+ —— 手机
+- OPPO Enco R3 Pro —— 蓝牙耳机
+
+**IDE**
+
+JetBrains 全家桶忠实爱好者，仓库级项目首选
+
+小项目临时编辑用 VS Code，体验过 Sublime Text、Vim、Notepad++、Trae、Cursor、Zed……
+
+**日常笔记**
+
+- Obsidian —— 学习工作笔记，配合 AI CLI 整理
+- Notion —— 日程规划 / 兴趣与生活记录
+
+**IM**
+
+- 微信 —— 同学老师等熟人间社交
+- QQ —— 社群交流
+- 推特 —— 日常生活交流分享
+- 偶尔闪现 Telegram、Discord 等
+- 开发活动交流流落在飞书与微信之间
+
+**AI 工具**
+
+- Claude Code —— vibe coding 主力
+- Codex —— session limit 了，应急备用
+- Cherry Studio —— 日常对话 / API 调试
+- Claude Desktop —— 文件处理 & 新功能体验
+- Gemini —— 图片创作
+
+**每月订阅**
+
+Claude Pro · Twitter Plus · QQ Music 绿钻
+
+> 曾经尝试订阅 GLM Coding Plan 没成功，也订阅过各大二游月卡。
+
 ## 我的 oc
 
 <div><img src="/oc/design.png" alt="picture" width="420" /></div> 

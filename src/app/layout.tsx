@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono as FontSans } from "next/font/google";
-import Script from "next/script";
 import { FloatingTerminal } from "@/components/floating-terminal";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import NavbarWrapper from "@/components/navbar-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { VantaClouds2Client } from "@/components/vanta-clouds2-client";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
@@ -69,19 +67,12 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<head>
-				<Script
-					src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"
-					strategy="beforeInteractive"
-				/>
-			</head>
 			<body
 				className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
 			>
 				<TRPCReactProvider>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 						<TooltipProvider delayDuration={0}>
-							<VantaClouds2Client />
 							<ScrollProgress />
 							<div className="mx-auto w-full max-w-2xl px-6 pt-12 pb-24 sm:py-24">
 								{children}
