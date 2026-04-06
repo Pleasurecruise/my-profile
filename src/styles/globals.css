@@ -223,6 +223,54 @@ body {
 	overflow-x: hidden;
 }
 
+/* === Background System === */
+
+/* Light mode: use a visible light gray so the white center glow has contrast */
+html:not(.dark) {
+	background-color: hsl(0, 0%, 93%);
+}
+
+/* Dark mode: keep the existing near-black from CSS variable */
+html.dark {
+	background-color: var(--background);
+}
+
+/* Noise grain texture */
+.bg-noise {
+	background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>");
+	background-size: 200px 200px;
+}
+
+/* === Cherry Blossom === */
+
+@keyframes petal-fall {
+	0% {
+		transform: translateY(-8vh);
+		opacity: 0;
+	}
+	8% {
+		transform: translateY(4vh);
+		opacity: 1;
+	}
+	92% {
+		transform: translateY(96vh);
+		opacity: 0.85;
+	}
+	100% {
+		transform: translateY(110vh);
+		opacity: 0;
+	}
+}
+
+@keyframes petal-sway {
+	from {
+		transform: translateX(-28px) rotateZ(0deg);
+	}
+	to {
+		transform: translateX(28px) rotateZ(180deg);
+	}
+}
+
 html {
 	scrollbar-width: none;
 	-ms-overflow-style: none;

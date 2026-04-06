@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ImagesBadge } from "@/components/aceternityui/images-badge";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
+import { HelloSignature } from "@/components/hello-signature";
 import { Icons } from "@/components/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
@@ -40,7 +41,7 @@ export default function Page() {
 									rel="noopener noreferrer"
 									className="text-[20px] font-medium text-foreground hover:underline"
 								>
-									@Pleasurecruise
+									@Pleasure1234
 								</Link>
 								<p className="text-[14px] text-foreground">
 									Full-stack Developer
@@ -325,13 +326,7 @@ export default function Page() {
 						</div>
 						<div className="flex justify-end">
 							<div className="text-right text-muted-foreground/40">
-								<p className="text-[13px]">𐔌՞. .՞𐦯 ᢉ𐭩.ᐟ🍮</p>
-								<p
-									className="text-[13px] italic"
-									style={{ fontFamily: "var(--font-newsreader)" }}
-								>
-									a pudding for you
-								</p>
+								<HelloSignature />
 							</div>
 						</div>
 					</div>

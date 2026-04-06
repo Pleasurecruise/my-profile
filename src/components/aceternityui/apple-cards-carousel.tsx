@@ -59,6 +59,14 @@ export const Carousel = forwardRef<CarouselHandle, CarouselProps>(
 			}
 		}, [initialScroll]);
 
+		useEffect(() => {
+			const el = carouselRef.current;
+			if (!el) return;
+			const onResize = () => checkScrollability();
+			window.addEventListener("resize", onResize);
+			return () => window.removeEventListener("resize", onResize);
+		}, []);
+
 		const checkScrollability = () => {
 			if (carouselRef.current) {
 				const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -109,7 +117,7 @@ export const Carousel = forwardRef<CarouselHandle, CarouselProps>(
 			>
 				<div className="relative w-full">
 					<div
-						className="flex w-full overflow-x-scroll overscroll-x-auto scroll-smooth py-4 [scrollbar-width:none]"
+						className="flex w-full overflow-x-scroll overscroll-x-contain scroll-smooth py-4 [scrollbar-width:none] touch-pan-x"
 						ref={carouselRef}
 						onScroll={checkScrollability}
 					>

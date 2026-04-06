@@ -20,7 +20,7 @@ import { Typescript } from "@/components/ui/svgs/typescript";
 
 export const DATA = {
 	name: "Yiming Wang",
-	initials: "Pleasurecruise",
+	initials: "Pleasure1234",
 	url: "https://yiming1234.cn",
 	location: "Nottingham, UK",
 	locationLink: "https://www.google.com/maps/place/nottingham",
