@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono as FontSans } from "next/font/google";
-import { CherryBlossom } from "@/components/cherry-blossom";
+import {
+	Fira_Code,
+	JetBrains_Mono as FontSans,
+	Noto_Sans_SC,
+} from "next/font/google";
+import { CherryBlossom } from "@my-profile/ui";
 import { FloatingTerminal } from "@/components/floating-terminal";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import NavbarWrapper from "@/components/navbar-wrapper";
@@ -18,6 +22,19 @@ const fontSans = FontSans({
 	variable: "--font-sans",
 });
 
+const fontCJK = Noto_Sans_SC({
+	weight: ["400", "500", "700"],
+	variable: "--font-cjk",
+	display: "swap",
+});
+
+const fontMono = Fira_Code({
+	subsets: ["latin"],
+	weight: ["400", "500", "600"],
+	variable: "--font-mono",
+	display: "swap",
+});
+
 export const metadata: Metadata = {
 	metadataBase: new URL(DATA.url),
 	title: {
@@ -32,6 +49,7 @@ export const metadata: Metadata = {
 		siteName: "Pleasure1234 的小站",
 		locale: "en_US",
 		type: "website",
+		images: [`${DATA.url}/og`],
 	},
 	robots: {
 		index: true,
@@ -49,6 +67,7 @@ export const metadata: Metadata = {
 		description: DATA.description,
 		card: "summary_large_image",
 		creator: "@Pleasure9876",
+		images: [`${DATA.url}/og`],
 	},
 	alternates: {
 		types: {
@@ -69,7 +88,12 @@ export default function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body
-				className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
+				className={cn(
+					"min-h-screen font-sans antialiased",
+					fontSans.variable,
+					fontCJK.variable,
+					fontMono.variable,
+				)}
 			>
 				<TRPCReactProvider>
 					<ThemeProvider attribute="class" defaultTheme="system" enableSystem>

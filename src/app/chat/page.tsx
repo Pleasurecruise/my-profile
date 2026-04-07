@@ -34,6 +34,8 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function ChatPage() {
 	const [messages, setMessages] = useState<Message[]>([]);
+	const messagesRef = useRef<Message[]>([]);
+	messagesRef.current = messages;
 	const [isLoading, setIsLoading] = useState(false);
 	const { data: session } = useSession();
 	const sendMessageMutation = api.chat.sendMessage.useMutation();
@@ -164,10 +166,9 @@ export default function ChatPage() {
 
 		try {
 			const stream = await sendMessageMutation.mutateAsync({
-				messages: [...messages, userMessage].map(({ role, content }) => ({
-					role,
-					content,
-				})),
+				messages: [...messagesRef.current, userMessage].map(
+					({ role, content }) => ({ role, content }),
+				),
 			});
 
 			for await (const chunk of stream) {

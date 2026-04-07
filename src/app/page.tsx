@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ImagesBadge } from "@/components/aceternityui/images-badge";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
-import { HelloSignature } from "@/components/hello-signature";
+import { HelloSignature } from "@my-profile/ui";
 import { Icons } from "@/components/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";

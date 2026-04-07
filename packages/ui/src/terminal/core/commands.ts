@@ -1,5 +1,4 @@
-import { FRIENDS } from "@/data/links";
-import { DATA } from "@/data/resume";
+import type { TerminalConfig } from "./config";
 import type { SelectorItem, SlashCommandResult } from "./types";
 
 const FORTUNES = [
@@ -26,25 +25,22 @@ export const TOP_COMMANDS: SelectorItem[] = [
 	{ label: "/reload", value: "/reload", desc: "Reload the page" },
 ];
 
-export const GO_DESTINATIONS: SelectorItem[] = [
-	{ label: "blog", value: "/go blog", desc: "Blog" },
-	{ label: "chat", value: "/go chat", desc: "AI chat" },
-	{ label: "story", value: "/go story", desc: "My personal story" },
-	{ label: "cv", value: "/go cv", desc: "CV / Resume" },
-];
+function getGoDestinations(config: TerminalConfig): SelectorItem[] {
+	return Object.keys(config.routes ?? {}).map((key) => ({
+		label: key,
+		value: `/go ${key}`,
+		desc: key.charAt(0).toUpperCase() + key.slice(1),
+	}));
+}
 
-const GO_ROUTES: Record<string, string> = {
-	blog: "/blog",
-	chat: "/chat",
-	story: "/story",
-	cv: "/cv",
-};
-
-export function getSelectorItems(input: string): SelectorItem[] {
+export function getSelectorItems(
+	input: string,
+	config: TerminalConfig,
+): SelectorItem[] {
 	const lower = input.toLowerCase();
 	if (lower === "/go" || lower.startsWith("/go ")) {
 		const partial = lower.slice(4);
-		return GO_DESTINATIONS.filter((d) => d.label.startsWith(partial));
+		return getGoDestinations(config).filter((d) => d.label.startsWith(partial));
 	}
 	if (lower.startsWith("/")) {
 		return TOP_COMMANDS.filter((c) => c.value.startsWith(lower));
@@ -52,7 +48,9 @@ export function getSelectorItems(input: string): SelectorItem[] {
 	return [];
 }
 
-const HELP_TEXT = `Available slash commands:
+function buildHelpText(config: TerminalConfig): string {
+	const routeNames = Object.keys(config.routes ?? {}).join(" | ");
+	return `Available slash commands:
   /help        - Show this help message
   /skills      - Tech stack
   /social      - Social media links
@@ -61,27 +59,32 @@ const HELP_TEXT = `Available slash commands:
   /links       - Friend links
   /am-i-ok     - What am I doing right now
   /dino        - Play Chrome Dino
-  /go <page>   - Navigate  (blog | chat | story | cv)
+  /go <page>   - Navigate  (${routeNames || "..."})
   /reload      - Reload the page`;
+}
 
 export function resolveCommand(
 	slug: string,
 	rest: string,
+	config: TerminalConfig,
 ): SlashCommandResult | null {
+	const routes = config.routes ?? {};
+	const hostname = config.hostname ?? "user@website";
+
 	switch (slug) {
 		case "help":
-			return { kind: "text", text: HELP_TEXT };
+			return { kind: "text", text: buildHelpText(config) };
 
 		case "skills":
 			return {
 				kind: "text",
-				text: `Tech Stack:\n  ${DATA.skills.map((s) => s.name).join("  |  ")}`,
+				text: `Tech Stack:\n  ${config.skills.join("  |  ")}`,
 			};
 
 		case "social":
 			return {
 				kind: "links",
-				items: Object.values(DATA.contact.social)
+				items: config.social
 					.filter((s) => s.url !== "#")
 					.map((s) => ({ label: s.name.padEnd(10), url: s.url })),
 			};
@@ -90,12 +93,18 @@ export function resolveCommand(
 			return {
 				kind: "links",
 				items: [
-					{ label: "Email     ", url: `mailto:${DATA.contact.email}` },
-					{
-						label: "Telegram  ",
-						url: `https://t.me/${DATA.contact.telegram.replace(/^@/, "")}`,
-					},
-					{ label: "WeChat    ", url: `wechat:${DATA.contact.wechat}` },
+					{ label: "Email     ", url: `mailto:${config.contact.email}` },
+					...(config.contact.telegram
+						? [
+								{
+									label: "Telegram  ",
+									url: `https://t.me/${config.contact.telegram.replace(/^@/, "")}`,
+								},
+							]
+						: []),
+					...(config.contact.wechat
+						? [{ label: "WeChat    ", url: `wechat:${config.contact.wechat}` }]
+						: []),
 				],
 			};
 
@@ -104,7 +113,7 @@ export function resolveCommand(
 				kind: "text",
 				text:
 					"Projects:\n" +
-					DATA.projects
+					config.projects
 						.map(
 							(p, i) =>
 								`  ${String(i + 1).padStart(2, "0")}. ${p.title}  (${p.dates})`,
@@ -115,7 +124,10 @@ export function resolveCommand(
 		case "links":
 			return {
 				kind: "links",
-				items: FRIENDS.map((f) => ({ label: f.name.padEnd(20), url: f.url })),
+				items: config.friends.map((f) => ({
+					label: f.name.padEnd(20),
+					url: f.url,
+				})),
 			};
 
 		case "dino":
@@ -123,17 +135,17 @@ export function resolveCommand(
 
 		case "go": {
 			const dest = rest.trim().toLowerCase();
-			const path = GO_ROUTES[dest];
+			const path = routes[dest];
 			if (path) return { kind: "navigate", path };
 			if (!dest) {
 				return {
 					kind: "text",
-					text: `Usage: /go <page>\nAvailable: ${Object.keys(GO_ROUTES).join(" | ")}`,
+					text: `Usage: /go <page>\nAvailable: ${Object.keys(routes).join(" | ")}`,
 				};
 			}
 			return {
 				kind: "text",
-				text: `go: unknown destination '${dest}'\nAvailable: ${Object.keys(GO_ROUTES).join(" | ")}`,
+				text: `go: unknown destination '${dest}'\nAvailable: ${Object.keys(routes).join(" | ")}`,
 			};
 		}
 
@@ -144,7 +156,7 @@ export function resolveCommand(
 			return { kind: "navigate", path: "__reload__" };
 
 		case "ping": {
-			const target = rest.trim() || "yiming1234.cn";
+			const target = rest.trim() || hostname.split("@")[1] || hostname;
 			return {
 				kind: "stream",
 				items: [
@@ -224,15 +236,18 @@ export function resolveCommand(
 			return {
 				kind: "text",
 				text:
-					`Linux yiming1234.cn 6.6.0-website #1 SMP PREEMPT_DYNAMIC\n` +
+					`Linux ${hostname.split("@")[1] ?? hostname} 6.6.0-website #1 SMP PREEMPT_DYNAMIC\n` +
 					`Next.js 16 / React 19 / TypeScript — running in your browser`,
 			};
 
-		case "neofetch":
+		case "neofetch": {
+			const host = hostname.split("@");
+			const user = host[0] ?? "user";
+			const site = host[1] ?? hostname;
 			return {
 				kind: "text",
 				text: [
-					`        ·:·         pleasure1234@website`,
+					`        ·:·         ${user}@${site}`,
 					`      ·'   '·       ──────────────────────────`,
 					`    .'  ╔══╗  '.    OS:       Website OS (Next.js 16)`,
 					`   /   ╔╝  ╚╗   \\  Host:     Vercel Edge Network`,
@@ -244,6 +259,7 @@ export function resolveCommand(
 					`                   CPU:      V8 @ browser speed`,
 				].join("\n"),
 			};
+		}
 
 		case "hack":
 			return {
@@ -282,9 +298,12 @@ export function resolveCommand(
 				return {
 					kind: "stream",
 					items: [
-						{ text: `Hit:1 https://yiming1234.cn stable InRelease`, delay: 0 },
 						{
-							text: `Get:2 https://yiming1234.cn stable/main Packages [1,337 kB]`,
+							text: `Hit:1 https://${hostname.split("@")[1] ?? hostname} stable InRelease`,
+							delay: 0,
+						},
+						{
+							text: `Get:2 https://${hostname.split("@")[1] ?? hostname} stable/main Packages [1,337 kB]`,
 							delay: 600,
 						},
 						{ text: `Fetched 1,337 kB in 0s (∞ kB/s)`, delay: 1200 },
@@ -294,7 +313,6 @@ export function resolveCommand(
 					],
 				};
 			}
-
 			if (subcmd === "upgrade") {
 				return {
 					kind: "stream",
@@ -321,14 +339,12 @@ export function resolveCommand(
 					],
 				};
 			}
-
 			if (subcmd === "install") {
-				if (!pkg) {
+				if (!pkg)
 					return {
 						kind: "text",
 						text: `${slug}: 'install' requires at least one package name`,
 					};
-				}
 				return {
 					kind: "stream",
 					items: [
@@ -352,7 +368,6 @@ export function resolveCommand(
 					],
 				};
 			}
-
 			if (subcmd === "remove" || subcmd === "purge") {
 				const target = sub.split(/\s+/).slice(1).join(" ") || "???";
 				return {
@@ -375,14 +390,11 @@ export function resolveCommand(
 					],
 				};
 			}
-
-			if (!subcmd) {
+			if (!subcmd)
 				return {
 					kind: "text",
 					text: `Usage: apt [update | upgrade | install <pkg> | remove <pkg>]`,
 				};
-			}
-
 			return {
 				kind: "text",
 				text: `${slug}: invalid operation ${subcmd}\nUsage: apt [update | upgrade | install <pkg> | remove <pkg>]`,
@@ -391,13 +403,13 @@ export function resolveCommand(
 
 		case "cd": {
 			const dest = rest.trim().toLowerCase().replace(/^\//, "");
-			const path = GO_ROUTES[dest];
+			const path = routes[dest];
 			if (path) return { kind: "navigate", path };
 			if (!dest || dest === "~" || dest === "..")
 				return { kind: "text", text: `You're already home.` };
 			return {
 				kind: "text",
-				text: `cd: ${rest.trim()}: No such directory\nAvailable: ${Object.keys(GO_ROUTES).join("  ")}`,
+				text: `cd: ${rest.trim()}: No such directory\nAvailable: ${Object.keys(routes).join("  ")}`,
 			};
 		}
 
@@ -406,7 +418,10 @@ export function resolveCommand(
 			return {
 				kind: "stream",
 				items: [
-					{ text: `Broadcast message from root@yiming1234.cn`, delay: 0 },
+					{
+						text: `Broadcast message from root@${hostname.split("@")[1] ?? hostname}`,
+						delay: 0,
+					},
 					{ text: `The system will reboot NOW!`, delay: 600 },
 					{ text: `[ OK ] Stopped Next.js app router.`, delay: 1200 },
 					{ text: `[ OK ] Stopped React renderer.`, delay: 1700 },
@@ -417,67 +432,57 @@ export function resolveCommand(
 				],
 			};
 
-		case "node": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version")
-				return { kind: "text", text: `v22.14.0` };
-			return { kind: "text", text: `Try: node -v` };
-		}
+		case "node":
+			return rest.trim() === "-v" || rest.trim() === "--version"
+				? { kind: "text", text: `v22.14.0` }
+				: { kind: "text", text: `Try: node -v` };
 
-		case "npm": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version")
-				return { kind: "text", text: `10.9.2` };
-			return { kind: "text", text: `Try: npm -v` };
-		}
+		case "npm":
+			return rest.trim() === "-v" || rest.trim() === "--version"
+				? { kind: "text", text: `10.9.2` }
+				: { kind: "text", text: `Try: npm -v` };
 
-		case "pnpm": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version")
-				return { kind: "text", text: `10.6.5` };
-			return { kind: "text", text: `Try: pnpm -v` };
-		}
+		case "pnpm":
+			return rest.trim() === "-v" || rest.trim() === "--version"
+				? { kind: "text", text: `10.6.5` }
+				: { kind: "text", text: `Try: pnpm -v` };
 
-		case "yarn": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version")
-				return { kind: "text", text: `4.7.0` };
-			return { kind: "text", text: `Try: yarn -v` };
-		}
+		case "yarn":
+			return rest.trim() === "-v" || rest.trim() === "--version"
+				? { kind: "text", text: `4.7.0` }
+				: { kind: "text", text: `Try: yarn -v` };
 
 		case "pip":
-		case "pip3": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version" || flag === "-V")
-				return {
-					kind: "text",
-					text: `pip 25.0.1 from /usr/lib/python3.13/site-packages/pip (python 3.13)`,
-				};
-			return { kind: "text", text: `Try: pip --version` };
-		}
+		case "pip3":
+			return rest.trim() === "-v" ||
+				rest.trim() === "--version" ||
+				rest.trim() === "-V"
+				? {
+						kind: "text",
+						text: `pip 25.0.1 from /usr/lib/python3.13/site-packages/pip (python 3.13)`,
+					}
+				: { kind: "text", text: `Try: pip --version` };
 
-		case "bun": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version")
-				return { kind: "text", text: `1.2.4` };
-			return { kind: "text", text: `Try: bun -v` };
-		}
+		case "bun":
+			return rest.trim() === "-v" || rest.trim() === "--version"
+				? { kind: "text", text: `1.2.4` }
+				: { kind: "text", text: `Try: bun -v` };
 
 		case "python":
-		case "python3": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version" || flag === "-V")
-				return { kind: "text", text: `Python 3.13.2` };
-			return { kind: "text", text: `Try: python --version` };
-		}
+		case "python3":
+			return rest.trim() === "-v" ||
+				rest.trim() === "--version" ||
+				rest.trim() === "-V"
+				? { kind: "text", text: `Python 3.13.2` }
+				: { kind: "text", text: `Try: python --version` };
 
 		case "rustc":
-		case "cargo": {
-			const flag = rest.trim();
-			if (flag === "-v" || flag === "--version" || flag === "-V")
-				return { kind: "text", text: `${slug} 1.85.0 (4d91de4e4 2025-02-17)` };
-			return { kind: "text", text: `Try: ${slug} --version` };
-		}
+		case "cargo":
+			return rest.trim() === "-v" ||
+				rest.trim() === "--version" ||
+				rest.trim() === "-V"
+				? { kind: "text", text: `${slug} 1.85.0 (4d91de4e4 2025-02-17)` }
+				: { kind: "text", text: `Try: ${slug} --version` };
 
 		case "rustup": {
 			const flag = rest.trim();
@@ -494,24 +499,21 @@ export function resolveCommand(
 		case "ls": {
 			const flag = rest.trim().toLowerCase();
 			if (flag === "-la" || flag === "-al" || flag === "-a" || flag === "-l") {
+				const dirs = Object.keys(routes);
 				return {
 					kind: "text",
 					text: [
-						`drwxr-xr-x  visitor  visitors   about/`,
-						`drwxr-xr-x  visitor  visitors   blog/`,
-						`drwxr-xr-x  visitor  visitors   chat/`,
-						`drwxr-xr-x  visitor  visitors   cv/`,
-						`drwxr-xr-x  visitor  visitors   story/`,
+						...dirs.map((d) => `drwxr-xr-x  visitor  visitors   ${d}/`),
 						`-rw-r--r--  visitor  visitors   package.json`,
 						`-rw-r--r--  visitor  visitors   README.md`,
-						`-rw-r--r--  visitor  visitors   tailwind.config.ts`,
-						`-rw-r--r--  visitor  visitors   tsconfig.json`,
 					].join("\n"),
 				};
 			}
 			return {
 				kind: "text",
-				text: `blog/  chat/  cv/  story/  package.json  README.md  tailwind.config.ts  tsconfig.json`,
+				text: `${Object.keys(routes)
+					.map((d) => `${d}/`)
+					.join("  ")}  package.json  README.md`,
 			};
 		}
 
@@ -526,7 +528,7 @@ export function resolveCommand(
 			if (file === "readme.md" || file === "readme") {
 				return {
 					kind: "text",
-					text: `# pleasure1234's website\n\nA personal website built with Next.js, TypeScript,\nTailwindCSS, and a sprinkle of chaos.\n\nTry /help for available commands.`,
+					text: `# ${hostname}\n\nA personal website built with Next.js, TypeScript,\nTailwindCSS, and a sprinkle of chaos.\n\nTry /help for available commands.`,
 				};
 			}
 			if (file === "package.json") {
@@ -569,7 +571,7 @@ export function resolveCommand(
 						{ text: `remote: Enumerating objects: 5, done.`, delay: 0 },
 						{ text: `remote: Counting objects: 100% (5/5), done.`, delay: 500 },
 						{ text: `Unpacking objects: 100% (5/5), done.`, delay: 1000 },
-						{ text: `From github.com:pleasure1234/my-profile`, delay: 1400 },
+						{ text: `From github.com:${hostname}`, delay: 1400 },
 						{ text: `   5067e91..HEAD  main -> origin/main`, delay: 1700 },
 						{ text: `Already up to date.`, delay: 2100 },
 					],
@@ -585,7 +587,7 @@ export function resolveCommand(
 							text: `Writing objects: 100% (3/3), 1.33 KiB | 1.33 MiB/s`,
 							delay: 1000,
 						},
-						{ text: `To github.com:pleasure1234/my-profile.git`, delay: 1600 },
+						{ text: `To github.com:${hostname}.git`, delay: 1600 },
 						{ text: `   5067e91..HEAD  main -> main`, delay: 1900 },
 					],
 				};
@@ -602,7 +604,10 @@ export function resolveCommand(
 		}
 
 		case "curl": {
-			const url = (rest.trim() || "yiming1234.cn").replace(/^https?:\/\//, "");
+			const url = (rest.trim() || (hostname.split("@")[1] ?? hostname)).replace(
+				/^https?:\/\//,
+				"",
+			);
 			return {
 				kind: "stream",
 				items: [
@@ -622,9 +627,9 @@ export function resolveCommand(
 		}
 
 		case "wget": {
-			const url = rest.trim() || "https://yiming1234.cn";
-			const host =
-				url.replace(/^https?:\/\//, "").split("/")[0] ?? "yiming1234.cn";
+			const url =
+				rest.trim() || `https://${hostname.split("@")[1] ?? hostname}`;
+			const host = url.replace(/^https?:\/\//, "").split("/")[0] ?? hostname;
 			const file =
 				url
 					.split("/")
@@ -663,7 +668,7 @@ export function resolveCommand(
 		case "am-i-ok":
 			return {
 				kind: "fetch",
-				url: "/api/am-i-ok",
+				url: config.amIOkUrl ?? "/api/am-i-ok",
 				format: (data) => {
 					if (!data || typeof data !== "object") return "No status available.";
 					const d = data as {

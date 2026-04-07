@@ -2,21 +2,23 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getSelectorItems, resolveCommand } from "./commands";
-import { DinoGame } from "./dino-game";
-import { MOTD } from "./motd";
-import type { Line, SelectorItem } from "./types";
-
-const HOSTNAME = "pleasure1234@website";
-const PROMPT = `${HOSTNAME}:~$`;
+import type { TerminalConfig } from "./core/config";
+import { getSelectorItems, resolveCommand } from "./core/commands";
+import { DinoGame } from "./components/dino-game";
+import { MOTD } from "./components/motd";
+import type { Line, SelectorItem } from "./core/types";
 
 interface TerminalProps {
+	config: TerminalConfig;
 	onClose?: () => void;
 	onDragStart?: (e: React.PointerEvent) => void;
 }
 
-export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
+export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
 	const router = useRouter();
+	const hostname = config.hostname ?? "user@website";
+	const PROMPT = `${hostname}:~$`;
+
 	const idRef = useRef(0);
 	const nextId = () => ++idRef.current;
 	const [lines, setLines] = useState<Line[]>([{ id: nextId(), type: "motd" }]);
@@ -51,7 +53,6 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 			hasInitializedScrollRef.current = true;
 			return;
 		}
-
 		requestAnimationFrame(() => {
 			bottomRef.current?.scrollIntoView({ behavior: "smooth" });
 		});
@@ -59,7 +60,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 
 	const updateInput = (val: string) => {
 		setInput(val);
-		const items = getSelectorItems(val);
+		const items = getSelectorItems(val, config);
 		setSelectorItems(items);
 		setSelectorIdx(0);
 	};
@@ -90,7 +91,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 				.toLowerCase()
 				.split(/\s+/);
 			const rest = restParts.join(" ");
-			const result = resolveCommand(slug, rest);
+			const result = resolveCommand(slug, rest, config);
 
 			if (!result) {
 				if (!hasSlash) {
@@ -210,7 +211,6 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 					]);
 					return;
 				}
-
 				setLines((prev) => [
 					...prev,
 					{ id: nextId(), type: "input", text: cmd },
@@ -221,7 +221,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 				});
 			}
 		},
-		[hasActiveDino, router],
+		[hasActiveDino, router, config, onClose],
 	);
 
 	const handleSudoSubmit = useCallback(
@@ -282,9 +282,8 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 				const selected = selectorItems[selectorIdx];
 				if (!selected) return;
 				if (selected.value.endsWith(" ")) {
-					// "/go " — fill and open sub-selector
 					setInput(selected.value);
-					setSelectorItems(getSelectorItems(selected.value));
+					setSelectorItems(getSelectorItems(selected.value, config));
 					setSelectorIdx(0);
 				} else {
 					setSelectorItems([]);
@@ -297,14 +296,12 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 			if (e.key === "ArrowUp") {
 				e.preventDefault();
 				if (history.length === 0) return;
-				// save draft the first time we leave index -1
 				if (historyIdx === -1) draftRef.current = input;
 				const next = Math.min(historyIdx + 1, history.length - 1);
 				setHistoryIdx(next);
 				const val = history[next] ?? "";
 				setInput(val);
 				setSelectorItems([]);
-				// move cursor to end after React re-render
 				requestAnimationFrame(() => {
 					const el = inputRef.current;
 					if (el) el.setSelectionRange(val.length, val.length);
@@ -328,7 +325,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 	const selectItem = (item: SelectorItem) => {
 		if (item.value.endsWith(" ")) {
 			setInput(item.value);
-			setSelectorItems(getSelectorItems(item.value));
+			setSelectorItems(getSelectorItems(item.value, config));
 			setSelectorIdx(0);
 		} else {
 			setSelectorItems([]);
@@ -361,7 +358,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 					<span className="w-3 h-3 rounded-full bg-yellow-500" />
 					<span className="w-3 h-3 rounded-full bg-green-500" />
 					<span className="ml-3 text-xs text-zinc-400 font-mono select-none">
-						{HOSTNAME}:~
+						{hostname}:~
 					</span>
 				</div>
 
@@ -377,7 +374,7 @@ export function Terminal({ onClose, onDragStart }: TerminalProps = {}) {
 						if (line.type === "motd")
 							return (
 								<div key={line.id}>
-									<MOTD />
+									<MOTD profile={config.profile} />
 									{lines.length > 1 && (
 										<div className="border-t border-white/10 my-3" />
 									)}

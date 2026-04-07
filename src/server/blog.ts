@@ -1,5 +1,5 @@
+import { compile } from "@my-profile/ui";
 import { env } from "@/lib/env";
-import { createMarkdownProcessor } from "@/lib/mdx-plugins";
 import { getAliOssClient } from "@/server/ali-oss";
 
 export type BlogTreeNode = {
@@ -100,11 +100,6 @@ function buildTreeNodes(paths: string[]) {
 	return sortTreeNodes(rootNodes);
 }
 
-export async function markdownToHtml(markdown: string): Promise<string> {
-	const result = await createMarkdownProcessor().process(markdown);
-	return String(result);
-}
-
 function extractTitleFromMarkdown(markdown: string, fileName: string): string {
 	const h1Match = markdown.match(/^#\s+(.+)$/m);
 	const title = h1Match?.[1];
@@ -171,9 +166,10 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 				? result.content.toString("utf-8")
 				: String(result.content);
 
+		const { html: content, frontmatter } = await compile(markdown);
 		const fileName = decodedSlug.split("/").pop() || decodedSlug;
-		const title = extractTitleFromMarkdown(markdown, fileName);
-		const content = await markdownToHtml(markdown);
+		const title =
+			frontmatter.title || extractTitleFromMarkdown(markdown, fileName);
 
 		return {
 			slug,

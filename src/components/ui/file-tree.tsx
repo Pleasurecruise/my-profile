@@ -101,11 +101,15 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
 					const newPath = [...currentPath, currentElement.id];
 					if (currentElement.id === selectId) {
 						if (isSelectable) {
-							setExpandedItems((prev) => [...(prev ?? []), ...newPath]);
+							setExpandedItems((prev) =>
+								Array.from(new Set([...(prev ?? []), ...newPath])),
+							);
 						} else {
 							if (newPath.includes(currentElement.id)) {
 								newPath.pop();
-								setExpandedItems((prev) => [...(prev ?? []), ...newPath]);
+								setExpandedItems((prev) =>
+									Array.from(new Set([...(prev ?? []), ...newPath])),
+								);
 							}
 						}
 						return;
@@ -162,9 +166,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
 							value={expandedItems}
 							className="flex flex-col gap-1"
 							onValueChange={(value) => {
-								const nextValue = value[0];
-								if (!nextValue) return;
-								setExpandedItems((prev) => [...(prev ?? []), nextValue]);
+								setExpandedItems(value);
 							}}
 							dir={dir as Direction}
 						>
@@ -263,13 +265,7 @@ const Folder = forwardRef<
 						dir={direction}
 						type="multiple"
 						className="ml-5 flex flex-col gap-1 py-1 rtl:mr-5"
-						defaultValue={expandedItems}
 						value={expandedItems}
-						onValueChange={(value) => {
-							const nextValue = value[0];
-							if (!nextValue) return;
-							setExpandedItems?.((prev) => [...(prev ?? []), nextValue]);
-						}}
 					>
 						{children}
 					</AccordionPrimitive.Root>
@@ -358,11 +354,10 @@ const CollapseButton = forwardRef<
 	}, []);
 
 	useEffect(() => {
-		console.log(expandAll);
 		if (expandAll) {
 			expendAllTree(elements);
 		}
-	}, [expandAll]);
+	}, [expandAll, elements, expendAllTree]);
 
 	return (
 		<Button

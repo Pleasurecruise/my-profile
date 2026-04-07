@@ -31,6 +31,8 @@ export function TravelGlobe({ locations, className }: TravelGlobeProps) {
 	const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? null;
 	const isDark = resolvedTheme === "dark";
 	const mapStyle = `mapbox://styles/mapbox/${isDark ? "dark" : "light"}-v10`;
+	const mapStyleRef = useRef(mapStyle);
+	mapStyleRef.current = mapStyle;
 
 	const toLngLat = (location: Readonly<[number, number]>) =>
 		[location[1], location[0]] as [number, number];
@@ -45,7 +47,7 @@ export function TravelGlobe({ locations, className }: TravelGlobeProps) {
 
 		const map = new mapboxgl.Map({
 			container: mapContainerRef.current,
-			style: mapStyle,
+			style: mapStyleRef.current,
 			center: [100, 30],
 			zoom: 1.6,
 			projection: "globe",
@@ -101,7 +103,7 @@ export function TravelGlobe({ locations, className }: TravelGlobeProps) {
 			map.remove();
 			mapRef.current = null;
 		};
-	}, [mapStyle, mapboxToken]);
+	}, [mapboxToken]);
 
 	useEffect(() => {
 		const map = mapRef.current;

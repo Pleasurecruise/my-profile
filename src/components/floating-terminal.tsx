@@ -1,17 +1,19 @@
 "use client";
 
-import { SquareTerminal } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Terminal } from "@/app/_terminal/terminal";
+import { Terminal, type TerminalConfig } from "@my-profile/ui";
+import { FRIENDS } from "@/data/links";
+import { DATA } from "@/data/resume";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { useIsMobile } from "@/lib/use-mobile";
 import { cn } from "@/lib/utils";
+import { SquareTerminal } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const MIN_W = 320;
-const MIN_H = 213; // 3:2
+const MIN_H = 213;
 const DEFAULT_W = 960;
-const DEFAULT_H = 640; // 3:2
+const DEFAULT_H = 640;
 
 type InteractionType =
 	| {
@@ -29,6 +31,50 @@ type InteractionType =
 			startSize: { w: number; h: number };
 	  };
 
+const config: TerminalConfig = {
+	hostname: "pleasure1234@website",
+	skills: DATA.skills.map((s) => s.name),
+	social: Object.values(DATA.contact.social)
+		.filter((s) => s.url !== "#")
+		.map((s) => ({ name: s.name, url: s.url })),
+	contact: {
+		email: DATA.contact.email,
+		telegram: DATA.contact.telegram,
+		wechat: DATA.contact.wechat,
+	},
+	projects: DATA.projects.map((p) => ({ title: p.title, dates: p.dates })),
+	friends: FRIENDS.map((f) => ({ name: f.name, url: f.url })),
+	routes: {
+		blog: "/blog",
+		chat: "/chat",
+		story: "/story",
+		cv: "/cv",
+	},
+	amIOkUrl: "/api/am-i-ok",
+	profile: {
+		displayName: "Pleasure1234",
+		username: "@Pleasurecruise",
+		location: DATA.location,
+		projectCount: DATA.projects.length,
+		hackathonCount: DATA.hackathons.length,
+		university: "University of Nottingham",
+		degree: "BSc Computer Science with AI",
+		graduationYear: "2027",
+		bio: "Interested in front-end engineering. Hope to have my own open source project.",
+		founded: [
+			{ label: "CompPsyUnion", url: "https://github.com/CompPsyUnion" },
+		],
+		contributions: [
+			{
+				label: "cherry-studio",
+				url: "https://github.com/CherryHQ/cherry-studio",
+			},
+			{ label: "note-gen", url: "https://github.com/codexu/note-gen" },
+			{ label: "twitter-cli", url: "https://github.com/jackwener/twitter-cli" },
+		],
+	},
+};
+
 export function FloatingTerminal() {
 	const [open, setOpen] = useState(false);
 	const [mounted, setMounted] = useState(false);
@@ -39,12 +85,10 @@ export function FloatingTerminal() {
 	const [active, setActive] = useState(false);
 	const interactionRef = useRef<InteractionType | null>(null);
 
-	// Close terminal on route change
 	useEffect(() => {
 		setOpen(false);
 	}, [pathname]);
 
-	// Keyboard shortcut Ctrl/Cmd + `
 	useEffect(() => {
 		const handler = (e: KeyboardEvent) => {
 			if (e.key === "`" && (e.ctrlKey || e.metaKey)) {
@@ -56,11 +100,10 @@ export function FloatingTerminal() {
 		return () => window.removeEventListener("keydown", handler);
 	}, []);
 
-	// Open/close animation + reset position
 	useEffect(() => {
 		if (open) {
 			if (!isMobile) {
-				const DOCK_H = 80; // navbar dock height + margin
+				const DOCK_H = 80;
 				setPos({
 					x: Math.round((window.innerWidth - DEFAULT_W) / 2),
 					y: Math.round((window.innerHeight - DOCK_H - DEFAULT_H) / 2),
@@ -72,7 +115,6 @@ export function FloatingTerminal() {
 		}
 	}, [open, isMobile]);
 
-	// Global pointer move/up — handles both drag and resize (desktop only)
 	useEffect(() => {
 		if (!active || isMobile) return;
 		const onMove = (e: PointerEvent) => {
@@ -80,7 +122,6 @@ export function FloatingTerminal() {
 			if (!ia) return;
 			const dx = e.clientX - ia.startX;
 			const dy = e.clientY - ia.startY;
-
 			if (ia.kind === "drag") {
 				setPos({
 					x: Math.max(
@@ -94,11 +135,10 @@ export function FloatingTerminal() {
 				});
 			} else {
 				const { dir, startPos, startSize } = ia;
-				let x = startPos.x;
-				let y = startPos.y;
-				let w = startSize.w;
-				let h = startSize.h;
-
+				let x = startPos.x,
+					y = startPos.y;
+				let w = startSize.w,
+					h = startSize.h;
 				if (dir.includes("e")) w = Math.max(MIN_W, startSize.w + dx);
 				if (dir.includes("s")) h = Math.max(MIN_H, startSize.h + dy);
 				if (dir.includes("w")) {
@@ -109,7 +149,6 @@ export function FloatingTerminal() {
 					h = Math.max(MIN_H, startSize.h - dy);
 					y = startPos.y + startSize.h - h;
 				}
-
 				setPos({ x, y });
 				setSize({ w, h });
 			}
@@ -161,7 +200,6 @@ export function FloatingTerminal() {
 
 	return (
 		<>
-			{/* Trigger button */}
 			<ShimmerButton
 				onClick={() => setOpen((o) => !o)}
 				aria-label="Toggle terminal"
@@ -177,7 +215,6 @@ export function FloatingTerminal() {
 				<SquareTerminal className="size-7 max-sm:size-5" />
 			</ShimmerButton>
 
-			{/* Mobile: fullscreen overlay */}
 			{open && isMobile && (
 				<div
 					className={cn(
@@ -186,11 +223,10 @@ export function FloatingTerminal() {
 						mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
 					)}
 				>
-					<Terminal onClose={() => setOpen(false)} />
+					<Terminal config={config} onClose={() => setOpen(false)} />
 				</div>
 			)}
 
-			{/* Desktop: floating draggable window */}
 			{open && !isMobile && (
 				<div
 					style={{
@@ -210,12 +246,10 @@ export function FloatingTerminal() {
 						transformOrigin: "center",
 					}}
 				>
-					{/* Resize handles */}
 					<div
 						className="absolute inset-0 pointer-events-none"
 						style={{ zIndex: 10 }}
 					>
-						{/* Edges */}
 						<div
 							className="absolute top-0 left-3 right-3 h-1.5 cursor-n-resize pointer-events-auto"
 							onPointerDown={(e) => handleResizeStart(e, "n")}
@@ -232,7 +266,6 @@ export function FloatingTerminal() {
 							className="absolute right-0 top-3 bottom-3 w-1.5 cursor-e-resize pointer-events-auto"
 							onPointerDown={(e) => handleResizeStart(e, "e")}
 						/>
-						{/* Corners */}
 						<div
 							className="absolute top-0 left-0 w-3 h-3 cursor-nw-resize pointer-events-auto"
 							onPointerDown={(e) => handleResizeStart(e, "nw")}
@@ -250,8 +283,8 @@ export function FloatingTerminal() {
 							onPointerDown={(e) => handleResizeStart(e, "se")}
 						/>
 					</div>
-
 					<Terminal
+						config={config}
 						onClose={() => setOpen(false)}
 						onDragStart={handleDragStart}
 					/>

@@ -1,7 +1,8 @@
 "use client";
 
 import { startTransition, useEffect, useState } from "react";
-import { DATA } from "@/data/resume";
+import type { TerminalConfig } from "../core/config";
+import { MC_ARTS } from "../data/mc-arts";
 
 function parseBrowser(ua: string): string {
 	if (/Edg\/[\d.]+/.test(ua))
@@ -37,8 +38,6 @@ function parsePlatform(ua: string): string {
 	return "Unknown";
 }
 
-import { MC_ARTS } from "./mc-arts";
-
 function McArt() {
 	const [lines, setLines] = useState<string[]>([]);
 
@@ -55,14 +54,17 @@ function McArt() {
 			{lines.map((row) => {
 				const nextCount = (lineCounts.get(row) ?? 0) + 1;
 				lineCounts.set(row, nextCount);
-
 				return <div key={`${row}:${nextCount}`}>{row}</div>;
 			})}
 		</div>
 	);
 }
 
-export function MOTD() {
+interface MOTDProps {
+	profile: TerminalConfig["profile"];
+}
+
+export function MOTD({ profile }: MOTDProps) {
 	const [info, setInfo] = useState({
 		dateStr: "",
 		browser: "",
@@ -104,12 +106,15 @@ export function MOTD() {
 		</a>
 	);
 
+	const founded = profile.founded ?? [];
+	const contributions = profile.contributions ?? [];
+
 	return (
 		<div className="mb-2 font-mono text-sm leading-relaxed">
 			<p className="text-white">
 				Welcome to{" "}
 				<span className="text-green-400 font-bold">
-					Pleasure1234&apos;s Website
+					{profile.displayName}&apos;s Website
 				</span>{" "}
 				(Next.js 16 / TypeScript)
 			</p>
@@ -121,38 +126,60 @@ export function MOTD() {
 			<div className="mb-3 ml-2 space-y-1.5 text-zinc-300">
 				<p>
 					<span className="text-yellow-400">👋</span> Hi! I&apos;m{" "}
-					<span className="text-green-400 font-bold">Pleasure1234</span>{" "}
-					<span className="text-zinc-400">(@Pleasurecruise)</span>
+					<span className="text-green-400 font-bold">
+						{profile.displayName}
+					</span>{" "}
+					<span className="text-zinc-400">({profile.username})</span>
 				</p>
+				{profile.bio && <p className="text-zinc-400">{profile.bio}</p>}
+				{profile.university && (
+					<>
+						<p>
+							Junior undergrad @{" "}
+							<span className="text-white">{profile.university}</span>,
+						</p>
+						{profile.degree && (
+							<p>
+								studying <span className="text-cyan-400">{profile.degree}</span>
+								.
+							</p>
+						)}
+					</>
+				)}
+				{(founded.length > 0 || contributions.length > 0) && (
+					<p>
+						{founded.length > 0 && (
+							<>
+								Founded{" "}
+								{founded.map((f, i) => (
+									<span key={f.url}>
+										{link(f.url, f.label)}
+										{i < founded.length - 1 ? " · " : ""}
+									</span>
+								))}
+							</>
+						)}
+						{founded.length > 0 &&
+							contributions.length > 0 &&
+							" · contributed to "}
+						{founded.length === 0 &&
+							contributions.length > 0 &&
+							"Contributed to "}
+						{contributions.map((c, i) => (
+							<span key={c.url}>
+								{link(c.url, c.label)}
+								{i < contributions.length - 1 ? " · " : ""}
+							</span>
+						))}
+					</p>
+				)}
 				<p className="text-zinc-400">
-					Keywords:{" "}
-					<span className="text-zinc-400">TypeScript, React, Next.js</span>
-				</p>
-				<p className="text-zinc-400 ml-9">
-					<span className="text-zinc-400">Agents, Open Source, Hackathon</span>
-				</p>
-				<p>
-					Junior undergrad @{" "}
-					<span className="text-white">University of Nottingham</span>,
-				</p>
-				<p>
-					studying{" "}
-					<span className="text-cyan-400">BSc Computer Science with AI</span>.
-				</p>
-				<p>
-					Interested in front-end engineering. Hope to have my own open source
-					project.
-				</p>
-				<p>
-					Founded {link("https://github.com/CompPsyUnion", "CompPsyUnion")} ·
-					contributed to{" "}
-					{link("https://github.com/CherryHQ/cherry-studio", "cherry-studio")} ·{" "}
-					{link("https://github.com/codexu/note-gen", "note-gen")} ·{" "}
-					{link("https://github.com/jackwener/twitter-cli", "twitter-cli")}
-				</p>
-				<p className="text-zinc-400">
-					📍 {DATA.location} · 🎓 2027 · 💼 {DATA.projects.length} projects · 🏆{" "}
-					{DATA.hackathons.length} hackathons
+					{profile.location && `📍 ${profile.location}`}
+					{profile.graduationYear && ` · 🎓 ${profile.graduationYear}`}
+					{profile.projectCount !== undefined &&
+						` · 💼 ${profile.projectCount} projects`}
+					{profile.hackathonCount !== undefined &&
+						` · 🏆 ${profile.hackathonCount} hackathons`}
 				</p>
 			</div>
 
@@ -197,9 +224,11 @@ export function MOTD() {
 				Type <span className="text-yellow-400">/help</span> to see available
 				commands.
 			</p>
-			<p className="mt-3 text-zinc-400">
-				Recommend to visit <span className="text-yellow-400">/go blog</span>.
-			</p>
+			{profile.founded?.[0] && (
+				<p className="mt-3 text-zinc-400">
+					Recommend to visit <span className="text-yellow-400">/go blog</span>.
+				</p>
+			)}
 		</div>
 	);
 }

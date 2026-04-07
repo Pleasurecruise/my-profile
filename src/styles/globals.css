@@ -79,6 +79,8 @@
 	}
 }
 
+/* === Design Tokens === */
+
 :root {
 	--radius: 0.5rem;
 
@@ -141,6 +143,8 @@
 	--ring: hsl(0, 0%, 83.1%);
 }
 
+/* === Base Layer === */
+
 @layer base {
 	* {
 		@apply border-border outline-ring/50;
@@ -150,72 +154,7 @@
 	}
 }
 
-pre {
-	@apply !px-0 rounded-lg overflow-x-auto py-4;
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}
-
-pre::-webkit-scrollbar {
-	display: none;
-}
-
-pre [data-line] {
-	@apply px-4;
-}
-
-code {
-	@apply text-sm md:text-base !leading-loose;
-}
-
-h3 code {
-	@apply !text-lg md:!text-xl;
-}
-
-pre > code {
-	counter-reset: line;
-}
-
-code[data-theme*=" "],
-code[data-theme*=" "] span {
-	color: var(--shiki-light);
-	background-color: var(--shiki-light-bg);
-}
-
-.dark code[data-theme*=" "],
-.dark code[data-theme*=" "] span {
-	color: var(--shiki-dark);
-	background-color: var(--shiki-dark-bg);
-}
-
-code[data-line-numbers] {
-	counter-reset: line;
-}
-
-code > [data-line]::before {
-	counter-increment: line;
-	content: counter(line);
-	display: inline-block;
-	width: 1rem;
-	margin-right: 2rem;
-	text-align: right;
-	color: var(--muted-foreground);
-}
-
-code[data-line-numbers] > [data-line]::before {
-	counter-increment: line;
-	content: counter(line);
-	@apply inline-block w-4 mr-4 text-right;
-	color: var(--muted-foreground);
-}
-
-code[data-line-numbers-max-digits="2"] > [data-line]::before {
-	width: 2rem;
-}
-
-code[data-line-numbers-max-digits="3"] > [data-line]::before {
-	width: 3rem;
-}
+/* === Global Resets === */
 
 html,
 body {
@@ -223,22 +162,54 @@ body {
 	overflow-x: hidden;
 }
 
-/* === Background System === */
+html {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
 
-/* Light mode: use a visible light gray so the white center glow has contrast */
+html::-webkit-scrollbar {
+	display: none;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+/* === Background === */
+
 html:not(.dark) {
 	background-color: hsl(0, 0%, 93%);
 }
 
-/* Dark mode: keep the existing near-black from CSS variable */
 html.dark {
 	background-color: var(--background);
 }
 
-/* Noise grain texture */
 .bg-noise {
 	background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>");
 	background-size: 200px 200px;
+}
+
+/* === Scrollbar Utilities === */
+
+.scrollbar-hide,
+.react-terminal-wrapper,
+.react-terminal {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar,
+.react-terminal-wrapper::-webkit-scrollbar,
+.react-terminal::-webkit-scrollbar {
+	display: none;
 }
 
 /* === Cherry Blossom === */
@@ -271,42 +242,257 @@ html.dark {
 	}
 }
 
-html {
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-}
+/* === Code Blocks === */
 
-html::-webkit-scrollbar {
-	display: none;
-}
-
-.scrollbar-hide {
+pre {
+	@apply !px-0 rounded-lg overflow-x-auto py-4;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
+pre::-webkit-scrollbar {
 	display: none;
 }
 
-.react-terminal-wrapper,
-.react-terminal {
-	-ms-overflow-style: none;
-	scrollbar-width: none;
+code {
+	@apply text-sm md:text-base !leading-loose;
 }
 
-.react-terminal-wrapper::-webkit-scrollbar,
-.react-terminal::-webkit-scrollbar {
-	display: none;
+pre code {
+	@apply !leading-normal;
 }
 
-a {
-	color: inherit;
-	text-decoration: none;
+pre.shiki code {
+	display: block;
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-	animation: none;
-	mix-blend-mode: normal;
+pre.shiki code .line {
+	display: inline-block;
+	width: 100%;
+	padding: 0 1rem;
+}
+
+h3 code {
+	@apply !text-lg md:!text-xl;
+}
+
+pre.shiki {
+	/* biome-ignore lint/complexity/noImportantStyles: override shiki's inline light background */
+	background-color: hsl(0, 0%, 98%) !important;
+}
+
+.dark pre.shiki {
+	/* biome-ignore lint/complexity/noImportantStyles: activate shiki dark theme via CSS variables it sets inline */
+	background-color: var(--shiki-dark-bg) !important;
+	/* biome-ignore lint/complexity/noImportantStyles: switch base text color to dark theme */
+	color: var(--shiki-dark) !important;
+}
+
+.dark pre.shiki span {
+	/* biome-ignore lint/complexity/noImportantStyles: switch token colors to dark theme */
+	color: var(--shiki-dark) !important;
+}
+
+code[data-line-numbers] {
+	counter-reset: line;
+}
+
+code[data-line-numbers] > .line::before {
+	counter-increment: line;
+	content: counter(line);
+	@apply inline-block w-4 mr-4 text-right;
+	color: var(--muted-foreground);
+}
+
+code[data-line-numbers-max-digits="2"] > .line::before {
+	width: 2rem;
+}
+code[data-line-numbers-max-digits="3"] > .line::before {
+	width: 3rem;
+}
+
+/* ===================================================
+   Article / Blog Content  (.article)
+   =================================================== */
+
+.article {
+	color: var(--foreground);
+	line-height: 1.5;
+	font-family:
+		var(--font-cjk), "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+		sans-serif;
+	font-size: 1rem;
+	word-break: break-word;
+	overflow-wrap: break-word;
+}
+
+.article p {
+	margin: 1em 0;
+	text-align: justify;
+}
+
+/* Headings use sans-serif for contrast */
+.article h1,
+.article h2,
+.article h3,
+.article h4,
+.article h5,
+.article h6 {
+	font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+	font-weight: 600;
+	color: var(--foreground);
+	line-height: 1.4;
+	margin-top: 2em;
+	margin-bottom: 0.6em;
+}
+
+.article h1 {
+	font-size: 1.75em;
+}
+.article h2 {
+	font-size: 1.375em;
+	padding-bottom: 0.3em;
+	border-bottom: 1px solid var(--border);
+}
+.article h3 {
+	font-size: 1.2em;
+}
+.article h4 {
+	font-size: 1.05em;
+}
+.article h5 {
+	font-size: 0.95em;
+}
+.article h6 {
+	font-size: 0.875em;
+	color: var(--muted-foreground);
+}
+
+.article a {
+	color: hsl(210, 85%, 52%);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: color 140ms ease;
+}
+
+.article a:hover {
+	color: hsl(210, 85%, 40%);
+}
+
+.dark .article a {
+	color: hsl(210, 70%, 68%);
+}
+
+.dark .article a:hover {
+	color: hsl(210, 70%, 78%);
+}
+
+.article ul,
+.article ol {
+	padding-left: 1.6em;
+	margin: 1em 0;
+}
+
+.article ul {
+	list-style-type: disc;
+}
+.article ol {
+	list-style-type: decimal;
+}
+
+.article li {
+	margin: 0.4em 0;
+	line-height: 1.75;
+}
+
+.article li > ul,
+.article li > ol {
+	margin: 0.25em 0;
+}
+
+.article blockquote {
+	border-left: 2px solid var(--muted-foreground);
+	padding: 0.1em 0 0.1em 1.25em;
+	margin: 1.5em 0;
+	color: var(--muted-foreground);
+	font-style: italic;
+}
+
+.article blockquote p {
+	margin: 0.3em 0;
+}
+
+.article hr {
+	border: none;
+	border-top: 1px solid var(--border);
+	margin: 2.5em 0;
+}
+
+.article img {
+	max-width: 100%;
+	border-radius: 0.5rem;
+	margin: 1.5em auto;
+	display: block;
+}
+
+.article table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9em;
+	font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+	margin: 1.5em 0;
+}
+
+.article th,
+.article td {
+	border: 1px solid var(--border);
+	padding: 0.5em 0.75em;
+	text-align: left;
+}
+
+.article th {
+	background-color: var(--muted);
+	font-weight: 600;
+}
+
+/* Strong / emphasis */
+.article strong {
+	font-weight: 700;
+}
+
+/* Code blocks inside article — IDE style */
+.article pre {
+	margin: 1.75em 0;
+	border-radius: 0.5rem;
+	overflow-x: auto;
+	overflow-y: hidden;
+	border: 1px solid hsl(0, 0%, 86%);
+}
+
+.dark .article pre {
+	border-color: hsl(0, 0%, 17%);
+}
+
+.article pre code {
+	display: block;
+	text-align: left;
+	font-family:
+		var(--font-mono), "Fira Code", ui-monospace, Menlo, Monaco, Consolas,
+		monospace;
+	font-size: 13px;
+	line-height: 1.65;
+}
+
+/* Inline code */
+.article :not(pre) > code {
+	font-family:
+		var(--font-mono), "Fira Code", ui-monospace, Menlo, Monaco, Consolas,
+		monospace;
+	font-size: 0.875em;
+	background-color: var(--muted);
+	border: 1px solid var(--border);
+	border-radius: 0.25rem;
+	padding: 0.15em 0.4em;
+	line-height: 1.5;
 }

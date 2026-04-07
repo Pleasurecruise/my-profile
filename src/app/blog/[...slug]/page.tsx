@@ -2,10 +2,11 @@ import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlogContent } from "@/components/blog-content";
+import { BlogContent } from "@my-profile/ui";
 import BlurFade from "@/components/magicui/blur-fade";
 import { DATA } from "@/data/resume";
 import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
+import { ArticleActions } from "./article-actions";
 
 export const revalidate = 604800;
 export const dynamicParams = true;
@@ -88,23 +89,26 @@ export default async function Blog({
 				})}
 			</script>
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<div className="flex items-center gap-2 max-w-[650px]">
+				<div className="flex items-start gap-2 max-w-[650px]">
 					<Link
 						href="/blog"
-						className="text-muted-foreground hover:text-foreground transition-colors"
+						className="text-muted-foreground hover:text-foreground transition-colors shrink-0 mt-1"
 					>
 						<ChevronLeft className="size-5" />
 					</Link>
-					<h1 className="title font-medium text-2xl tracking-tighter">
-						{post.title}
-					</h1>
+					<div className="flex items-start justify-between gap-3 flex-1 min-w-0">
+						<h1 className="title font-medium text-2xl tracking-tighter">
+							{post.title}
+						</h1>
+						<ArticleActions
+							title={post.title}
+							url={`${DATA.url}/blog/${post.slug}`}
+						/>
+					</div>
 				</div>
 			</BlurFade>
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<BlogContent
-					content={post.content}
-					className="prose dark:prose-invert mt-8"
-				/>
+				<BlogContent content={post.content} className="article mt-8" />
 			</BlurFade>
 		</section>
 	);

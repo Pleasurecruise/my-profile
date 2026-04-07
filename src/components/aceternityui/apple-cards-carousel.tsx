@@ -16,6 +16,7 @@ import React, {
 	useState,
 } from "react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { useIsMobile } from "@/lib/use-mobile";
 import { cn } from "@/lib/utils";
 
 interface CarouselProps {
@@ -51,6 +52,7 @@ export const Carousel = forwardRef<CarouselHandle, CarouselProps>(
 		const [canScrollLeft, setCanScrollLeft] = React.useState(false);
 		const [canScrollRight, setCanScrollRight] = React.useState(true);
 		const [currentIndex, setCurrentIndex] = useState(0);
+		const isMobile = useIsMobile();
 
 		useEffect(() => {
 			if (carouselRef.current) {
@@ -89,8 +91,8 @@ export const Carousel = forwardRef<CarouselHandle, CarouselProps>(
 
 		const handleCardClose = (index: number) => {
 			if (carouselRef.current) {
-				const cardWidth = isMobile() ? 230 : 384; // (md:w-96)
-				const gap = isMobile() ? 4 : 8;
+				const cardWidth = isMobile ? 230 : 384; // (md:w-96)
+				const gap = isMobile ? 4 : 8;
 				const scrollPosition = (cardWidth + gap) * (index + 1);
 				carouselRef.current.scrollTo({
 					left: scrollPosition,
@@ -98,10 +100,6 @@ export const Carousel = forwardRef<CarouselHandle, CarouselProps>(
 				});
 				setCurrentIndex(index);
 			}
-		};
-
-		const isMobile = () => {
-			return window && window.innerWidth < 768;
 		};
 
 		useImperativeHandle(ref, () => ({

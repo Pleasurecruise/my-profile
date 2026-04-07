@@ -1,10 +1,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BlogContent } from "@/components/blog-content";
+import { BlogContent, markdownToHtml } from "@my-profile/ui";
 import BlurFade from "@/components/magicui/blur-fade";
 import { TravelGlobe } from "@/components/travel-globe";
 import { TRAVEL_LOCATIONS } from "@/data/travel";
-import { markdownToHtml } from "@/server/blog";
 
 export const metadata = {
 	title: "Story",
@@ -33,10 +32,12 @@ export default async function StoryPage() {
 		<main className="flex flex-col min-h-[100dvh]">
 			<section id="story">
 				<BlurFade delay={BLUR_FADE_DELAY}>
-					<div className="prose dark:prose-invert max-w-2xl mx-auto">
-						<BlogContent content={beforeContent} />
+					<div className="max-w-2xl mx-auto">
+						<BlogContent content={beforeContent} className="article" />
 						<TravelGlobe locations={TRAVEL_LOCATIONS} />
-						{afterContent && <BlogContent content={afterContent} />}
+						{afterContent && (
+							<BlogContent content={afterContent} className="article" />
+						)}
 					</div>
 				</BlurFade>
 			</section>
