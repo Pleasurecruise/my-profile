@@ -57,17 +57,17 @@ export const DATA = {
 		telegram: "@Pleasure12345678",
 		wechat: "W3196812536",
 		social: {
-			GitHub: {
-				name: "GitHub",
-				url: "https://github.com/Pleasurecruise",
-				icon: Icons.github,
-
-				navbar: true,
-			},
 			Notion: {
 				name: "Notion",
 				url: "https://yiming1234.notion.site/me",
 				icon: Icons.notion,
+
+				navbar: true,
+			},
+			GitHub: {
+				name: "GitHub",
+				url: "https://github.com/Pleasurecruise",
+				icon: Icons.github,
 
 				navbar: true,
 			},

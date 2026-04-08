@@ -26,26 +26,31 @@ export default function Page() {
 			<section id="hero">
 				<div className="mx-auto w-full max-w-2xl">
 					<BlurFade delay={BLUR_FADE_DELAY}>
-						<div className="flex items-center gap-4 mb-6">
-							<Image
-								src={DATA.avatarUrl}
-								alt={DATA.name}
-								width={56}
-								height={56}
-								className="rounded-full"
-							/>
-							<div className="flex flex-col">
-								<Link
-									href={DATA.contact.social.GitHub.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-[20px] font-medium text-foreground hover:underline"
-								>
-									@Pleasure1234
-								</Link>
-								<p className="text-[14px] text-foreground">
-									Full-stack Developer
-								</p>
+						<div className="flex items-center justify-between mb-6">
+							<div className="flex items-center gap-4">
+								<Image
+									src={DATA.avatarUrl}
+									alt={DATA.name}
+									width={56}
+									height={56}
+									className="rounded-full"
+								/>
+								<div className="flex flex-col">
+									<Link
+										href={DATA.contact.social.GitHub.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-[20px] font-medium text-foreground hover:underline"
+									>
+										@Pleasure1234
+									</Link>
+									<p className="text-[14px] text-foreground">
+										Full-stack Developer
+									</p>
+								</div>
+							</div>
+							<div className="text-muted-foreground/40">
+								<HelloSignature />
 							</div>
 						</div>
 					</BlurFade>
@@ -215,69 +220,89 @@ export default function Page() {
 						>
 							Connect
 						</span>
-						<ul className="space-y-3">
-							<li>
-								<Link
-									href={`mailto:${DATA.contact.email}`}
-									className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-								>
-									<Icons.email className="w-5 h-5" />
-									<span>Email</span>
-									<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-								</Link>
-							</li>
-							<li>
-								<Tooltip
-									content={
-										<div className="flex items-center justify-center">
-											<div className="h-50 w-50 overflow-hidden rounded-lg">
-												<Image
-													src="/profile/wechat.png"
-													alt="WeChat QR Code"
-													width={200}
-													height={200}
-													className="h-full w-full object-cover object-center"
-												/>
+						<div className="flex gap-8">
+							<ul className="space-y-3 flex-1">
+								<li>
+									<Link
+										href={`mailto:${DATA.contact.email}`}
+										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+									>
+										<Icons.email className="w-5 h-5" />
+										<span>Email</span>
+										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+									</Link>
+								</li>
+								<li>
+									<Tooltip
+										content={
+											<div className="flex items-center justify-center">
+												<div className="h-50 w-50 overflow-hidden rounded-lg">
+													<Image
+														src="/profile/wechat.png"
+														alt="WeChat QR Code"
+														width={200}
+														height={200}
+														className="h-full w-full object-cover object-center"
+													/>
+												</div>
 											</div>
-										</div>
-									}
-								>
+										}
+									>
+										<Link
+											href="#"
+											className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+										>
+											<Icons.wechat className="w-5 h-5" />
+											<span>WeChat</span>
+											<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+										</Link>
+									</Tooltip>
+								</li>
+								<li>
 									<Link
-										href="#"
+										href={DATA.contact.social.Instagram.url}
 										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
 									>
-										<Icons.wechat className="w-5 h-5" />
-										<span>WeChat</span>
+										<Icons.instagram className="w-5 h-5" />
+										<span>Instagram</span>
 										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
 									</Link>
-								</Tooltip>
-							</li>
-							<li>
-								<Link
-									href={DATA.contact.social.Instagram.url}
-									className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-								>
-									<Icons.instagram className="w-5 h-5" />
-									<span>Instagram</span>
-									<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-								</Link>
-							</li>
-							<li>
-								<Tooltip
-									containerClassName="[&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
-									content="Add me on Discord: pleasure9876"
-								>
-									<Link
-										href="#"
-										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+								</li>
+								<li>
+									<Tooltip
+										containerClassName="[&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
+										content="Add me on Discord: pleasure9876"
 									>
-										<Icons.discord className="w-5 h-5" />
-										<span>Discord</span>
-										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-									</Link>
-								</Tooltip>
-							</li>
-						</ul>
+										<Link
+											href="#"
+											className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+										>
+											<Icons.discord className="w-5 h-5" />
+											<span>Discord</span>
+											<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+										</Link>
+									</Tooltip>
+								</li>
+							</ul>
+							<ul className="space-y-3 flex-1">
+								{Object.entries(DATA.contact.social)
+									.filter(([, social]) => social.navbar)
+									.map(([name, social]) => (
+										<li key={name}>
+											<Link
+												href={social.url}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+											>
+												<social.icon className="w-5 h-5" />
+												<span>{name}</span>
+												<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+											</Link>
+										</li>
+									))}
+							</ul>
+						</div>
 					</div>
 				</BlurFade>
 			</section>
@@ -323,11 +348,6 @@ export default function Page() {
 								萌 ICP No.20240608
 								<ArrowUpRight className="w-3 h-3" />
 							</Link>
-						</div>
-						<div className="flex justify-end">
-							<div className="text-right text-muted-foreground/40">
-								<HelloSignature />
-							</div>
 						</div>
 					</div>
 				</BlurFade>

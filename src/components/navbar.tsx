@@ -79,30 +79,6 @@ export default function Navbar() {
 							</Tooltip>
 						</DockIcon>
 					))}
-					<Separator orientation="vertical" className="h-full" />
-					{Object.entries(DATA.contact.social)
-						.filter(([, social]) => social.navbar)
-						.map(([name, social]) => (
-							<DockIcon key={name}>
-								<Tooltip>
-									<TooltipTrigger asChild>
-										<Link
-											href={social.url}
-											aria-label={name}
-											className={cn(
-												buttonVariants({ variant: "ghost", size: "icon" }),
-												"size-full rounded-full",
-											)}
-										>
-											<social.icon className="size-1/2" />
-										</Link>
-									</TooltipTrigger>
-									<TooltipContent>
-										<p>{name}</p>
-									</TooltipContent>
-								</Tooltip>
-							</DockIcon>
-						))}
 					<Separator orientation="vertical" className="h-full py-2" />
 					<DockIcon>
 						<Tooltip>
