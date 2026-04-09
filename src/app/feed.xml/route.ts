@@ -12,10 +12,6 @@ function escapeXml(text: string): string {
 		.replace(/'/g, "&apos;");
 }
 
-function stripHtml(html: string): string {
-	return html.replace(/<[^>]*>/g, "").trim();
-}
-
 export async function GET() {
 	const siteUrl = DATA.url;
 	const siteName = DATA.name;
@@ -35,7 +31,7 @@ export async function GET() {
 	const rssItems = validPosts
 		.map((post) => {
 			const link = `${siteUrl}/blog/${encodeURIComponent(post.slug)}`;
-			const description = `${stripHtml(post.content).slice(0, 200)}...`;
+			const description = `${post.excerpt.slice(0, 200)}...`;
 
 			return `    <item>
       <title>${escapeXml(post.title)}</title>

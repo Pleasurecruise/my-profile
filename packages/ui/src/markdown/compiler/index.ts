@@ -1,21 +1,22 @@
+import { compile as compileMdx, run } from "@mdx-js/mdx";
 import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
-import rehypeStringify from "rehype-stringify";
-import remarkDirective from "remark-directive";
+import type { Root as MdastRoot, Text } from "mdast";
+import { createElement, type ReactElement } from "react";
+import * as jsxRuntime from "react/jsx-runtime";
+import rehypeRaw from "rehype-raw";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
-import { parse as parseYaml } from "yaml";
-import type { Root as MdastRoot } from "mdast";
 import type { Plugin } from "unified";
-import { getHighlighter } from "./shiki";
-import { rehypeToc } from "./rehype-toc";
+import { unified } from "unified";
+import { visit } from "unist-util-visit";
+import { parse as parseYaml } from "yaml";
+import { rehypeTables } from "./rehype-tables";
 import type { TocEntry } from "./rehype-toc";
-import { remarkExtractDirectives } from "./remark-directives";
-import type { ComponentEntry } from "./remark-directives";
+import { rehypeToc } from "./rehype-toc";
+import { getHighlighter } from "./shiki";
 
-export type { TocEntry, ComponentEntry };
+export type { TocEntry };
 
 export interface Frontmatter {
 	title: string;
@@ -29,19 +30,19 @@ export interface Frontmatter {
 
 export interface CompileResult {
 	frontmatter: Frontmatter;
-	html: string;
+	content: ReactElement;
 	toc: TocEntry[];
-	components: ComponentEntry[];
+	excerpt: string;
 }
 
-// Remark plugin: extract raw YAML frontmatter into a store object
 const remarkExtractFrontmatter: Plugin<
 	[{ store: { raw?: string } }],
 	MdastRoot
 > = (options) => (tree) => {
-	for (const node of tree.children) {
+	for (const [index, node] of tree.children.entries()) {
 		if (node.type === "yaml") {
 			options.store.raw = (node as { value: string }).value;
+			tree.children.splice(index, 1);
 			return;
 		}
 	}
@@ -50,53 +51,74 @@ const remarkExtractFrontmatter: Plugin<
 export async function compile(source: string): Promise<CompileResult> {
 	const fmStore: { raw?: string } = {};
 	const toc: TocEntry[] = [];
-	const components: ComponentEntry[] = [];
-	const highlighter = await getHighlighter();
-
-	const html = await unified()
+	const excerptTree = unified()
 		.use(remarkParse)
 		.use(remarkGfm)
 		.use(remarkFrontmatter, ["yaml"])
-		.use(remarkExtractFrontmatter, { store: fmStore })
-		.use(remarkDirective as Plugin)
-		.use(remarkExtractDirectives, { components })
-		.use(remarkRehype, { allowDangerousHtml: true })
-		.use(rehypeToc, { toc })
-		.use(() =>
-			rehypeShikiFromHighlighter(highlighter, {
-				themes: { light: "github-light", dark: "github-dark" },
-				lazy: true,
-				defaultLanguage: "text",
-				fallbackLanguage: "text",
-				transformers: [
-					{
-						pre(node) {
-							const lang = this.options.lang ?? "";
-							if (lang && lang !== "text") {
-								node.properties["data-language"] = lang;
-							}
+		.parse(source) as MdastRoot;
+	const excerptSegments: string[] = [];
+
+	visit(excerptTree, (node) => {
+		if (node.type === "yaml" || node.type === "code" || node.type === "html") {
+			return;
+		}
+
+		if (node.type === "text") {
+			excerptSegments.push((node as Text).value);
+		}
+	});
+
+	const excerpt = excerptSegments.join(" ").replace(/\s+/g, " ").trim();
+	const highlighter = await getHighlighter();
+
+	const compiled = await compileMdx(source, {
+		format: "md",
+		outputFormat: "function-body",
+		remarkPlugins: [
+			remarkGfm,
+			[remarkFrontmatter, ["yaml"]],
+			[remarkExtractFrontmatter, { store: fmStore }],
+		],
+		remarkRehypeOptions: {
+			allowDangerousHtml: true,
+		},
+		rehypePlugins: [
+			rehypeRaw,
+			() =>
+				rehypeShikiFromHighlighter(highlighter, {
+					themes: { light: "github-light", dark: "github-dark" },
+					lazy: true,
+					defaultLanguage: "text",
+					fallbackLanguage: "text",
+					transformers: [
+						{
+							pre(node) {
+								const lang = this.options.lang ?? "";
+								if (lang && lang !== "text") {
+									node.properties["data-language"] = lang;
+								}
+							},
 						},
-					},
-				],
-			}),
-		)
-		.use(rehypeStringify, { allowDangerousHtml: true })
-		.process(source);
+					],
+				}),
+			[rehypeToc, { toc }],
+			rehypeTables,
+		],
+	});
+
+	const executed = await run(String(compiled), {
+		...jsxRuntime,
+	});
 
 	const frontmatter: Frontmatter = fmStore.raw
 		? (parseYaml(fmStore.raw) as Frontmatter)
 		: { title: "" };
+	const Content = executed.default;
 
 	return {
 		frontmatter,
-		html: String(html),
+		content: createElement(Content),
 		toc,
-		components,
+		excerpt,
 	};
-}
-
-/** Backward-compat wrapper — returns only the HTML string. */
-export async function markdownToHtml(markdown: string): Promise<string> {
-	const { html } = await compile(markdown);
-	return html;
 }

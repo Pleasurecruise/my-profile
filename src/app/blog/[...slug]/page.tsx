@@ -1,8 +1,8 @@
+import { BlogContent } from "@my-profile/ui";
 import { ChevronLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BlogContent } from "@my-profile/ui";
 import BlurFade from "@/components/magicui/blur-fade";
 import { DATA } from "@/data/resume";
 import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
@@ -108,7 +108,7 @@ export default async function Blog({
 				</div>
 			</BlurFade>
 			<BlurFade delay={BLUR_FADE_DELAY}>
-				<BlogContent content={post.content} className="article mt-8" />
+				<BlogContent className="article mt-8">{post.content}</BlogContent>
 			</BlurFade>
 		</section>
 	);

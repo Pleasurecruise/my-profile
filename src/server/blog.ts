@@ -1,4 +1,6 @@
 import { compile } from "@my-profile/ui";
+import type { ReactNode } from "react";
+import { cache } from "react";
 import { env } from "@/lib/env";
 import { getAliOssClient } from "@/server/ali-oss";
 
@@ -18,7 +20,8 @@ export type BlogFileTreeData = {
 export type BlogPost = {
 	slug: string;
 	title: string;
-	content: string;
+	content: ReactNode;
+	excerpt: string;
 };
 
 function normalizeRelativeTreePath(relativePath: string) {
@@ -153,34 +156,37 @@ export async function getBlogFileTree(): Promise<BlogFileTreeData> {
 	};
 }
 
-export async function getBlogPost(slug: string): Promise<BlogPost | null> {
-	const client = getAliOssClient();
-	const prefix = env.ALI_OSS_BLOG_PREFIX;
-	const decodedSlug = decodeURIComponent(slug);
-	const objectKey = `${prefix}/${decodedSlug}`;
+export const getBlogPost = cache(
+	async (slug: string): Promise<BlogPost | null> => {
+		const client = getAliOssClient();
+		const prefix = env.ALI_OSS_BLOG_PREFIX;
+		const decodedSlug = decodeURIComponent(slug);
+		const objectKey = `${prefix}/${decodedSlug}`;
 
-	try {
-		const result = await client.get(objectKey);
-		const markdown =
-			result.content instanceof Buffer
-				? result.content.toString("utf-8")
-				: String(result.content);
+		try {
+			const result = await client.get(objectKey);
+			const markdown =
+				result.content instanceof Buffer
+					? result.content.toString("utf-8")
+					: String(result.content);
 
-		const { html: content, frontmatter } = await compile(markdown);
-		const fileName = decodedSlug.split("/").pop() || decodedSlug;
-		const title =
-			frontmatter.title || extractTitleFromMarkdown(markdown, fileName);
+			const { content, excerpt, frontmatter } = await compile(markdown);
+			const fileName = decodedSlug.split("/").pop() || decodedSlug;
+			const title =
+				frontmatter.title || extractTitleFromMarkdown(markdown, fileName);
 
-		return {
-			slug,
-			title,
-			content,
-		};
-	} catch {
-		// Silently return null during build when blog post is unavailable
-		return null;
-	}
-}
+			return {
+				slug,
+				title,
+				content,
+				excerpt,
+			};
+		} catch {
+			// Silently return null during build when blog post is unavailable
+			return null;
+		}
+	},
+);
 
 export async function getAllBlogSlugs(): Promise<string[]> {
 	const paths = await listBlogFilePaths();

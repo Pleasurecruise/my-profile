@@ -1,4 +1,4 @@
-import type { Root, Element, Text } from "hast";
+import type { Element, Root, Text } from "hast";
 import type { Plugin } from "unified";
 import { slugify } from "./slugify";
 

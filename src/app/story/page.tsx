@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { BlogContent, markdownToHtml } from "@my-profile/ui";
+import { BlogContent, compile } from "@my-profile/ui";
 import BlurFade from "@/components/magicui/blur-fade";
 import { TravelGlobe } from "@/components/travel-globe";
 import { TRAVEL_LOCATIONS } from "@/data/travel";
@@ -23,9 +23,9 @@ export default async function StoryPage() {
 			? [markdown.slice(0, globeIndex), markdown.slice(globeIndex)]
 			: [markdown, ""];
 
-	const [beforeContent, afterContent] = await Promise.all([
-		markdownToHtml(before),
-		after ? markdownToHtml(after) : Promise.resolve(""),
+	const [beforeResult, afterResult] = await Promise.all([
+		compile(before),
+		after ? compile(after) : Promise.resolve(null),
 	]);
 
 	return (
@@ -33,11 +33,15 @@ export default async function StoryPage() {
 			<section id="story">
 				<BlurFade delay={BLUR_FADE_DELAY}>
 					<div className="max-w-2xl mx-auto">
-						<BlogContent content={beforeContent} className="article" />
+						<BlogContent className="article">
+							{beforeResult.content}
+						</BlogContent>
 						<TravelGlobe locations={TRAVEL_LOCATIONS} />
-						{afterContent && (
-							<BlogContent content={afterContent} className="article" />
-						)}
+						{afterResult ? (
+							<BlogContent className="article">
+								{afterResult.content}
+							</BlogContent>
+						) : null}
 					</div>
 				</BlurFade>
 			</section>

@@ -33,7 +33,7 @@ export default function Page() {
 									alt={DATA.name}
 									width={56}
 									height={56}
-									className="rounded-full"
+									className="rounded-full transition-transform duration-700 ease-in-out hover:rotate-[360deg]"
 								/>
 								<div className="flex flex-col">
 									<Link

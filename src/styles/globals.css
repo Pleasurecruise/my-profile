@@ -259,11 +259,13 @@ code {
 }
 
 pre code {
-	@apply !leading-normal;
+	@apply block px-4 !leading-normal;
 }
 
 pre.shiki code {
 	display: block;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 pre.shiki code .line {
