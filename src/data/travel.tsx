@@ -1,10 +1,15 @@
 export const TRAVEL_LOCATIONS = [
-	{ name: "Shanghai", location: [31.2304, 121.4737], size: 0.08 },
+	{ name: "Shanghai", location: [31.2304, 121.4737], size: 0.1 },
 	{ name: "Ningbo", location: [29.8683, 121.544], size: 0.1 },
 	{ name: "Hangzhou", location: [30.2741, 120.1551], size: 0.08 },
+	{ name: "Chengdu", location: [30.5728, 104.0668], size: 0.08 },
 	{ name: "Nottingham", location: [52.9548, -1.1581], size: 0.1 },
 	{ name: "London", location: [51.5074, -0.1278], size: 0.08 },
 	{ name: "Manchester", location: [53.4808, -2.2426], size: 0.08 },
 	{ name: "Leeds", location: [53.8008, -1.5491], size: 0.08 },
 	{ name: "Helsinki", location: [60.1699, 24.9384], size: 0.08 },
+	{ name: "Marseille", location: [43.2965, 5.3698], size: 0.08 },
+	{ name: "Nice", location: [43.7102, 7.262], size: 0.08 },
+	{ name: "Monaco", location: [43.7384, 7.4246], size: 0.08 },
+	{ name: "Paris", location: [48.8566, 2.3522], size: 0.08 },
 ] as const;
