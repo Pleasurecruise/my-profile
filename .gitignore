@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+packages/ui/node_modules
 .pnpm-store
 /.pnp
 .pnp.*

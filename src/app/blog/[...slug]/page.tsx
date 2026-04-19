@@ -7,6 +7,7 @@ import BlurFade from "@/components/magicui/blur-fade";
 import { DATA } from "@/data/resume";
 import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
 import { ArticleActions } from "./article-actions";
+import { ArticleHeader } from "./article-header";
 
 export const revalidate = 604800;
 export const dynamicParams = true;
@@ -96,15 +97,11 @@ export default async function Blog({
 					>
 						<ChevronLeft className="size-5" />
 					</Link>
-					<div className="flex items-start justify-between gap-3 flex-1 min-w-0">
-						<h1 className="title font-medium text-2xl tracking-tighter">
-							{post.title}
-						</h1>
-						<ArticleActions
-							title={post.title}
-							url={`${DATA.url}/blog/${post.slug}`}
-						/>
-					</div>
+					<ArticleHeader title={post.title} text={post.excerpt} />
+					<ArticleActions
+						title={post.title}
+						url={`${DATA.url}/blog/${post.slug}`}
+					/>
 				</div>
 			</BlurFade>
 			<BlurFade delay={BLUR_FADE_DELAY}>

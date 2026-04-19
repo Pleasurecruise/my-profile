@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ImagesBadge } from "@/components/aceternityui/images-badge";
 import { Tooltip } from "@/components/aceternityui/tooltip-card";
-import { HelloSignature } from "@my-profile/ui";
+import { HelloSignature, PresenceCount, SiteAge } from "@my-profile/ui";
 import { Icons } from "@/components/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
@@ -306,20 +306,26 @@ export default function Page() {
 					</div>
 				</BlurFade>
 			</section>
-			<footer className="mt-auto pt-16">
+			<footer className="mt-4 pt-4">
 				<BlurFade delay={BLUR_FADE_DELAY * 8}>
 					<div className={`mx-auto w-full max-w-2xl ${newsreader.variable}`}>
-						<p className="text-lg text-muted-foreground/30 mb-4">
-							Inspired by{" "}
-							<Link
-								href="https://github.com/magicuidesign/portfolio"
-								target="_blank"
-								className="italic hover:underline"
-								style={{ fontFamily: "var(--font-newsreader)" }}
-							>
-								magicuidesign portfolio
-							</Link>
-						</p>
+						<div className="flex items-center justify-between mb-4">
+							<p className="text-lg text-muted-foreground/30">
+								Inspired by{" "}
+								<Link
+									href="https://github.com/magicuidesign/portfolio"
+									target="_blank"
+									className="italic hover:underline"
+									style={{ fontFamily: "var(--font-newsreader)" }}
+								>
+									magicuidesign portfolio
+								</Link>
+							</p>
+							<div className="flex flex-col items-end gap-1">
+								<SiteAge />
+								<PresenceCount />
+							</div>
+						</div>
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-8">
 							<Link
 								href="https://github.com/Pleasurecruise/my-profile"
