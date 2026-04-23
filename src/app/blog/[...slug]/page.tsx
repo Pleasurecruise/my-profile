@@ -8,6 +8,7 @@ import { DATA } from "@/data/resume";
 import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
 import { ArticleActions } from "./article-actions";
 import { ArticleHeader } from "./article-header";
+import { Toc } from "./toc";
 
 export const revalidate = 604800;
 export const dynamicParams = true;
@@ -77,6 +78,7 @@ export default async function Blog({
 
 	return (
 		<section id="blog">
+			<Toc entries={post.toc} />
 			<script type="application/ld+json" suppressHydrationWarning>
 				{JSON.stringify({
 					"@context": "https://schema.org",

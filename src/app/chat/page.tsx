@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import BlurFade from "@/components/magicui/blur-fade";
+import { BorderBeam } from "@/components/magicui/border-beam";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	Card,
@@ -14,7 +15,7 @@ import {
 	CardHeader,
 } from "@/components/ui/card";
 import { authClient, useSession } from "@/lib/auth-client";
-import { api } from "@/trpc/react";
+import { api, TRPCReactProvider } from "@/trpc/react";
 import { ChatInput } from "./_components/chat-input";
 import { ChatMessages } from "./_components/chat-messages";
 
@@ -33,6 +34,14 @@ interface Message {
 const BLUR_FADE_DELAY = 0.04;
 
 export default function ChatPage() {
+	return (
+		<TRPCReactProvider>
+			<ChatPageContent />
+		</TRPCReactProvider>
+	);
+}
+
+function ChatPageContent() {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const messagesRef = useRef<Message[]>([]);
 	messagesRef.current = messages;
@@ -214,7 +223,7 @@ export default function ChatPage() {
 	return (
 		<BlurFade delay={BLUR_FADE_DELAY}>
 			<div className="flex flex-col h-full w-full">
-				<Card className="flex flex-col flex-1 w-full max-w-2xl mx-auto border shadow-lg">
+				<Card className="relative overflow-hidden flex flex-col flex-1 w-full max-w-2xl mx-auto border shadow-lg">
 					<CardHeader className="flex flex-row items-center justify-between border-b px-4 py-3 sm:px-6">
 						<div>
 							<h2 className="text-lg font-semibold">Chat with DeepSeek</h2>
@@ -269,6 +278,7 @@ export default function ChatPage() {
 							loading={isLoading}
 						/>
 					</CardFooter>
+					<BorderBeam duration={4} size={80} />
 				</Card>
 			</div>
 		</BlurFade>

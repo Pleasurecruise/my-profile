@@ -7,7 +7,7 @@
 或许你能够通过下面的信息 来更好的了解我哦
 
 <div style="display:inline-flex;flex-direction:column;align-items:center;gap:16px;padding:24px;border:1px solid #e5e7eb;border-radius:16px;max-width:420px;background:#fff;">
-  <img src="https://cdn.bonjour.bio/cloudstorage/47314939-4311-4d6e-ad52-6eca2df7b6c2" alt="Pleasure1234" style="width:96px;height:96px;border-radius:50%;object-fit:cover;" />
+  <img src="https://avatars.githubusercontent.com/u/144885467" alt="Pleasure1234" style="width:96px;height:96px;border-radius:50%;object-fit:cover;" />
   <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
     <div style="font-size:1.2rem;font-weight:700;">Pleasure1234</div>
     <div style="font-size:0.85rem;color:#6b7280;">Core Developer @ CherryHQ · 前端小白, etc. · 中国 浙江省 宁波市 · 他</div>

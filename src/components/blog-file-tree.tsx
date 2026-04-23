@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { HTMLAttributes } from "react";
+import { BorderBeam } from "@/components/magicui/border-beam";
 import { File, Folder, Tree } from "@/components/ui/file-tree";
 import { cn } from "@/lib/utils";
 import type { BlogTreeNode } from "@/server/blog";
@@ -57,7 +58,10 @@ export default function BlogFileTree({
 
 	return (
 		<div
-			className={cn("rounded-xl border border-border/80 p-3", className)}
+			className={cn(
+				"relative overflow-hidden rounded-xl border border-border/80 p-3",
+				className,
+			)}
 			{...props}
 		>
 			<div className="[&>div]:!h-auto [&_[data-slot='scroll-area']]:!h-auto [&_[data-slot='scroll-area']]:!overflow-visible [&_[data-slot='scroll-area-viewport']]:!h-auto [&_[data-slot='scroll-area-viewport']]:!overflow-visible [&_[data-slot='scroll-area-scrollbar']]:!hidden">
@@ -69,6 +73,7 @@ export default function BlogFileTree({
 					</Folder>
 				</Tree>
 			</div>
+			<BorderBeam duration={4} size={80} />
 		</div>
 	);
 }

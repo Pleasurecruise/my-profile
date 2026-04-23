@@ -1,3 +1,4 @@
+import type { TocEntry } from "@my-profile/ui";
 import { compile } from "@my-profile/ui";
 import type { ReactNode } from "react";
 import { cache } from "react";
@@ -22,6 +23,7 @@ export type BlogPost = {
 	title: string;
 	content: ReactNode;
 	excerpt: string;
+	toc: TocEntry[];
 };
 
 function normalizeRelativeTreePath(relativePath: string) {
@@ -170,7 +172,7 @@ export const getBlogPost = cache(
 					? result.content.toString("utf-8")
 					: String(result.content);
 
-			const { content, excerpt, frontmatter } = await compile(markdown);
+			const { content, excerpt, frontmatter, toc } = await compile(markdown);
 			const fileName = decodedSlug.split("/").pop() || decodedSlug;
 			const title =
 				frontmatter.title || extractTitleFromMarkdown(markdown, fileName);
@@ -180,6 +182,7 @@ export const getBlogPost = cache(
 				title,
 				content,
 				excerpt,
+				toc,
 			};
 		} catch {
 			// Silently return null during build when blog post is unavailable
