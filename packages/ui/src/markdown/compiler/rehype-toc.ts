@@ -1,3 +1,4 @@
+// Derived from Taki <https://github.com/canmi21/taki> (AGPL-v3)
 import type { Element, Root, Text } from "hast";
 import type { Plugin } from "unified";
 import { slugify } from "./slugify";

@@ -1,5 +1,6 @@
 "use client";
 
+// Derived from Taki <https://github.com/canmi21/taki> (AGPL-v3)
 import { Check, Link2 } from "lucide-react";
 import { useState } from "react";
 

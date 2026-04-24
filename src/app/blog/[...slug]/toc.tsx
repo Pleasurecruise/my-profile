@@ -1,5 +1,6 @@
 "use client";
 
+// Derived from Taki <https://github.com/canmi21/taki> (AGPL-v3)
 import type { TocEntry } from "@my-profile/ui";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";

@@ -1,3 +1,4 @@
+// Derived from Taki <https://github.com/canmi21/taki> (AGPL-v3)
 import { Clock, Eye, Type } from "lucide-react";
 
 const CJK_READING_SPEED = 350;

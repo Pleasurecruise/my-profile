@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal website built with Next.js 16, React 19, TypeScript, TailwindCSS v4, and tRPC. Features a blog, AI chat, Moments feed, interactive terminal, real-time activity status, and authentication.
+Personal website built with Next.js 16, React 19, TypeScript, TailwindCSS v4, and tRPC. Features a blog, AI chat, Moments feed, photo gallery, interactive terminal, real-time activity status, and authentication.
 
 ## Package Manager
 
@@ -148,3 +148,7 @@ See `.env.example`. Key variables:
 | `src/db/` | Prisma schema and client |
 | `src/app/layout.tsx` | Root layout, providers, metadata |
 | `src/styles/globals.css` | Global styles, design tokens, article/code block CSS |
+
+## License
+
+[AGPL-v3](LICENSE). This project contains code derived from [Taki](https://github.com/canmi21/taki) (AGPL-v3).

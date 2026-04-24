@@ -8,6 +8,7 @@ import { DATA } from "@/data/resume";
 import { getAllBlogSlugs, getBlogPost } from "@/server/blog";
 import { ArticleActions } from "./article-actions";
 import { ArticleHeader } from "./article-header";
+import { ArticleSide } from "./article-side";
 import { Toc } from "./toc";
 
 export const revalidate = 604800;
@@ -79,6 +80,7 @@ export default async function Blog({
 	return (
 		<section id="blog">
 			<Toc entries={post.toc} />
+			<ArticleSide url={`${DATA.url}/blog/${post.slug}`} />
 			<script type="application/ld+json" suppressHydrationWarning>
 				{JSON.stringify({
 					"@context": "https://schema.org",

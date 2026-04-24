@@ -12,10 +12,12 @@ Next.js 16 · React 19 · TypeScript · TailwindCSS v4 · tRPC · Prisma · Post
 - **Blog** — Markdown fetched from Alibaba Cloud OSS, compiled server-side with Shiki syntax highlighting and TOC generation
 - **Chat** — AI assistant powered by OpenAI via Vercel AI SDK
 - **Moments** — personal feed with Mapbox globe visualization
+- **Gallery** — photo gallery with masonry layout
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **Am I OK** — real-time activity status pushed from macOS every 30s
 - **CV** — resume page with work, projects, and hackathons
 - **Story** — personal story page with interactive map
+- **Auth** — sign up, login, password reset (Better Auth + GitHub/Google OAuth)
 - **llms.txt** — LLM-friendly site summary at `/llms.txt`
 
 ## Getting Started
@@ -69,3 +71,9 @@ packages/ui/src/
 ├── terminal/        # Interactive terminal (logic + components)
 └── markdown/        # Blog compiler (Shiki, TOC, directives) + BlogContent
 ```
+
+## License
+
+[AGPL-v3](LICENSE)
+
+This project contains code derived from [Taki](https://github.com/canmi21/taki) (AGPL-v3).

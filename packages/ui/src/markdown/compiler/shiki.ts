@@ -1,3 +1,4 @@
+// Derived from Taki <https://github.com/canmi21/taki> (AGPL-v3)
 import { createBundledHighlighter } from "shiki/core";
 import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import { bundledLanguages } from "shiki/langs";
