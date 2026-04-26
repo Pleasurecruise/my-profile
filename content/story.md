@@ -147,18 +147,18 @@ Claude Pro · Twitter Plus · QQ Music 绿钻
 
 ## 我的 oc
 
-<div><img src="/oc/design.png" alt="picture" width="420" /></div> 
+<div><img src="/oc/design.png" alt="picture" width="420" /></div>
 
-<div><img src="/oc/emoji.png" alt="picture" width="420" /></div> 
+<div><img src="/oc/emoji.png" alt="picture" width="420" /></div>
 
 <details>
-<summary>人物设定</summary>  
+<summary>人物设定</summary>
 
 - 姓名：柒夜 / Vesper
 - 性别：女
 - 年龄：16-17岁
 - MBTI：ENFP
-- 关键词：热情过载 / 天马行空 / 自由灵魂  / 偏执浪漫主义
+- 关键词：热情过载 / 天马行空 / 自由灵魂 / 偏执浪漫主义
   外貌与气质
 - **发色**：深黑色为主体，发梢自然渐变为暖淡黄，如同被月光浸染过的夜色。发质柔顺带光泽，随动作轻微飘动。
 - **瞳色**：金琥珀色竖裂瞳，底色明亮，光线好的时候像融化的金箔。眼神通常带着三分漫不经心、三分审视、三分藏着掖着的好奇，剩下一分——她不会让你看见。

@@ -1,13 +1,13 @@
 {
-	"name": "@my-profile/ui",
-	"version": "0.1.0",
-	"private": true,
-	"exports": {
-		".": "./src/index.ts",
-		"./cherry-blossom": "./src/components/cherry-blossom.tsx",
-		"./hello-signature": "./src/components/hello-signature.tsx",
-		"./terminal": "./src/terminal/index.ts",
-		"./markdown": "./src/markdown/index.ts",
-		"./footer": "./src/footer/index.ts"
-	}
+  "name": "@my-profile/ui",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./cherry-blossom": "./src/components/cherry-blossom.tsx",
+    "./hello-signature": "./src/components/hello-signature.tsx",
+    "./terminal": "./src/terminal/index.ts",
+    "./markdown": "./src/markdown/index.ts",
+    "./footer": "./src/footer/index.ts"
+  }
 }

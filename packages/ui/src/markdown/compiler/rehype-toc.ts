@@ -4,56 +4,51 @@ import type { Plugin } from "unified";
 import { slugify } from "./slugify";
 
 export interface TocEntry {
-	depth: number;
-	text: string;
-	id: string;
+  depth: number;
+  text: string;
+  id: string;
 }
 
 function extractText(node: Element): string {
-	let text = "";
-	for (const child of node.children) {
-		if (child.type === "text") {
-			text += (child as Text).value;
-		} else if (child.type === "element") {
-			text += extractText(child as Element);
-		}
-	}
-	return text;
+  let text = "";
+  for (const child of node.children) {
+    if (child.type === "text") {
+      text += (child as Text).value;
+    } else if (child.type === "element") {
+      text += extractText(child as Element);
+    }
+  }
+  return text;
 }
 
 function createHeadingLink(id: string): Element {
-	return {
-		type: "element",
-		tagName: "a",
-		properties: {
-			href: `#${id}`,
-			className: ["heading-link"],
-			ariaLabel: "Link to section",
-			dataHeadingLink: "true",
-			dataHeadingId: id,
-		},
-		children: [],
-	};
+  return {
+    type: "element",
+    tagName: "a",
+    properties: {
+      href: `#${id}`,
+      className: ["heading-link"],
+      ariaLabel: "Link to section",
+      dataHeadingLink: "true",
+      dataHeadingId: id,
+    },
+    children: [],
+  };
 }
 
 const headingTags = new Set(["h1", "h2", "h3", "h4", "h5", "h6"]);
 
-export const rehypeToc: Plugin<[{ toc: TocEntry[] }], Root> =
-	(options) => (tree) => {
-		for (const node of tree.children) {
-			if (
-				node.type !== "element" ||
-				!headingTags.has((node as Element).tagName)
-			)
-				continue;
+export const rehypeToc: Plugin<[{ toc: TocEntry[] }], Root> = (options) => (tree) => {
+  for (const node of tree.children) {
+    if (node.type !== "element" || !headingTags.has((node as Element).tagName)) continue;
 
-			const el = node as Element;
-			const depth = Number(el.tagName[1]);
-			const text = extractText(el);
-			const id = slugify(text);
+    const el = node as Element;
+    const depth = Number(el.tagName[1]);
+    const text = extractText(el);
+    const id = slugify(text);
 
-			el.properties = { ...el.properties, id };
-			el.children.unshift(createHeadingLink(id));
-			options.toc.push({ depth, text, id });
-		}
-	};
+    el.properties = { ...el.properties, id };
+    el.children.unshift(createHeadingLink(id));
+    options.toc.push({ depth, text, id });
+  }
+};

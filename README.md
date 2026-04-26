@@ -4,14 +4,13 @@ Personal website — [yiming1234.cn](https://yiming1234.cn)
 
 ## Stack
 
-Next.js 16 · React 19 · TypeScript · TailwindCSS v4 · tRPC · Prisma · PostgreSQL · Better Auth
+Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Prisma · PostgreSQL · Better Auth
 
 ## Features
 
 - **Home** — landing page with animated background
 - **Blog** — Markdown fetched from Alibaba Cloud OSS, compiled server-side with Shiki syntax highlighting and TOC generation
 - **Chat** — AI assistant powered by OpenAI via Vercel AI SDK
-- **Moments** — personal feed with Mapbox globe visualization
 - **Gallery** — photo gallery with masonry layout
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **Am I OK** — real-time activity status pushed from macOS every 30s
@@ -33,21 +32,23 @@ pnpm dev
 
 See `.env.example` for all required variables. Key ones:
 
-| Variable | Purpose |
-|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `BETTER_AUTH_SECRET` | Auth secret key |
-| `OPENAI_API_KEY` | AI chat |
-| `NEXT_PUBLIC_MAPBOX_TOKEN` | Globe visualization |
-| `AM_I_OK_SECRET` | Status push API token |
-| `ALI_OSS_*` | Alibaba Cloud OSS for blog storage |
+| Variable             | Purpose                            |
+| -------------------- | ---------------------------------- |
+| `DATABASE_URL`       | PostgreSQL connection string       |
+| `BETTER_AUTH_SECRET` | Auth secret key                    |
+| `OPENAI_API_KEY`     | AI chat                            |
+| `VITE_MAPBOX_TOKEN`  | Globe visualization                |
+| `AM_I_OK_SECRET`     | Status push API token              |
+| `ALI_OSS_*`          | Alibaba Cloud OSS for blog storage |
 
 ## Commands
 
 ```bash
-pnpm dev          # dev server (Turbopack)
-pnpm build        # production build
-pnpm lint         # Biome lint
+pnpm dev          # Vite dev server (vite-plus)
+pnpm build        # Production build
+pnpm check        # Type check
+pnpm lint         # Lint (vite-plus)
+pnpm format       # Format (vite-plus)
 pnpm db:studio    # Prisma Studio
 ```
 

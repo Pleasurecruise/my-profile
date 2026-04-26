@@ -1,0 +1,337 @@
+import { ArrowUpRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import { ImagesBadge } from "@/components/aceternityui/images-badge";
+import { Tooltip } from "@/components/aceternityui/tooltip-card";
+import { HelloSignature, PresenceCount, SiteAge } from "@my-profile/ui";
+import { Icons } from "@/components/shared/icons";
+import BlurFade from "@/components/magicui/blur-fade";
+import { Highlighter } from "@/components/magicui/highlighter";
+import { FRIENDS } from "@/data/links";
+import { DATA } from "@/data/resume";
+
+export const Route = createFileRoute("/")({
+  component: HomePage,
+});
+
+const BLUR_FADE_DELAY = 0.04;
+
+function HomePage() {
+  return (
+    <main className="flex flex-col min-h-dvh">
+      <section id="hero">
+        <div className="mx-auto w-full max-w-2xl">
+          <BlurFade delay={BLUR_FADE_DELAY}>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-4">
+                <img
+                  src={DATA.avatarUrl}
+                  alt={DATA.name}
+                  width={56}
+                  height={56}
+                  className="rounded-full transition-transform duration-700 ease-in-out hover:rotate-[360deg]"
+                />
+                <div className="flex flex-col">
+                  <a
+                    href={DATA.contact.social.GitHub.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[20px] font-medium text-foreground hover:underline"
+                  >
+                    @Pleasure1234
+                  </a>
+                  <p className="text-[14px] text-foreground">Full-stack Developer</p>
+                </div>
+              </div>
+              <div className="text-muted-foreground/40">
+                <HelloSignature />
+              </div>
+            </div>
+          </BlurFade>
+        </div>
+      </section>
+
+      <section id="about" className="mt-6">
+        <BlurFade delay={BLUR_FADE_DELAY * 2}>
+          <div className="mx-auto w-full max-w-2xl space-y-4">
+            <p className="text-[15px] leading-relaxed text-foreground">
+              Any shortcomings are kindly overlooked. 🙏
+            </p>
+            <p className="text-[15px] leading-relaxed text-foreground">
+              Passionate computer science student at{" "}
+              <Highlighter action="underline">
+                <a
+                  href="https://www.nottingham.ac.uk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                >
+                  UoN
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </Highlighter>{" "}
+              with hands-on experience in{" "}
+              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                full-stack
+              </span>{" "}
+              development and{" "}
+              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                AI
+              </span>{" "}
+              technologies. Active contributor to open source projects mainly on{" "}
+              <Highlighter action="underline">
+                <a
+                  href="https://github.com/CherryHQ/cherry-studio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                >
+                  Cherry Studio
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </Highlighter>
+              . Building with React, Next.js, and TypeScript.
+            </p>
+            <p className="text-[15px] leading-relaxed text-foreground">
+              Off the keyboard, I ride road bikes, get lost in music, and sink hours into open-world
+              games. A{" "}
+              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+                hackathon
+              </span>{" "}
+              enthusiast who has competed across universities in 🇬🇧 — someday I hope to go full
+              digital nomad, shipping open source from wherever the road takes me.
+            </p>
+            <p className="text-[15px] leading-relaxed text-foreground">
+              Currently I am seeking a job opportunity. Click{" "}
+              <Highlighter action="underline">
+                <Link
+                  to="/cv"
+                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+                >
+                  here
+                  <ArrowUpRight className="w-3 h-3" />
+                </Link>
+              </Highlighter>{" "}
+              to see my cv :3
+            </p>
+          </div>
+        </BlurFade>
+      </section>
+
+      <section id="links" className="mt-16">
+        <BlurFade delay={BLUR_FADE_DELAY * 3}>
+          <div className="mx-auto w-full max-w-2xl mb-6">
+            <ImagesBadge text="Friends" images={FRIENDS.slice(0, 3).map((f) => f.avatar)} />
+          </div>
+        </BlurFade>
+        <BlurFade delay={BLUR_FADE_DELAY * 4}>
+          <div className="mx-auto w-full max-w-2xl">
+            <ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
+              {FRIENDS.map((friend) => (
+                <li key={friend.url}>
+                  <a
+                    href={friend.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                  >
+                    <img
+                      src={friend.avatar}
+                      alt={friend.name}
+                      width={20}
+                      height={20}
+                      className="rounded-full"
+                    />
+                    <span>{friend.name}</span>
+                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </BlurFade>
+      </section>
+
+      <section id="friend-link" className="mt-10">
+        <BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+          <div className="space-y-4 mx-auto w-full max-w-2xl">
+            <span className="italic block" style={{ fontFamily: "var(--font-newsreader)" }}>
+              Add my link
+            </span>
+            <p className="text-[15px] text-muted-foreground">
+              Feel free to exchange links!👏🏻 <br />
+              Just add my link and submit yours via{" "}
+              <a
+                href="https://github.com/Pleasurecruise/my-profile/pulls"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground hover:underline"
+              >
+                GitHub
+              </a>
+              .
+            </p>
+            <ul className="space-y-1 text-[15px] text-muted-foreground ml-0.5">
+              <li>
+                <span className="text-foreground">name</span>: Pleasure1234
+              </li>
+              <li>
+                <span className="text-foreground">url</span>: yiming1234.cn
+              </li>
+              <li>
+                <span className="text-foreground">avatar</span>: yiming1234.cn/profile/me.png
+              </li>
+              <li>
+                <span className="text-foreground">description</span>: Any shortcomings are kindly
+                overlooked 🙏
+              </li>
+            </ul>
+          </div>
+        </BlurFade>
+      </section>
+
+      <section id="contact" className="mt-16">
+        <BlurFade delay={BLUR_FADE_DELAY * 5}>
+          <div className="space-y-4 mx-auto w-full max-w-2xl">
+            <span className="italic block" style={{ fontFamily: "var(--font-newsreader)" }}>
+              Connect
+            </span>
+            <div className="flex gap-8">
+              <ul className="space-y-3 flex-1">
+                <li>
+                  <a
+                    href={`mailto:${DATA.contact.email}`}
+                    className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                  >
+                    <Icons.email className="w-5 h-5" />
+                    <span>Email</span>
+                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                </li>
+                <li>
+                  <Tooltip
+                    content={
+                      <div className="flex items-center justify-center">
+                        <div className="h-50 w-50 overflow-hidden rounded-lg">
+                          <img
+                            src="/profile/wechat.png"
+                            alt="WeChat QR Code"
+                            width={200}
+                            height={200}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                      </div>
+                    }
+                  >
+                    <a
+                      href="#"
+                      className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                    >
+                      <Icons.wechat className="w-5 h-5" />
+                      <span>WeChat</span>
+                      <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  </Tooltip>
+                </li>
+                <li>
+                  <a
+                    href={DATA.contact.social.Instagram.url}
+                    className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                  >
+                    <Icons.instagram className="w-5 h-5" />
+                    <span>Instagram</span>
+                    <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </a>
+                </li>
+                <li>
+                  <Tooltip
+                    containerClassName="[&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
+                    content="Add me on Discord: pleasure9876"
+                  >
+                    <a
+                      href="#"
+                      className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                    >
+                      <Icons.discord className="w-5 h-5" />
+                      <span>Discord</span>
+                      <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                  </Tooltip>
+                </li>
+              </ul>
+              <ul className="space-y-3 flex-1">
+                {Object.entries(DATA.contact.social)
+                  .filter(([, social]) => social.navbar)
+                  .map(([name, social]) => (
+                    <li key={name}>
+                      <a
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                      >
+                        <social.icon className="w-5 h-5" />
+                        <span>{name}</span>
+                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+        </BlurFade>
+      </section>
+
+      <footer className="mt-4 pt-4">
+        <BlurFade delay={BLUR_FADE_DELAY * 8}>
+          <div className="mx-auto w-full max-w-2xl">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-lg text-muted-foreground/30">
+                Inspired by{" "}
+                <a
+                  href="https://github.com/magicuidesign/portfolio"
+                  target="_blank"
+                  className="italic hover:underline"
+                  style={{ fontFamily: "var(--font-newsreader)" }}
+                >
+                  magicuidesign portfolio
+                </a>
+              </p>
+              <div className="flex flex-col items-end gap-1">
+                <SiteAge />
+                <PresenceCount />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-8">
+              <a
+                href="https://github.com/Pleasurecruise/my-profile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
+              >
+                Source Code <ArrowUpRight className="w-3 h-3" />
+              </a>
+              <a
+                href="https://beian.miit.gov.cn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
+              >
+                ICP No.2023040885-2 <ArrowUpRight className="w-3 h-3" />
+              </a>
+              <a
+                href="https://icp.gov.moe/?keyword=20240608"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
+              >
+                萌 ICP No.20240608 <ArrowUpRight className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        </BlurFade>
+      </footer>
+    </main>
+  );
+}

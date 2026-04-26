@@ -4,7 +4,7 @@ This document reflects the stack and architecture currently used in the reposito
 
 ## Overview
 
-This project is a `pnpm` workspace built around a Next.js 16 App Router application plus a shared local package, `@my-profile/ui`.
+This project is a `pnpm` workspace built around a Vite + Hono + TanStack Router application plus a shared local package, `@my-profile/ui`.
 
 At runtime it combines:
 
@@ -16,18 +16,20 @@ At runtime it combines:
 
 ## Core Runtime
 
-| Package | Version | Notes |
-|---------|---------|-------|
-| `next` | `16.2.2` | App Router, Route Handlers, metadata routes |
-| `react` / `react-dom` | `19.2.4` | React 19 app |
-| `typescript` | `6.0.2` | Main language across app and workspace package |
-| `pnpm` | `10.33.0` | Workspace package manager |
+| Package                          | Version              | Notes                                     |
+| -------------------------------- | -------------------- | ----------------------------------------- |
+| `vite-plus`                      | `0.1.19`             | Vite-based dev/build/lint/format workflow |
+| `react` / `react-dom`            | `19.2.5`             | React 19 app                              |
+| `@tanstack/react-router`         | `1.168.24`           | File-based client routing                 |
+| `hono` / `@hono/vite-dev-server` | `4.12.15` / `0.25.3` | API server plus Vite dev integration      |
+| `typescript`                     | `6.0.3`              | Main language across app and workspace    |
+| `pnpm`                           | `10.33.0`            | Workspace package manager                 |
 
 Implementation details:
 
-- `next.config.ts` enables `reactCompiler: true`
-- dev and build both use Turbopack via `next dev --turbopack` and `next build --turbopack`
-- `@my-profile/ui` is transpiled through `transpilePackages`
+- `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and Hono dev middleware
+- dev and build flow through `vp dev` and `vp build`
+- `@my-profile/ui` is consumed as a local workspace package
 
 ## Frontend & UI
 
@@ -47,12 +49,12 @@ Implementation details:
 - **Magic UI** and **Aceternity UI** registry-based visual components
 - **Lucide React** and **Tabler Icons** for iconography
 - **Framer Motion** and **Motion** for animation
-- **next-themes** for dark/light theme switching
+- **next-themes** for dark/light theme switching in plain React
 - **Sonner** for toast notifications
 
 ### Typography and global UX
 
-- Fonts are loaded with `next/font/google`
+- Fonts are loaded from Google Fonts in `index.html`
 - Current font setup:
   - `JetBrains Mono` (aliased as the main sans variable)
   - `Noto Sans SC`
@@ -74,7 +76,7 @@ Enabled auth capabilities in `src/server/auth.ts`:
 - password reset by email
 - GitHub OAuth
 - Google OAuth
-- Next.js cookie integration through `nextCookies()`
+- session cookies handled through Better Auth on the Hono server
 
 Related packages:
 
@@ -82,7 +84,7 @@ Related packages:
 - `@better-auth/prisma-adapter`
 - `nodemailer`
 
-Email flows use SMTP credentials validated in `src/lib/env.ts` and sent through `src/server/email.ts`.
+Email flows use SMTP credentials validated in `server/lib/env.ts` and sent through `server/lib/email.ts`.
 
 ## Database & Persistence
 
