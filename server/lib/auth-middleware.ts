@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import { getAuth } from "../auth";
+import { auth } from "../auth";
 import type { AuthBindings } from "../types/auth";
 import type { Bindings } from "../types/bindings";
 
@@ -14,7 +14,7 @@ export const authMiddleware = createMiddleware<AuthBindings & { Bindings: Bindin
       return;
     }
 
-    const session = await getAuth(c.env).api.getSession({ headers: c.req.raw.headers });
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
     c.set("session", session?.session ?? null);
     c.set("user", session?.user ?? null);

@@ -8,11 +8,15 @@ import { TravelGlobe } from "@/components/shared/travel-globe";
 import { TRAVEL_LOCATIONS } from "@/data/travel";
 import type { StoryData } from "@shared/story";
 
+type StoryPageData = StoryData & {
+  mapboxToken: string | null;
+};
+
 export const Route = createFileRoute("/story")({
-  loader: async (): Promise<StoryData> => {
+  loader: async (): Promise<StoryPageData> => {
     const res = await fetch("/api/story");
     if (!res.ok) throw new Error("Failed to load story");
-    return res.json() as Promise<StoryData>;
+    return res.json() as Promise<StoryPageData>;
   },
   component: StoryPage,
 });
@@ -25,7 +29,7 @@ function useMdxContent(code: string) {
 }
 
 function StoryPage() {
-  const { beforeCode, afterCode } = Route.useLoaderData();
+  const { beforeCode, afterCode, mapboxToken } = Route.useLoaderData();
   const Before = useMdxContent(beforeCode);
   const After = afterCode ? useMdxContent(afterCode) : null;
 
@@ -37,7 +41,7 @@ function StoryPage() {
             <BlogContent className="article">
               <Before />
             </BlogContent>
-            <TravelGlobe locations={TRAVEL_LOCATIONS} />
+            <TravelGlobe locations={TRAVEL_LOCATIONS} mapboxToken={mapboxToken} />
             {After && (
               <BlogContent className="article">
                 <After />

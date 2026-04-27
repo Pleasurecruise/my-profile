@@ -3,7 +3,6 @@
 import mapboxgl, { type Map as MapboxMap } from "mapbox-gl";
 import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
-import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 
 export interface TravelLocation {
@@ -15,12 +14,13 @@ export interface TravelLocation {
 interface TravelGlobeProps {
   locations: ReadonlyArray<TravelLocation>;
   className?: string;
+  mapboxToken: string | null;
 }
 
 const ROTATION_SPEED = 0.05;
 const RESUME_DELAY_MS = 4000;
 
-export function TravelGlobe({ locations, className }: TravelGlobeProps) {
+export function TravelGlobe({ locations, className, mapboxToken }: TravelGlobeProps) {
   const { resolvedTheme } = useTheme();
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapboxMap | null>(null);
@@ -29,7 +29,6 @@ export function TravelGlobe({ locations, className }: TravelGlobeProps) {
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isUserInteractingRef = useRef(false);
 
-  const mapboxToken = env.MAPBOX_TOKEN;
   const isDark = resolvedTheme === "dark";
   const mapStyle = `mapbox://styles/mapbox/${isDark ? "dark" : "light"}-v10`;
   const mapStyleRef = useRef(mapStyle);

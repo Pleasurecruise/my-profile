@@ -2,7 +2,6 @@
 
 interface ImportMetaEnv {
   readonly DEV: boolean;
-  readonly VITE_MAPBOX_TOKEN?: string;
 }
 
 interface ImportMeta {

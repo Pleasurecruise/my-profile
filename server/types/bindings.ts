@@ -20,4 +20,5 @@ export interface Bindings {
   OPENAI_API_KEY: string;
   OPENAI_API_URL?: string;
   OPENAI_MODEL?: string;
+  VITE_MAPBOX_TOKEN?: string;
 }

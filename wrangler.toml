@@ -18,4 +18,4 @@ remote = true
 [[hyperdrive]]
 binding = "HYPERDRIVE"
 id = "1a6934414a7740dca78dd8ed38a625e4"
-localConnectionString = "postgresql://pleasure1234:local@localhost:5432/mydb"
+localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"

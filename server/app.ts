@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { getAuth } from "./auth";
+import { auth } from "./auth";
 import { authMiddleware } from "./lib/auth-middleware";
 import type { AuthBindings } from "./types/auth";
 import type { Bindings } from "./types/bindings";
@@ -30,10 +30,10 @@ app.use("/api/*", authMiddleware);
 
 // Better Auth — handles /api/auth/*
 app.all("/api/auth", (c) => {
-  return getAuth(c.env).handler(c.req.raw);
+  return auth.handler(c.req.raw);
 });
 app.all("/api/auth/*", (c) => {
-  return getAuth(c.env).handler(c.req.raw);
+  return auth.handler(c.req.raw);
 });
 
 // API routes
