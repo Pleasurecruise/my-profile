@@ -4,6 +4,7 @@ import { logger } from "hono/logger";
 import { auth } from "./auth";
 import { authMiddleware } from "./lib/auth-middleware";
 import type { AuthBindings } from "./types/auth";
+import type { Bindings } from "./types/bindings";
 import { amIOk } from "./routes/am-i-ok";
 import { blog } from "./routes/blog";
 import { chat } from "./routes/chat";
@@ -11,7 +12,9 @@ import { gallery } from "./routes/gallery";
 import { presence } from "./routes/presence";
 import { story } from "./routes/story";
 
-const app = new Hono<AuthBindings>();
+type AppEnv = AuthBindings & { Bindings: Bindings };
+
+const app = new Hono<AppEnv>();
 
 app.use("*", logger());
 app.use(
@@ -26,7 +29,12 @@ app.use(
 app.use("/api/*", authMiddleware);
 
 // Better Auth — handles /api/auth/*
-app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+app.all("/api/auth", (c) => {
+  return auth.handler(c.req.raw);
+});
+app.all("/api/auth/*", (c) => {
+  return auth.handler(c.req.raw);
+});
 
 // API routes
 app

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal website built with Vite, React 19, TypeScript, TailwindCSS v4, TanStack Router, and a Hono API server. Features a blog, AI chat, photo gallery, interactive terminal, real-time activity status, and authentication.
+Personal website built with Vite, React 19, TypeScript, TailwindCSS v4, TanStack Router, and a Hono API server running on **Cloudflare Workers**. Features a blog, AI chat, photo gallery, interactive terminal, real-time activity status, and authentication.
 
 ## Package Manager
 
@@ -13,12 +13,11 @@ This project uses **pnpm** with a workspace. Always use `pnpm` commands, never `
 ## Development Commands
 
 ```bash
-pnpm dev       # Vite dev server (vite-plus)
+pnpm dev       # Cloudflare Workers dev server (wrangler + @cloudflare/vite-plugin)
 pnpm build     # Production build (prisma generate + vp build)
-pnpm start     # Start production server (tsx server/index.ts)
 pnpm check     # Type check (vp check && tsgo --noEmit)
-pnpm lint      # Biome lint (--error-on-warnings)
-pnpm format    # Biome format
+pnpm lint      # Lint (vite-plus)
+pnpm format    # Format (vite-plus)
 ```
 
 ### Database (Prisma)
@@ -34,21 +33,38 @@ pnpm db:studio     # Open Prisma Studio
 ### Core Stack
 
 - **vite-plus** — unified toolchain: dev server, build, lint, format, type-check
-- **Vite** — SPA build with `@tailwindcss/vite` and `@hono/vite-dev-server`
+- **@cloudflare/vite-plugin** — runs the Hono server in a local Workers runtime during dev
+- **Vite** — SPA build (`dist/client/`), output served by the Workers `ASSETS` binding
 - **TanStack Router** — file-based client-side routing, auto-generates `src/routeTree.gen.ts`
 - **React 19** — SPA (no Server Components)
 - **TypeScript 6** + tsgo (TypeScript Go native preview, used in `pnpm check`)
 - **TailwindCSS v4** — no `tailwind.config.ts`, configured via CSS variables in `globals.css`
-- **Hono** — API server, served via `@hono/node-server`
-- **Prisma 7** — ORM with PostgreSQL
-- **Better Auth 1.6** — authentication (OAuth + email/password)
+- **Hono** — API server, entry point `server/app.ts` exported as `export default app` (Workers format)
+- **Cloudflare Workers** — deployment target; wrangler.toml defines all platform bindings
+- **Prisma 7** — ORM with PostgreSQL; `runtime = "workerd"` in schema; accessed via Hyperdrive
+- **Better Auth 1.6** — authentication (OAuth + email/password); uses `cloudflare:workers` env
+
+### Cloudflare Bindings
+
+Declared in `wrangler.toml`, typed in `server/types/bindings.ts`:
+
+| Binding       | Type       | Purpose                     |
+| ------------- | ---------- | --------------------------- |
+| `ASSETS`      | Static     | Serves the built SPA        |
+| `BLOG_BUCKET` | R2         | Blog Markdown files storage |
+| `HYPERDRIVE`  | Hyperdrive | PostgreSQL connection proxy |
+
+Secrets (`.dev.vars` locally, `wrangler secret put` in production): `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY`, `RESEND_FROM`, `AM_I_OK_SECRET`, `NOTION_TOKEN`, `OPENAI_API_KEY`, `OPENAI_API_URL?`, `OPENAI_MODEL?`.
+
+All env values are accessed via `c.env` (Hono context) or `env` from `cloudflare:workers` — **never** `process.env`.
 
 ### Workspace Structure
 
 ```
 .
 ├── src/                    # Vite SPA (TanStack Router)
-├── server/                 # Hono API server
+├── server/                 # Hono app (Cloudflare Workers entry)
+├── types/                  # Shared types (@shared/* alias)
 └── packages/
     └── ui/                 # Shared UI package (@my-profile/ui)
         └── src/
@@ -84,9 +100,10 @@ src/
 ├── data/
 │   ├── resume.tsx       # All personal data — edit here
 │   ├── links.tsx        # External links
+│   ├── story.tsx        # Story page data
 │   └── travel.tsx       # Travel data
 ├── lib/                 # Auth client, query client, utils
-├── types/               # Shared TypeScript types
+├── types/               # Frontend-only types (use types/ root for shared types)
 └── styles/              # globals.css — design tokens, article/code block CSS
 ```
 
@@ -94,29 +111,47 @@ src/
 
 ```
 server/
-├── app.ts               # Hono app — CORS, auth middleware, route registration
-├── auth.ts              # Better Auth instance
-├── index.ts             # Node.js entry point; serves SPA dist in production
+├── app.ts               # Hono app — CORS, auth middleware, route registration; default export
+├── auth.ts              # Better Auth instance (reads env from cloudflare:workers)
 ├── routes/              # API route handlers
 │   ├── am-i-ok.ts       # Status push/fetch
-│   ├── blog.ts          # Blog content from Ali OSS
+│   ├── blog.ts          # Blog content from R2
 │   ├── chat.ts          # OpenAI streaming chat
 │   ├── gallery.ts       # Photo gallery (Notion)
 │   ├── presence.ts      # Real-time presence count
 │   └── story.ts         # Story markdown
-└── lib/                 # Server-side helpers
-    ├── ali-oss.ts        # Alibaba Cloud OSS client
-    ├── blog.ts           # Blog fetch + compile
-    ├── prisma.ts         # Prisma client singleton
-    ├── env.ts            # Server environment variables (t3-oss/env-core)
-    └── auth-middleware.ts
+├── lib/                 # Server-side helpers
+│   ├── auth-middleware.ts
+│   ├── blog.ts          # R2 fetch + compile
+│   ├── email.ts         # Resend email client
+│   ├── notion-gallery.ts # Notion API for gallery photos
+│   ├── prisma.ts        # Prisma client singleton (keyed by connection string)
+│   └── story.ts         # Story content helper
+└── types/               # Server-side type definitions
+    ├── auth.ts          # AuthBindings for Hono
+    ├── bindings.ts      # Cloudflare Workers bindings interface
+    ├── cloudflare.ts    # R2Bucket, Hyperdrive, Assets types
+    ├── cloudflare-workers.d.ts  # cloudflare:workers module shim
+    └── notion.ts        # Notion API response types
+```
+
+### Shared Types (`types/`)
+
+Root-level `types/` directory aliased as `@shared/` in both `vite.config.ts` and `tsconfig.json`. Use for types consumed by both `src/` and `server/`.
+
+```
+types/
+├── blog.ts      # BlogTreeNode, BlogFileTreeData, BlogPostData
+├── gallery.ts   # GalleryPhoto
+└── story.ts     # Story types
 ```
 
 ### Data & Content
 
 - **Site data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
-- **Blog posts**: Markdown files stored in Alibaba Cloud OSS, fetched via `server/lib/blog.ts`
-- **Database**: PostgreSQL via Prisma — handles auth sessions, etc.
+- **Blog posts**: Markdown files stored in **Cloudflare R2** (`BLOG_BUCKET`), fetched via `server/lib/blog.ts`
+- **Gallery**: Photos sourced from **Notion** database via `server/lib/notion-gallery.ts`
+- **Database**: PostgreSQL via Prisma + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
 
 ### Special Features
 
@@ -130,7 +165,8 @@ server/
 
 **Blog** (`src/routes/blog/`, `server/lib/blog.ts`, `packages/ui/src/markdown/`)
 
-- Markdown content stored in Ali OSS, fetched server-side in `server/lib/blog.ts`
+- Markdown stored in Cloudflare R2, accessed via `c.env.BLOG_BUCKET` (R2Bucket binding)
+- `server/lib/blog.ts` uses R2 `list()` and `get()` — no Ali OSS dependency
 - Compiled by `packages/ui/src/markdown/compiler/` using a unified/MDX pipeline:
   - `remark-gfm` — GitHub Flavored Markdown
   - `remark-frontmatter` — YAML frontmatter extraction
@@ -149,7 +185,12 @@ server/
 
 **AI Chat** (`src/routes/chat.tsx`, `server/routes/chat.ts`)
 
-- OpenAI SDK integration via Vercel AI SDK streaming
+- OpenAI SDK + Vercel AI SDK streaming; model/URL configurable via `OPENAI_MODEL` / `OPENAI_API_URL`
+
+**Email** (`server/lib/email.ts`)
+
+- Transactional email via **Resend** SDK — used for verification and password reset
+- `RESEND_API_KEY` and `RESEND_FROM` are Workers secrets
 
 ### Linting & Formatting
 
@@ -163,25 +204,39 @@ Avoid `any` in TypeScript; for unified plugin chains use `Plugin` type cast inst
 
 ### Environment Variables
 
-See `.env.example`. Key variables:
+No `process.env` — all env is accessed via Cloudflare Workers bindings.
 
-- `DATABASE_URL` / `POSTGRES_URL` / `PRISMA_DATABASE_URL` — PostgreSQL connection
+- **Local dev**: put secrets in `.dev.vars` (see `.dev.vars.example`); wrangler injects them as `c.env`
+- **Production**: `wrangler secret put <NAME>` for each secret; platform bindings in `wrangler.toml`
+- `server/auth.ts` reads env via `import { env } from "cloudflare:workers"` at module load time
+
+Key variables:
+
 - `BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` — auth config
 - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth
 - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth
-- `MAIL_HOST` / `MAIL_PORT` / `MAIL_AUTH_USER` / `MAIL_AUTH_PASS` — email for auth
+- `RESEND_API_KEY` / `RESEND_FROM` — email via Resend
 - `OPENAI_API_KEY` / `OPENAI_API_URL` / `OPENAI_MODEL` — AI chat
 - `AM_I_OK_SECRET` — bearer token for status push API
-- `VITE_MAPBOX_TOKEN` — Mapbox for gallery globe
-- `ALI_OSS_*` — Alibaba Cloud OSS for blog storage
+- `NOTION_TOKEN` — Notion API for gallery
+- `HYPERDRIVE` (binding) — PostgreSQL proxy connection string
+- `BLOG_BUCKET` (R2 binding) — blog Markdown files
 
 ## Important Files
 
 | File                                              | Purpose                                              |
 | ------------------------------------------------- | ---------------------------------------------------- |
 | `src/data/resume.tsx`                             | All personal data, navbar items, projects            |
-| `server/lib/blog.ts`                              | Blog post fetching from Ali OSS + compile call       |
-| `server/app.ts`                                   | Hono app entry — route registration                  |
+| `server/app.ts`                                   | Hono app entry — route registration, default export  |
+| `server/auth.ts`                                  | Better Auth instance (cloudflare:workers env)        |
+| `server/lib/blog.ts`                              | Blog fetch from R2 + compile                         |
+| `server/lib/email.ts`                             | Resend transactional email                           |
+| `server/lib/notion-gallery.ts`                    | Gallery photos from Notion API                       |
+| `server/lib/prisma.ts`                            | Prisma client keyed by connection string             |
+| `server/types/bindings.ts`                        | Cloudflare Workers bindings interface                |
+| `types/blog.ts`                                   | Shared blog types (@shared/blog)                     |
+| `wrangler.toml`                                   | Cloudflare Workers config (bindings, R2, Hyperdrive) |
+| `.dev.vars.example`                               | Local dev secrets template                           |
 | `packages/ui/src/terminal/core/commands.ts`       | Terminal slash commands                              |
 | `packages/ui/src/markdown/compiler/index.ts`      | Markdown → MDX compiler (unified pipeline)           |
 | `packages/ui/src/markdown/compiler/shiki.ts`      | Shiki highlighter singleton (bundled langs, lazy)    |

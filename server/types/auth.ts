@@ -1,6 +1,6 @@
-import { auth } from "../auth";
+import type { Auth } from "../auth";
 
-export type AuthSession = typeof auth.$Infer.Session;
+export type AuthSession = Auth["$Infer"]["Session"];
 export type AuthBindings = {
   Variables: {
     session: AuthSession["session"] | null;

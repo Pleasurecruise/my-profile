@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import BlogFileTree from "@/components/blog/file-tree";
 import BlurFade from "@/components/magicui/blur-fade";
-import type { BlogFileTreeData } from "@/types";
+import type { BlogFileTreeData } from "@shared/blog";
 
 export const Route = createFileRoute("/blog/")({
   loader: async (): Promise<BlogFileTreeData> => {

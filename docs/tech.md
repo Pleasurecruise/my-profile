@@ -1,42 +1,46 @@
 # Tech Stack
 
-This document reflects the stack and architecture currently used in the repository, not a generic personal-site template.
+This document reflects the stack and architecture currently used in the repository.
 
 ## Overview
 
-This project is a `pnpm` workspace built around a Vite + Hono + TanStack Router application plus a shared local package, `@my-profile/ui`.
+This project is a `pnpm` workspace built around a Vite SPA + Hono API server deployed on **Cloudflare Workers**, plus a shared local package `@my-profile/ui`.
 
 At runtime it combines:
 
 - a React 19 frontend with Tailwind CSS v4
-- a type-safe API layer built with tRPC
-- Better Auth + Prisma + PostgreSQL for authentication and persistence
-- Alibaba Cloud OSS as the blog content source
+- a Hono API server running in the Cloudflare Workers runtime
+- Better Auth + Prisma + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
+- Cloudflare R2 as the blog content store
+- Notion API as the gallery data source
+- Resend for transactional email
 - OpenAI + Vercel AI SDK for the chat page
 
 ## Core Runtime
 
-| Package                          | Version              | Notes                                     |
-| -------------------------------- | -------------------- | ----------------------------------------- |
-| `vite-plus`                      | `0.1.19`             | Vite-based dev/build/lint/format workflow |
-| `react` / `react-dom`            | `19.2.5`             | React 19 app                              |
-| `@tanstack/react-router`         | `1.168.24`           | File-based client routing                 |
-| `hono` / `@hono/vite-dev-server` | `4.12.15` / `0.25.3` | API server plus Vite dev integration      |
-| `typescript`                     | `6.0.3`              | Main language across app and workspace    |
-| `pnpm`                           | `10.33.0`            | Workspace package manager                 |
+| Package                   | Version    | Notes                                     |
+| ------------------------- | ---------- | ----------------------------------------- |
+| `vite-plus`               | `0.1.19`   | Vite-based dev/build/lint/format workflow |
+| `@cloudflare/vite-plugin` | `1.33.2`   | Runs Workers runtime locally during dev   |
+| `react` / `react-dom`     | `19.2.5`   | React 19 SPA                              |
+| `@tanstack/react-router`  | `1.168.24` | File-based client routing                 |
+| `hono`                    | `4.12.15`  | API server (Workers-compatible)           |
+| `typescript`              | `6.0.3`    | Main language across app and workspace    |
+| `pnpm`                    | `10.33.0`  | Workspace package manager                 |
 
 Implementation details:
 
-- `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and Hono dev middleware
+- `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and the Cloudflare plugin
 - dev and build flow through `vp dev` and `vp build`
+- `server/app.ts` uses `export default app` — the Cloudflare Workers entry format
 - `@my-profile/ui` is consumed as a local workspace package
 
 ## Frontend & UI
 
 ### Styling system
 
-- **Tailwind CSS 4.2.2** via `@import "tailwindcss"` in `src/styles/globals.css`
-- **`@tailwindcss/postcss`** for PostCSS integration
+- **Tailwind CSS v4** via `@import "tailwindcss"` in `src/styles/globals.css`
+- **`@tailwindcss/vite`** for Vite integration
 - **`@tailwindcss/typography`** enabled through the CSS plugin syntax
 - **CSS variables design tokens** for colors, radius, theming, and utility mapping
 - **`tw-animate-css`** for animation utilities
@@ -54,166 +58,105 @@ Implementation details:
 
 ### Typography and global UX
 
-- Fonts are loaded from Google Fonts in `index.html`
-- Current font setup:
-  - `JetBrains Mono` (aliased as the main sans variable)
-  - `Noto Sans SC`
-  - `Fira Code`
-- Global layout includes:
-  - themed background overlays
-  - scroll progress indicator
-  - floating terminal entry point
-  - cherry blossom visual effect from `@my-profile/ui`
+- Fonts are loaded from Google Fonts in `index.html`; current setup: `JetBrains Mono`, `Noto Sans SC`, `Fira Code`
+- Global layout includes: themed background overlays, scroll progress indicator, floating terminal, cherry blossom visual effect
 
 ## Authentication
 
-Authentication is implemented with **Better Auth 1.6.0** and stored in PostgreSQL via Prisma.
+Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Prisma.
 
-Enabled auth capabilities in `src/server/auth.ts`:
+Enabled capabilities (`server/auth.ts`):
 
-- email + password sign-up/login
-- required email verification
-- password reset by email
+- email + password sign-up / login
+- required email verification (via Resend)
+- password reset by email (via Resend)
 - GitHub OAuth
 - Google OAuth
-- session cookies handled through Better Auth on the Hono server
+- session cookies with cookie cache (30 min)
 
-Related packages:
+`server/auth.ts` reads secrets at module load time via `import { env } from "cloudflare:workers"` — the standard pattern for top-level Workers bindings.
 
-- `better-auth`
-- `@better-auth/prisma-adapter`
-- `nodemailer`
-
-Email flows use SMTP credentials validated in `server/lib/env.ts` and sent through `server/lib/email.ts`.
+Related packages: `better-auth`, `better-auth/adapters/prisma`, `resend`
 
 ## Database & Persistence
 
-### Primary database stack
+### Stack
 
 - **PostgreSQL**
-- **Prisma 7.7.0**
-- **`@prisma/adapter-pg`** with direct Postgres adapter usage
+- **Prisma 7** with `runtime = "workerd"` (Workers-compatible client)
+- **`@prisma/adapter-pg`** (`PrismaPg`) for the connection adapter
+- **Cloudflare Hyperdrive** — proxies the Postgres connection inside the Workers runtime
 
 ### Prisma setup
 
-- schema file: `prisma/schema.prisma`
-- generated client output: `src/generated/prisma`
-- root client wrapper: `src/server/prisma.ts`
+- Schema: `prisma/schema.prisma`
+- Generated client output: `src/generated/prisma`
+- Client wrapper: `server/lib/prisma.ts` — keyed by connection string to avoid duplicate clients per request
 
-Current persisted models:
+Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkStatus`
 
-- `User`
-- `Session`
-- `Account`
-- `Verification`
-- `AmIOkStatus`
+### Hyperdrive
 
-The schema is focused on auth/session data plus one app-specific table for live status updates.
+`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. `server/auth.ts` passes `runtimeEnv.HYPERDRIVE.connectionString` to Prisma. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
 
 ## API Layer
 
-### tRPC stack
+The API is plain **Hono** routes — no tRPC. All routes are registered in `server/app.ts` under `/api/*`.
 
-- `@trpc/server` `11.16.0`
-- `@trpc/client` `11.16.0`
-- `@trpc/react-query` `11.16.0`
-- `@tanstack/react-query` `5.96.2`
-- `superjson` `2.2.6`
-- `zod` `4.3.6`
-
-The app uses:
-
-- server-side callers for React Server Components
-- a React client provider for client components
-- `publicProcedure` and `protectedProcedure`
-- Zod-validated inputs and formatted validation errors
-
-Current top-level routers:
-
-- `welcome`
-- `chat`
-
-### Route Handlers
-
-The app also exposes Route Handlers under `src/app`, including:
-
-- `/api/auth/[...all]` for Better Auth
-- `/api/trpc/[trpc]` for tRPC
-- `/api/am-i-ok` for live device/app status updates
-- `/feed.xml`
-- `/llms.txt`
-- Open Graph image routes
+| Route prefix    | Handler file                | Purpose                    |
+| --------------- | --------------------------- | -------------------------- |
+| `/api/auth/*`   | `server/auth.ts`            | Better Auth handler        |
+| `/api/blog`     | `server/routes/blog.ts`     | Blog content from R2       |
+| `/api/chat`     | `server/routes/chat.ts`     | OpenAI streaming chat      |
+| `/api/am-i-ok`  | `server/routes/am-i-ok.ts`  | Activity status push/fetch |
+| `/api/presence` | `server/routes/presence.ts` | Real-time presence count   |
+| `/api/gallery`  | `server/routes/gallery.ts`  | Gallery photos from Notion |
+| `/api/story`    | `server/routes/story.ts`    | Story markdown content     |
 
 ## AI Integration
 
 The chat feature is built with:
 
-- **OpenAI SDK 6.33.0**
-- **Vercel AI SDK 6.0.151** (`ai`)
+- **OpenAI SDK** `6.34.0`
+- **Vercel AI SDK** `6.0.168` (`ai`)
 
-Implementation notes:
-
-- OpenAI client is created in `src/server/api/routers/chat.ts`
-- base URL is configurable through `OPENAI_API_URL`
-- model is configurable through `OPENAI_MODEL`
-- responses are streamed
-- chat access is protected with `protectedProcedure`
-- the current implementation keeps short-lived in-memory message state for resumable streaming
+Implementation: responses are streamed; base URL and model are configurable via `OPENAI_API_URL` / `OPENAI_MODEL` secrets.
 
 ## Content System
 
-### Blog source and compilation
+### Blog
 
-The blog is not stored as local MDX pages inside `src/app`.
+Blog content is stored in **Cloudflare R2** (`BLOG_BUCKET` binding). The flow:
 
-Instead, blog content is:
-
-1. listed from **Alibaba Cloud OSS**
-2. fetched in `src/server/blog.ts`
-3. compiled through the shared `@my-profile/ui` markdown compiler
-4. rendered as HTML in the blog route
+1. `server/lib/blog.ts` calls `bucket.list()` to enumerate Markdown files
+2. `bucket.get(key)` fetches file content
+3. Content is compiled through `@my-profile/ui/markdown` compiler
+4. Result (`{ code, frontmatter, toc, excerpt }`) is returned as JSON
 
 ### Markdown pipeline
 
 The compiler lives in `packages/ui/src/markdown/compiler` and uses:
 
-- `unified`
-- `remark-parse`
-- `remark-gfm`
-- `remark-frontmatter`
-- `remark-directive`
-- `remark-rehype`
-- `rehype-stringify`
-- `@shikijs/rehype`
-- `shiki`
-- `yaml`
+- `unified` + `remark-parse`
+- `remark-gfm` — GitHub Flavored Markdown
+- `remark-frontmatter` — YAML frontmatter extraction
+- `@shikijs/rehype/core` — syntax highlighting with dual light/dark themes
+- custom `rehypeToc` plugin — TOC extraction + heading anchor links
+- `@mdx-js/mdx` — MDX compilation for client hydration
 
-What the pipeline extracts or generates:
+### Gallery
 
-- YAML frontmatter
-- table of contents
-- custom directive/component metadata
-- syntax-highlighted HTML
+Gallery photos are sourced from a **Notion** database (`server/lib/notion-gallery.ts`). The Notion integration uses `@notionhq/client` and caches results for 50 minutes.
 
-### Generated content endpoints
+## Email
 
-- `/feed.xml` builds an RSS feed from the OSS-backed blog posts
-- `/llms.txt` exposes a plain-text summary for LLM consumption
+Transactional email (verification, password reset) is sent via **Resend** (`resend` package). `server/lib/email.ts` wraps the Resend SDK and reads `RESEND_API_KEY` / `RESEND_FROM` from Workers env.
 
-## Maps, Media, and External Services
+## Maps and External Services
 
-- **`mapbox-gl` `3.20.0`** for map-based experiences
-- **`cobe` `2.0.1`** for globe rendering
-- **`ali-oss` `6.23.0`** for blog/media storage access
-- **`react-tweet`** for embedded tweets
-- **`embla-carousel-react`** for carousel UI
-- **`react-chrome-dino-ts`** for the terminal mini-game
-- **`rough-notation`** for annotation effects
-
-Note:
-
-- `mapbox-gl@3.20.0` is patched locally through `patches/mapbox-gl@3.20.0.patch`
-- `ali-oss` is listed in `serverExternalPackages`
+- **`mapbox-gl` `3.22.0`** — map on the story page (patched via `patches/mapbox-gl@3.22.0.patch`)
+- **`react-chrome-dino-ts`** — terminal mini-game
+- **`rough-notation`** — annotation effects
 
 ## Workspace Layout
 
@@ -221,64 +164,57 @@ Note:
 .
 ├── docs/                   # Project documentation
 ├── packages/
-│   └── ui/                 # Shared UI package used by the app
-│       ├── src/components/ # Shared visual components
-│       ├── src/markdown/   # Markdown compiler and blog rendering helpers
-│       └── src/terminal/   # Reusable terminal UI and command system
-├── prisma/                 # Prisma schema and migrations
+│   └── ui/                 # Shared UI package (@my-profile/ui)
+│       ├── src/components/ # CherryBlossom, HelloSignature
+│       ├── src/footer/     # PresenceCount, SiteAge
+│       ├── src/markdown/   # Markdown compiler + BlogContent component
+│       └── src/terminal/   # Interactive terminal UI and command system
+├── prisma/                 # Prisma schema
 ├── public/                 # Static assets
-├── scripts/                # Local automation scripts (including am-i-ok agent)
-├── src/
-│   ├── app/                # Next.js App Router pages and route handlers
-│   │   ├── (auth)/         # Login and signup pages
-│   │   ├── api/            # Better Auth, tRPC, am-i-ok endpoints
-│   │   ├── am-i-ok/
-│   │   ├── blog/
-│   │   ├── chat/
-│   │   ├── cv/
-│   │   ├── gallery/
-│   │   ├── moment/
-│   │   ├── password/
-│   │   └── story/
-│   ├── components/         # App-level components and UI wrappers
-│   ├── data/               # Resume, links, travel, gallery, moments data
-│   ├── lib/                # Env validation and shared utilities
-│   ├── server/             # Auth, Prisma, mail, OSS, blog services
-│   └── trpc/               # tRPC React and RSC integration
-└── content/                # Additional local content files
+├── scripts/                # macOS am-i-ok agent
+├── server/                 # Hono app (Cloudflare Workers entry)
+│   ├── app.ts              # Route registration, default export
+│   ├── auth.ts             # Better Auth instance
+│   ├── lib/                # Blog, email, gallery, prisma helpers
+│   ├── routes/             # Route handlers
+│   └── types/              # Bindings, Cloudflare, Notion types
+├── src/                    # Vite SPA (TanStack Router)
+│   ├── routes/             # Page components
+│   ├── components/         # UI components
+│   ├── data/               # Personal data, links, story, travel
+│   ├── lib/                # Auth client, query client, utils
+│   └── styles/             # globals.css
+├── types/                  # Shared types (@shared/* alias)
+├── wrangler.toml           # Cloudflare Workers config
+└── .dev.vars.example       # Local dev secrets template
 ```
 
 ## Tooling
 
-- **Biome 2.4.10** for formatting and linting
-- **PostCSS** for CSS processing
-- **tsx** for running TypeScript scripts
-- **Vercel** deployment config in `vercel.json`
+- **vite-plus** `0.1.19` — unified dev/build/lint/format (wraps Vite + Biome)
+- **tsx** — runs TypeScript scripts directly
+- **wrangler** `4.85.0` — Cloudflare Workers CLI (deploy, secret management, local dev)
+- **vitest** `4.1.5` — test runner
+- **tsgo** (`@typescript/native-preview`) — TypeScript Go native type-check preview
 
-Key package scripts:
+Key scripts:
 
-- `pnpm dev`
-- `pnpm build`
-- `pnpm start`
-- `pnpm lint`
-- `pnpm format`
-- `pnpm check`
-- `pnpm db:generate`
-- `pnpm db:push`
-- `pnpm db:studio`
+```bash
+pnpm dev          # wrangler + Vite dev server
+pnpm build        # prisma generate + vp build
+pnpm check        # vp check && tsgo --noEmit
+pnpm lint         # vp lint
+pnpm format       # vp fmt
+pnpm db:generate
+pnpm db:push
+pnpm db:studio
+```
 
 ## Environment Strategy
 
-Environment variables are parsed centrally with **Zod** in `src/lib/env.ts`.
+All environment values are **Cloudflare Workers bindings** — no `process.env`.
 
-That validation covers:
-
-- database access
-- auth secrets and callback base URL
-- GitHub / Google OAuth credentials
-- SMTP mail configuration
-- OpenAI API configuration
-- Alibaba Cloud OSS credentials
-- the `am-i-ok` shared secret
-
-This means misconfigured runtime values fail fast during startup instead of surfacing later as partial runtime errors.
+- **Platform bindings** (R2, Hyperdrive, Assets) are declared in `wrangler.toml`
+- **Secrets** are set with `wrangler secret put <NAME>` in production; stored in `.dev.vars` locally
+- Server code reads env via `c.env` (in Hono handlers) or `import { env } from "cloudflare:workers"` (at module scope in `server/auth.ts`)
+- All binding types are defined in `server/types/bindings.ts`

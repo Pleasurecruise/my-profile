@@ -1,4 +1,4 @@
-## 👋 嘿！我是Pleasure1234
+export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 感谢你能光临我的主页！
 
@@ -193,3 +193,4 @@ Claude Pro · Twitter Plus · QQ Music 绿钻
 ### 结语
 
 最后 非常感谢你能看到这里 在这个互联网上不起眼的角落里 听我倾诉
+`;

@@ -1,28 +1,10 @@
-import { compileForClient, type Frontmatter } from "@my-profile/ui/markdown";
-import { env } from "./env";
-import { getAliOssClient } from "./ali-oss";
+import { compileForClient } from "@my-profile/ui/markdown";
+import type { BlogFileTreeData, BlogPostData, BlogTreeNode } from "@shared/blog";
+import type { R2Bucket } from "../types/cloudflare";
 
-export type BlogTreeNode = {
-  id: string;
-  name: string;
-  path: string;
-  type: "folder" | "file";
-  children?: BlogTreeNode[];
-};
+export type { BlogFileTreeData, BlogPostData, BlogTreeNode };
 
-export type BlogFileTreeData = {
-  rootName: string;
-  nodes: BlogTreeNode[];
-};
-
-export type BlogPostData = {
-  slug: string;
-  title: string;
-  code: string;
-  excerpt: string;
-  toc: Array<{ id: string; text: string; depth: number }>;
-  frontmatter: Frontmatter;
-};
+const BLOG_PREFIX = "blog";
 
 function normalizeRelativePath(p: string) {
   return p.replace(/\\/g, "/").replace(/^\/+/, "").replace(/\/+$/, "");
@@ -80,58 +62,51 @@ function buildTreeNodes(paths: string[]): BlogTreeNode[] {
   return sortTreeNodes(rootNodes);
 }
 
-async function listBlogFilePaths(): Promise<string[]> {
-  const client = getAliOssClient();
-  const prefix = `${env.ALI_OSS_BLOG_PREFIX}/`;
+async function listBlogFilePaths(bucket: R2Bucket): Promise<string[]> {
+  const prefix = `${BLOG_PREFIX}/`;
   const filePaths: string[] = [];
-  let nextMarker: string | undefined;
+  let cursor: string | undefined;
 
   do {
-    const result = await client.list({ prefix, "max-keys": 1000, marker: nextMarker }, {});
-    for (const obj of result.objects ?? []) {
-      if (!obj.name) continue;
-      let rel = obj.name;
+    const result = await bucket.list({ prefix, limit: 1000, cursor });
+    for (const obj of result.objects) {
+      let rel = obj.key;
       if (rel.startsWith(prefix)) rel = rel.slice(prefix.length);
       if (!rel || rel.endsWith("/")) continue;
       filePaths.push(rel);
     }
-    nextMarker = result.isTruncated ? result.nextMarker : undefined;
-  } while (nextMarker);
+    cursor = result.truncated ? result.cursor : undefined;
+  } while (cursor);
 
   return filePaths;
 }
 
-export async function getBlogFileTree(): Promise<BlogFileTreeData> {
-  const paths = await listBlogFilePaths();
-  return { rootName: env.ALI_OSS_BLOG_PREFIX, nodes: buildTreeNodes(paths) };
+export async function getBlogFileTree(bucket: R2Bucket): Promise<BlogFileTreeData> {
+  const paths = await listBlogFilePaths(bucket);
+  return { rootName: BLOG_PREFIX, nodes: buildTreeNodes(paths) };
 }
 
-export async function getAllBlogSlugs(): Promise<string[]> {
-  const paths = await listBlogFilePaths();
+export async function getAllBlogSlugs(bucket: R2Bucket): Promise<string[]> {
+  const paths = await listBlogFilePaths(bucket);
   return paths.filter((p) => p.endsWith(".md"));
 }
 
-export async function getBlogPost(slug: string): Promise<BlogPostData | null> {
-  const client = getAliOssClient();
+export async function getBlogPost(bucket: R2Bucket, slug: string): Promise<BlogPostData | null> {
   const decodedSlug = decodeURIComponent(slug);
-  const objectKey = `${env.ALI_OSS_BLOG_PREFIX}/${decodedSlug}`;
+  const key = `${BLOG_PREFIX}/${decodedSlug}`;
 
-  try {
-    const result = await client.get(objectKey);
-    const markdown =
-      result.content instanceof Buffer ? result.content.toString("utf-8") : String(result.content);
+  const obj = await bucket.get(key);
+  if (!obj) return null;
 
-    const { code, excerpt, frontmatter, toc } = await compileForClient(markdown);
+  const markdown = await obj.text();
+  const { code, excerpt, frontmatter, toc } = await compileForClient(markdown);
 
-    const fileName = decodedSlug.split("/").pop() ?? decodedSlug;
-    const h1Match = markdown.match(/^#\s+(.+)$/m);
-    const title =
-      (frontmatter.title as string | undefined) ??
-      h1Match?.[1]?.trim() ??
-      fileName.replace(/\.md$/, "");
+  const fileName = decodedSlug.split("/").pop() ?? decodedSlug;
+  const h1Match = markdown.match(/^#\s+(.+)$/m);
+  const title =
+    (frontmatter.title as string | undefined) ??
+    h1Match?.[1]?.trim() ??
+    fileName.replace(/\.md$/, "");
 
-    return { slug, title, code, excerpt, toc, frontmatter };
-  } catch {
-    return null;
-  }
+  return { slug, title, code, excerpt, toc, frontmatter };
 }

@@ -6,7 +6,7 @@ import { use, useMemo } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { TravelGlobe } from "@/components/shared/travel-globe";
 import { TRAVEL_LOCATIONS } from "@/data/travel";
-import type { StoryData } from "@/types";
+import type { StoryData } from "@shared/story";
 
 export const Route = createFileRoute("/story")({
   loader: async (): Promise<StoryData> => {

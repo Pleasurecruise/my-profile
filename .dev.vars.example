@@ -1,0 +1,23 @@
+# Cloudflare Workers local dev secrets — copy to .dev.vars and fill in values
+# These are injected as c.env bindings by wrangler during `pnpm dev`
+# Production values are set via `wrangler secret put <NAME>`
+
+BETTER_AUTH_URL=http://localhost:5173
+BETTER_AUTH_SECRET=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+RESEND_API_KEY=
+RESEND_FROM=noreply@yourdomain.com
+
+AM_I_OK_SECRET=
+
+NOTION_TOKEN=
+
+OPENAI_API_KEY=
+OPENAI_API_URL=
+OPENAI_MODEL=

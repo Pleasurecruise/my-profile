@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import BlurFade from "@/components/magicui/blur-fade";
-import type { GalleryPhoto } from "@/types";
+import type { GalleryPhoto } from "@shared/gallery";
 
 export const Route = createFileRoute("/gallery")({
   loader: async (): Promise<GalleryPhoto[]> => {
@@ -17,9 +16,7 @@ function GalleryPage() {
   return (
     <div className="w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-24 pt-6 sm:pt-8">
       <section>
-        <BlurFade delay={0.04}>
-          <MasonryGallery items={photos} />
-        </BlurFade>
+        <MasonryGallery items={photos} />
       </section>
     </div>
   );
@@ -30,6 +27,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PixelImage } from "@/components/magicui/pixel-image";
+import BlurFade from "@/components/magicui/blur-fade";
 
 interface GridItem extends GalleryPhoto {
   x: number;
@@ -69,6 +67,7 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [colW, setColW] = useState(0);
   const [selected, setSelected] = useState<GalleryPhoto | null>(null);
+  const [ratios, setRatios] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const el = containerRef.current;
@@ -89,27 +88,44 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
       const col = colHeights.indexOf(Math.min(...colHeights));
       const x = col * (colW + GAP);
       const y = colHeights[col] ?? 0;
-      const h = colW * item.ratio;
+      const ratio = ratios[item.id] ?? item.ratio;
+      const h = colW * ratio;
       colHeights[col] = (colHeights[col] ?? 0) + h + GAP;
       return { ...item, x, y, w: colW, h };
     });
-  }, [items, colW, columns]);
+  }, [items, colW, columns, ratios]);
 
   const totalH = useMemo(() => Math.max(...grid.map((i) => i.y + i.h), 0), [grid]);
 
   return (
     <>
       <div ref={containerRef} className="relative w-full" style={{ height: totalH }}>
-        {grid.map((item) => (
-          <button
+        {grid.map((item, i) => (
+          <div
             key={item.id}
-            type="button"
-            className="absolute overflow-hidden rounded-lg cursor-pointer focus:outline-none"
+            className="absolute overflow-hidden rounded-lg"
             style={{ left: item.x, top: item.y, width: item.w, height: item.h }}
-            onClick={() => setSelected(item)}
           >
-            <PixelImage src={item.img} alt={item.title} className="w-full h-full object-cover" />
-          </button>
+            <BlurFade delay={i * 0.03} className="w-full h-full" yOffset={0}>
+              <button
+                type="button"
+                className="w-full h-full cursor-pointer focus:outline-none"
+                onClick={() => setSelected(item)}
+              >
+                <PixelImage
+                  src={item.img}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                  onLoad={(e) => {
+                    const { naturalWidth, naturalHeight } = e.currentTarget;
+                    if (naturalWidth && naturalHeight) {
+                      setRatios((prev) => ({ ...prev, [item.id]: naturalHeight / naturalWidth }));
+                    }
+                  }}
+                />
+              </button>
+            </BlurFade>
+          </div>
         ))}
       </div>
 

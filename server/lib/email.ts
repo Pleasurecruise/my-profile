@@ -1,28 +1,17 @@
-import nodemailer from "nodemailer";
-import { env } from "./env";
+import { Resend } from "resend";
+import type { Bindings } from "../types/bindings";
 
-const transporter = nodemailer.createTransport({
-  host: env.MAIL_HOST,
-  port: env.MAIL_PORT,
-  secure: env.MAIL_SECURE,
-  auth: { user: env.MAIL_AUTH_USER, pass: env.MAIL_AUTH_PASS },
-});
+type SendEmailOptions =
+  | { to: string; subject: string; text: string; html?: string }
+  | { to: string; subject: string; html: string; text?: string };
 
-type SendEmailOptions = {
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-};
-
-export async function sendEmail({ to, subject, text, html }: SendEmailOptions) {
-  const info = await transporter.sendMail({
-    from: env.MAIL_FROM,
-    to,
-    subject,
-    text,
-    html,
+export async function sendEmail(env: Bindings, options: SendEmailOptions) {
+  const resend = new Resend(env.RESEND_API_KEY);
+  const { data, error } = await resend.emails.send({
+    from: env.RESEND_FROM,
+    ...options,
   });
-  console.log("Email sent:", info.messageId);
-  return { success: true, messageId: info.messageId };
+  if (error) throw new Error(error.message);
+  console.log("Email sent:", data?.id);
+  return { success: true, messageId: data?.id };
 }

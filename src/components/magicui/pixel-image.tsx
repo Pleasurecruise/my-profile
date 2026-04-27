@@ -25,7 +25,7 @@ interface PixelImageProps {
   className?: string;
   imgClassName?: string;
   style?: React.CSSProperties;
-  onLoad?: () => void;
+  onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
 }
 
 export function PixelImage({
@@ -71,9 +71,9 @@ export function PixelImage({
           filter: grayscaleAnimation && isGrayscale ? "grayscale(1)" : "grayscale(0)",
           transition: `filter ${pixelFadeInDuration}ms ease`,
         }}
-        onLoad={() => {
+        onLoad={(e) => {
           setLoaded(true);
-          onLoad?.();
+          onLoad?.(e);
         }}
       />
 

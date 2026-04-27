@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { env } from "../lib/env";
-import prisma from "../lib/prisma";
+import { getPrisma } from "../lib/prisma";
+import type { Bindings } from "../types/bindings";
 
 const bodySchema = z.object({
   app: z.string().optional(),
@@ -9,14 +9,15 @@ const bodySchema = z.object({
   device: z.string().optional(),
 });
 
-export const amIOk = new Hono()
+export const amIOk = new Hono<{ Bindings: Bindings }>()
   .get("/", async (c) => {
+    const prisma = getPrisma(c.env.HYPERDRIVE.connectionString);
     const status = await prisma.amIOkStatus.findUnique({ where: { id: 1 } });
     return c.json(status);
   })
   .post("/", async (c) => {
     const authHeader = c.req.header("Authorization");
-    if (authHeader !== `Bearer ${env.AM_I_OK_SECRET}`) {
+    if (authHeader !== `Bearer ${c.env.AM_I_OK_SECRET}`) {
       return c.json({ error: "Unauthorized" }, 401);
     }
 
@@ -26,6 +27,7 @@ export const amIOk = new Hono()
     const { app, apps, device } = parsed.data;
     const appList = apps ?? (app ? [app] : []);
 
+    const prisma = getPrisma(c.env.HYPERDRIVE.connectionString);
     await prisma.amIOkStatus.upsert({
       where: { id: 1 },
       update: { apps: appList.slice(0, 2), deviceName: device ?? "MacBook" },

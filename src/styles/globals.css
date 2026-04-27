@@ -11,6 +11,12 @@
   --font-mono: "Fira Code", monospace;
   --font-cjk: "Noto Sans SC", sans-serif;
   --font-newsreader: "Newsreader", serif;
+  --scrollbar-size: 10px;
+  --scrollbar-radius: 999px;
+  --scrollbar-track: color-mix(in srgb, var(--background) 88%, transparent);
+  --scrollbar-thumb: color-mix(in srgb, var(--foreground) 14%, transparent);
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--foreground) 24%, transparent);
+  --scrollbar-thumb-active: color-mix(in srgb, var(--foreground) 34%, transparent);
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -30,15 +36,12 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 html {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 a {
@@ -60,6 +63,10 @@ html:not(.dark) {
 
 html.dark {
   background-color: var(--background);
+  --scrollbar-track: color-mix(in srgb, var(--background) 92%, transparent);
+  --scrollbar-thumb: color-mix(in srgb, var(--foreground) 22%, transparent);
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--foreground) 34%, transparent);
+  --scrollbar-thumb-active: color-mix(in srgb, var(--foreground) 44%, transparent);
 }
 
 .bg-noise {
@@ -68,6 +75,43 @@ html.dark {
 }
 
 /* === Scrollbar Utilities === */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  *::-webkit-scrollbar {
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-radius: var(--scrollbar-radius);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border: 2px solid transparent;
+    border-radius: var(--scrollbar-radius);
+    background-clip: padding-box;
+    transition: background-color 160ms ease;
+  }
+
+  *:hover::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background-color: var(--scrollbar-thumb-active);
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
 
 .scrollbar-hide,
 .react-terminal-wrapper,

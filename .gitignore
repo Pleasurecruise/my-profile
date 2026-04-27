@@ -22,6 +22,7 @@ yarn-error.log*
 # env files
 .env
 .env*.local
+.dev.vars
 
 # vercel
 .vercel
@@ -39,3 +40,4 @@ src/generated/prisma
 # tools
 .claude
 .tanstack
+.wrangler

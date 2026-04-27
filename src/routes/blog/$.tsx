@@ -9,7 +9,7 @@ import { ArticleActions } from "@/components/blog/article-actions";
 import { ArticleHeader } from "@/components/blog/article-header";
 import { ArticleSide } from "@/components/blog/article-side";
 import { Toc } from "@/components/blog/toc";
-import type { BlogPostData } from "@/types";
+import type { BlogPostData } from "@shared/blog";
 import { DATA } from "@/data/resume";
 
 export const Route = createFileRoute("/blog/$")({

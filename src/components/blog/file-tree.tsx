@@ -5,7 +5,7 @@ import type { HTMLAttributes } from "react";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { File, Folder, Tree } from "@/components/ui/file-tree";
 import { cn } from "@/lib/utils";
-import type { BlogTreeNode } from "@/types";
+import type { BlogTreeNode } from "@shared/blog";
 
 type BlogFileTreeProps = {
   rootName: string;
