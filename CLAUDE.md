@@ -14,18 +14,10 @@ This project uses **pnpm** with a workspace. Always use `pnpm` commands, never `
 
 ```bash
 pnpm dev       # Cloudflare Workers dev server (wrangler + @cloudflare/vite-plugin)
-pnpm build     # Production build (prisma generate + vp build)
+pnpm build     # Production build
 pnpm check     # Type check (vp check && tsgo --noEmit)
 pnpm lint      # Lint (vite-plus)
 pnpm format    # Format (vite-plus)
-```
-
-### Database (Prisma)
-
-```bash
-pnpm db:generate   # Generate Prisma client
-pnpm db:push       # Push schema to database
-pnpm db:studio     # Open Prisma Studio
 ```
 
 ## Architecture
@@ -41,7 +33,7 @@ pnpm db:studio     # Open Prisma Studio
 - **TailwindCSS v4** — no `tailwind.config.ts`, configured via CSS variables in `globals.css`
 - **Hono** — API server, entry point `server/app.ts` exported as `export default app` (Workers format)
 - **Cloudflare Workers** — deployment target; wrangler.toml defines all platform bindings
-- **Prisma 7** — ORM with PostgreSQL; `runtime = "workerd"` in schema; accessed via Hyperdrive
+- **Kysely + pg** — SQL access to PostgreSQL via Hyperdrive
 - **Better Auth 1.6** — authentication (OAuth + email/password); uses `cloudflare:workers` env
 
 ### Cloudflare Bindings
@@ -125,7 +117,7 @@ server/
 │   ├── blog.ts          # R2 fetch + compile
 │   ├── email.ts         # Resend email client
 │   ├── notion-gallery.ts # Notion API for gallery photos
-│   ├── prisma.ts        # Prisma client singleton (keyed by connection string)
+│   ├── db.ts            # Kysely + pg database helper
 │   └── story.ts         # Story content helper
 └── types/               # Server-side type definitions
     ├── auth.ts          # AuthBindings for Hono
@@ -151,7 +143,7 @@ types/
 - **Site data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
 - **Blog posts**: Markdown files stored in **Cloudflare R2** (`BLOG_BUCKET`), fetched via `server/lib/blog.ts`
 - **Gallery**: Photos sourced from **Notion** database via `server/lib/notion-gallery.ts`
-- **Database**: PostgreSQL via Prisma + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
+- **Database**: PostgreSQL via Kysely/pg + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
 
 ### Special Features
 
@@ -232,7 +224,7 @@ Key variables:
 | `server/lib/blog.ts`                              | Blog fetch from R2 + compile                         |
 | `server/lib/email.ts`                             | Resend transactional email                           |
 | `server/lib/notion-gallery.ts`                    | Gallery photos from Notion API                       |
-| `server/lib/prisma.ts`                            | Prisma client keyed by connection string             |
+| `server/lib/db.ts`                                | Kysely + pg database helper                          |
 | `server/types/bindings.ts`                        | Cloudflare Workers bindings interface                |
 | `types/blog.ts`                                   | Shared blog types (@shared/blog)                     |
 | `wrangler.toml`                                   | Cloudflare Workers config (bindings, R2, Hyperdrive) |

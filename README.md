@@ -4,7 +4,7 @@ Personal website — [yiming1234.cn](https://yiming1234.cn)
 
 ## Stack
 
-Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Prisma · PostgreSQL · Better Auth · Cloudflare Workers
+Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Kysely · PostgreSQL · Better Auth · Cloudflare Workers
 
 ## Features
 
@@ -24,7 +24,6 @@ Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · P
 ```bash
 pnpm install
 cp .dev.vars.example .dev.vars   # fill in Cloudflare secrets for local dev
-pnpm db:push
 pnpm dev
 ```
 
@@ -61,13 +60,10 @@ Key secrets (`.dev.vars` / `wrangler secret put`):
 
 ```bash
 pnpm dev          # Cloudflare Workers dev (wrangler + Vite)
-pnpm build        # Production build (prisma generate + vp build)
+pnpm build        # Production build
 pnpm check        # Type check (vp check && tsgo --noEmit)
 pnpm lint         # Lint (vite-plus)
 pnpm format       # Format (vite-plus)
-pnpm db:generate  # Generate Prisma client
-pnpm db:push      # Push schema to database
-pnpm db:studio    # Prisma Studio
 ```
 
 ## Deployment

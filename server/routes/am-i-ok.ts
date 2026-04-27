@@ -1,6 +1,7 @@
 import { Hono } from "hono";
+import { sql } from "kysely";
 import { z } from "zod";
-import { getPrisma } from "../lib/prisma";
+import { getDb } from "../lib/db";
 import type { Bindings } from "../types/bindings";
 
 const bodySchema = z.object({
@@ -11,8 +12,12 @@ const bodySchema = z.object({
 
 export const amIOk = new Hono<{ Bindings: Bindings }>()
   .get("/", async (c) => {
-    const prisma = getPrisma(c.env.HYPERDRIVE.connectionString);
-    const status = await prisma.amIOkStatus.findUnique({ where: { id: 1 } });
+    const db = getDb(c.env.HYPERDRIVE.connectionString);
+    const status = await db
+      .selectFrom("am_i_ok_status")
+      .selectAll()
+      .where("id", "=", 1)
+      .executeTakeFirst();
     return c.json(status);
   })
   .post("/", async (c) => {
@@ -26,18 +31,25 @@ export const amIOk = new Hono<{ Bindings: Bindings }>()
 
     const { app, apps, device } = parsed.data;
     const appList = apps ?? (app ? [app] : []);
+    const db = getDb(c.env.HYPERDRIVE.connectionString);
+    const values = {
+      id: 1,
+      apps: appList.slice(0, 2),
+      deviceName: device ?? "MacBook",
+      updatedAt: new Date(),
+    };
 
-    const prisma = getPrisma(c.env.HYPERDRIVE.connectionString);
-    await prisma.amIOkStatus.upsert({
-      where: { id: 1 },
-      update: { apps: appList.slice(0, 2), deviceName: device ?? "MacBook" },
-      create: {
-        id: 1,
-        apps: appList.slice(0, 2),
-        deviceName: device ?? "MacBook",
-        updatedAt: new Date(),
-      },
-    });
+    await db
+      .insertInto("am_i_ok_status")
+      .values(values)
+      .onConflict((oc) =>
+        oc.column("id").doUpdateSet({
+          apps: values.apps,
+          deviceName: values.deviceName,
+          updatedAt: sql<Date>`now()`,
+        }),
+      )
+      .execute();
 
     return c.json({ ok: true });
   });

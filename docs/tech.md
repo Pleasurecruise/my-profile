@@ -10,7 +10,7 @@ At runtime it combines:
 
 - a React 19 frontend with Tailwind CSS v4
 - a Hono API server running in the Cloudflare Workers runtime
-- Better Auth + Prisma + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
+- Better Auth + Kysely + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
 - Cloudflare R2 as the blog content store
 - Notion API as the gallery data source
 - Resend for transactional email
@@ -63,7 +63,7 @@ Implementation details:
 
 ## Authentication
 
-Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Prisma.
+Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Kysely.
 
 Enabled capabilities (`server/auth.ts`):
 
@@ -76,28 +76,22 @@ Enabled capabilities (`server/auth.ts`):
 
 `server/auth.ts` reads secrets at module load time via `import { env } from "cloudflare:workers"` — the standard pattern for top-level Workers bindings.
 
-Related packages: `better-auth`, `better-auth/adapters/prisma`, `resend`
+Related packages: `better-auth`, `kysely`, `pg`, `resend`
 
 ## Database & Persistence
 
 ### Stack
 
 - **PostgreSQL**
-- **Prisma 7** with `runtime = "workerd"` (Workers-compatible client)
-- **`@prisma/adapter-pg`** (`PrismaPg`) for the connection adapter
+- **Kysely** for SQL access
+- **`pg`** connection pooling for PostgreSQL
 - **Cloudflare Hyperdrive** — proxies the Postgres connection inside the Workers runtime
-
-### Prisma setup
-
-- Schema: `prisma/schema.prisma`
-- Generated client output: `src/generated/prisma`
-- Client wrapper: `server/lib/prisma.ts` — keyed by connection string to avoid duplicate clients per request
 
 Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkStatus`
 
 ### Hyperdrive
 
-`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. `server/auth.ts` passes `runtimeEnv.HYPERDRIVE.connectionString` to Prisma. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
+`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. `server/auth.ts` passes `runtimeEnv.HYPERDRIVE.connectionString` to the shared Kysely/pg database helper. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
 
 ## API Layer
 
@@ -169,13 +163,12 @@ Transactional email (verification, password reset) is sent via **Resend** (`rese
 │       ├── src/footer/     # PresenceCount, SiteAge
 │       ├── src/markdown/   # Markdown compiler + BlogContent component
 │       └── src/terminal/   # Interactive terminal UI and command system
-├── prisma/                 # Prisma schema
 ├── public/                 # Static assets
 ├── scripts/                # macOS am-i-ok agent
 ├── server/                 # Hono app (Cloudflare Workers entry)
 │   ├── app.ts              # Route registration, default export
 │   ├── auth.ts             # Better Auth instance
-│   ├── lib/                # Blog, email, gallery, prisma helpers
+│   ├── lib/                # Blog, email, gallery, database helpers
 │   ├── routes/             # Route handlers
 │   └── types/              # Bindings, Cloudflare, Notion types
 ├── src/                    # Vite SPA (TanStack Router)
@@ -201,7 +194,7 @@ Key scripts:
 
 ```bash
 pnpm dev          # wrangler + Vite dev server
-pnpm build        # prisma generate + vp build
+pnpm build        # production build
 pnpm check        # vp check && tsgo --noEmit
 pnpm lint         # vp lint
 pnpm format       # vp fmt
