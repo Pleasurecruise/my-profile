@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { sql } from "kysely";
 import { z } from "zod";
 import { getDb } from "../lib/db";
+import { getConfig } from "../lib/runtime-config";
 import type { Bindings } from "../types/bindings";
 
 const bodySchema = z.object({
@@ -22,7 +23,8 @@ export const amIOk = new Hono<{ Bindings: Bindings }>()
   })
   .post("/", async (c) => {
     const authHeader = c.req.header("Authorization");
-    if (authHeader !== `Bearer ${c.env.AM_I_OK_SECRET}`) {
+    const amIOkSecret = await getConfig(c.env, "AM_I_OK_SECRET");
+    if (authHeader !== `Bearer ${amIOkSecret}`) {
       return c.json({ error: "Unauthorized" }, 401);
     }
 

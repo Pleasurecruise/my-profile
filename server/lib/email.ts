@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { getConfig, getSecret } from "./runtime-config";
 import type { Bindings } from "../types/bindings";
 
 type SendEmailOptions =
@@ -6,9 +7,11 @@ type SendEmailOptions =
   | { to: string; subject: string; html: string; text?: string };
 
 export async function sendEmail(env: Bindings, options: SendEmailOptions) {
-  const resend = new Resend(env.RESEND_API_KEY);
+  const resendApiKey = await getSecret(env.RESEND_API_KEY, "RESEND_API_KEY");
+  const resendFrom = await getConfig(env, "RESEND_FROM");
+  const resend = new Resend(resendApiKey);
   const { data, error } = await resend.emails.send({
-    from: env.RESEND_FROM,
+    from: resendFrom,
     ...options,
   });
   if (error) throw new Error(error.message);

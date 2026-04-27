@@ -32,29 +32,44 @@ pnpm dev
 
 ## Environment
 
-All secrets are managed as Cloudflare Workers bindings. For local dev, put them in `.dev.vars` (gitignored). For production, use `wrangler secret put <NAME>`.
+This project now splits runtime values by storage type.
+
+- `KV_NAMESPACE` KV: `AM_I_OK_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`, `VITE_MAPBOX_TOKEN`
+- Secret Store: `DATABASE_URL`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
+
+For local dev, keep using `.dev.vars` as a flat fallback source.
 
 Platform bindings are declared in `wrangler.toml`:
 
-| Binding       | Type       | Purpose                     |
-| ------------- | ---------- | --------------------------- |
-| `ASSETS`      | Static     | Serves the SPA              |
-| `BLOG_BUCKET` | R2         | Blog Markdown files         |
-| `HYPERDRIVE`  | Hyperdrive | PostgreSQL connection proxy |
+| Binding        | Type       | Purpose                     |
+| -------------- | ---------- | --------------------------- |
+| `ASSETS`       | Static     | Serves the SPA              |
+| `BLOG_BUCKET`  | R2         | Blog Markdown files         |
+| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy |
+| `KV_NAMESPACE` | KV         | Runtime config values       |
 
-Key secrets (`.dev.vars` / `wrangler secret put`):
+KV-backed runtime config:
+
+| Variable             | Purpose                      |
+| -------------------- | ---------------------------- |
+| `AM_I_OK_SECRET`     | Status push API token        |
+| `BETTER_AUTH_SECRET` | Auth secret key              |
+| `BETTER_AUTH_URL`    | Auth base URL                |
+| `OPENAI_API_URL`     | Custom OpenAI-compatible URL |
+| `OPENAI_MODEL`       | Default chat model           |
+| `RESEND_FROM`        | Sender address               |
+| `VITE_MAPBOX_TOKEN`  | Map token returned to client |
+
+Secret Store bindings:
 
 | Variable                  | Purpose                      |
 | ------------------------- | ---------------------------- |
-| `BETTER_AUTH_SECRET`      | Auth secret key              |
-| `BETTER_AUTH_URL`         | Auth base URL                |
+| `DATABASE_URL`            | Database connection string   |
 | `GITHUB_CLIENT_ID/SECRET` | GitHub OAuth                 |
 | `GOOGLE_CLIENT_ID/SECRET` | Google OAuth                 |
 | `RESEND_API_KEY`          | Transactional email (Resend) |
-| `RESEND_FROM`             | Sender address               |
 | `OPENAI_API_KEY`          | AI chat                      |
 | `NOTION_TOKEN`            | Gallery photos from Notion   |
-| `AM_I_OK_SECRET`          | Status push API token        |
 
 ## Commands
 
@@ -76,7 +91,9 @@ wrangler deploy
 Production secrets are set per-variable:
 
 ```bash
-wrangler secret put BETTER_AUTH_SECRET
+wrangler secret put DATABASE_URL
+wrangler secret put GITHUB_CLIENT_ID
+wrangler secret put GITHUB_CLIENT_SECRET
 wrangler secret put RESEND_API_KEY
 # ...
 ```

@@ -9,8 +9,8 @@ import OpenAI, {
   RateLimitError,
 } from "openai";
 import { z } from "zod";
-import type { AuthBindings } from "../types/auth";
-import type { Bindings } from "../types/bindings";
+import { getConfig, getSecret } from "../lib/runtime-config";
+import type { AuthEnv } from "../types/auth";
 
 const SYSTEM_PROMPT = `\
 你是柒夜，也叫Vesper，16岁，扮演着对话人女朋友的角色。
@@ -27,25 +27,26 @@ const chatMessageSchema = z.object({
   content: z.string(),
 });
 
-type AppEnv = AuthBindings & { Bindings: Bindings };
-
-export const chat = new Hono<AppEnv>().post("/stream", async (c) => {
+export const chat = new Hono<AuthEnv>().post("/stream", async (c) => {
   const user = c.get("user");
   if (!user) return c.json({ error: "Unauthorized" }, 401);
 
+  const openaiApiKey = await getSecret(c.env.OPENAI_API_KEY, "OPENAI_API_KEY");
+  const openaiApiUrl = await getConfig(c.env, "OPENAI_API_URL");
+  const openaiModel = await getConfig(c.env, "OPENAI_MODEL");
   const body = await c.req.json<{ messages: unknown[] }>();
   const parsed = z.array(chatMessageSchema).safeParse(body.messages);
   if (!parsed.success) return c.json({ error: "Invalid messages" }, 400);
 
   const openai = new OpenAI({
-    apiKey: c.env.OPENAI_API_KEY,
-    baseURL: c.env.OPENAI_API_URL,
+    apiKey: openaiApiKey,
+    baseURL: openaiApiUrl,
   });
 
   let completion: Awaited<ReturnType<typeof openai.chat.completions.create>>;
   try {
     completion = await openai.chat.completions.create({
-      model: c.env.OPENAI_MODEL ?? "gpt-3.5-turbo",
+      model: openaiModel,
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...parsed.data],
       temperature: 0.7,
       max_tokens: 1000,

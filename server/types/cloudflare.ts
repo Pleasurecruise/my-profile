@@ -21,3 +21,11 @@ export interface Hyperdrive {
 export interface Assets {
   fetch(request: Request): Promise<Response>;
 }
+
+export interface KVNamespace {
+  get(key: string): Promise<string | null>;
+}
+
+export interface SecretStoreSecret {
+  get(): Promise<string>;
+}

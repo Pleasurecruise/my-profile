@@ -1,10 +1,9 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { auth } from "./auth";
+import { getAuth } from "./auth";
 import { authMiddleware } from "./lib/auth-middleware";
-import type { AuthBindings } from "./types/auth";
-import type { Bindings } from "./types/bindings";
+import type { AuthEnv } from "./types/auth";
 import { amIOk } from "./routes/am-i-ok";
 import { blog } from "./routes/blog";
 import { chat } from "./routes/chat";
@@ -12,9 +11,7 @@ import { gallery } from "./routes/gallery";
 import { presence } from "./routes/presence";
 import { story } from "./routes/story";
 
-type AppEnv = AuthBindings & { Bindings: Bindings };
-
-const app = new Hono<AppEnv>();
+const app = new Hono<AuthEnv>();
 
 app.use("*", logger());
 app.use(
@@ -29,10 +26,12 @@ app.use(
 app.use("/api/*", authMiddleware);
 
 // Better Auth — handles /api/auth/*
-app.all("/api/auth", (c) => {
+app.all("/api/auth", async (c) => {
+  const auth = await getAuth(c.env);
   return auth.handler(c.req.raw);
 });
-app.all("/api/auth/*", (c) => {
+app.all("/api/auth/*", async (c) => {
+  const auth = await getAuth(c.env);
   return auth.handler(c.req.raw);
 });
 
