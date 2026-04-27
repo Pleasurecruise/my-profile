@@ -14,7 +14,6 @@ export type SecretBackedValue = string | SecretStoreSecret | undefined;
 export type ResolvedAuthConfig = {
   authSecret: string;
   authUrl: string;
-  databaseUrl: string;
   githubClientId: string;
   githubClientSecret: string;
   googleClientId: string;

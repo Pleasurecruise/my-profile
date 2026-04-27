@@ -34,9 +34,6 @@ yarn-error.log*
 .idea
 .vscode
 
-# generated
-src/generated/prisma
-
 # tools
 .claude
 .tanstack

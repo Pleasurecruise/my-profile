@@ -17,7 +17,7 @@ remote = true
 
 [[hyperdrive]]
 binding = "HYPERDRIVE"
-id = "1a6934414a7740dca78dd8ed38a625e4"
+id = "806b06d49b6541caaf7c1a703eedd77b"
 localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"
 
 [[kv_namespaces]]

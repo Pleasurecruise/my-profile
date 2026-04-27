@@ -4,7 +4,7 @@ Personal website — [yiming1234.cn](https://yiming1234.cn)
 
 ## Stack
 
-Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Kysely · PostgreSQL · Better Auth · Cloudflare Workers
+Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Drizzle ORM · PostgreSQL · Better Auth · Cloudflare Workers
 
 ## Features
 
@@ -35,7 +35,7 @@ pnpm dev
 This project now splits runtime values by storage type.
 
 - `KV_NAMESPACE` KV: `AM_I_OK_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`, `VITE_MAPBOX_TOKEN`
-- Secret Store: `DATABASE_URL`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
+- Secret Store: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
 
 For local dev, keep using `.dev.vars` as a flat fallback source.
 
@@ -64,7 +64,6 @@ Secret Store bindings:
 
 | Variable                  | Purpose                      |
 | ------------------------- | ---------------------------- |
-| `DATABASE_URL`            | Database connection string   |
 | `GITHUB_CLIENT_ID/SECRET` | GitHub OAuth                 |
 | `GOOGLE_CLIENT_ID/SECRET` | Google OAuth                 |
 | `RESEND_API_KEY`          | Transactional email (Resend) |
@@ -91,7 +90,6 @@ wrangler deploy
 Production secrets are set per-variable:
 
 ```bash
-wrangler secret put DATABASE_URL
 wrangler secret put GITHUB_CLIENT_ID
 wrangler secret put GITHUB_CLIENT_SECRET
 wrangler secret put RESEND_API_KEY

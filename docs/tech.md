@@ -10,7 +10,7 @@ At runtime it combines:
 
 - a React 19 frontend with Tailwind CSS v4
 - a Hono API server running in the Cloudflare Workers runtime
-- Better Auth + Kysely + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
+- Better Auth + Drizzle ORM + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
 - Cloudflare R2 as the blog content store
 - Notion API as the gallery data source
 - Resend for transactional email
@@ -63,7 +63,7 @@ Implementation details:
 
 ## Authentication
 
-Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Kysely.
+Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Drizzle ORM.
 
 Enabled capabilities (`server/auth.ts`):
 
@@ -74,24 +74,24 @@ Enabled capabilities (`server/auth.ts`):
 - Google OAuth
 - session cookies with cookie cache (30 min)
 
-`server/auth.ts` reads secrets at module load time via `import { env } from "cloudflare:workers"` — the standard pattern for top-level Workers bindings.
+`server/auth.ts` resolves runtime config from Workers bindings and reuses the shared Drizzle connection created from `HYPERDRIVE.connectionString`.
 
-Related packages: `better-auth`, `kysely`, `pg`, `resend`
+Related packages: `better-auth`, `drizzle-orm`, `postgres`, `resend`
 
 ## Database & Persistence
 
 ### Stack
 
 - **PostgreSQL**
-- **Kysely** for SQL access
-- **`pg`** connection pooling for PostgreSQL
+- **Drizzle ORM** for SQL access
+- **`postgres`** connection pooling for PostgreSQL
 - **Cloudflare Hyperdrive** — proxies the Postgres connection inside the Workers runtime
 
 Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkStatus`
 
 ### Hyperdrive
 
-`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. `server/auth.ts` passes `runtimeEnv.HYPERDRIVE.connectionString` to the shared Kysely/pg database helper. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
+`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. Both Better Auth and route-level queries use `runtimeEnv.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
 
 ## API Layer
 
@@ -198,9 +198,6 @@ pnpm build        # production build
 pnpm check        # vp check && tsgo --noEmit
 pnpm lint         # vp lint
 pnpm format       # vp fmt
-pnpm db:generate
-pnpm db:push
-pnpm db:studio
 ```
 
 ## Environment Strategy
@@ -209,5 +206,5 @@ All environment values are **Cloudflare Workers bindings** — no `process.env`.
 
 - **Platform bindings** (R2, Hyperdrive, Assets) are declared in `wrangler.toml`
 - **Secrets** are set with `wrangler secret put <NAME>` in production; stored in `.dev.vars` locally
-- Server code reads env via `c.env` (in Hono handlers) or `import { env } from "cloudflare:workers"` (at module scope in `server/auth.ts`)
+- Server code reads env via `c.env` in Hono handlers and passes bindings through helper functions where needed
 - All binding types are defined in `server/types/bindings.ts`

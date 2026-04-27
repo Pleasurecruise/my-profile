@@ -1,19 +1,16 @@
-import { Kysely } from "kysely";
-import { PostgresJSDialect } from "kysely-postgres-js";
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import type { Database } from "../types/database";
+import * as schema from "./schema";
 
-export function getDb(connectionString: string): Kysely<Database> {
-  return new Kysely<Database>({
-    dialect: new PostgresJSDialect({
-      postgres: postgres(connectionString, {
-        max: 1,
-        fetch_types: false,
-        // Keep the Worker client request-scoped and conservative behind Hyperdrive.
-        prepare: false,
-        idle_timeout: 5,
-        connect_timeout: 10,
-      }),
-    }),
+export function getDb(connectionString: string): ReturnType<typeof drizzle<typeof schema>> {
+  const sqlClient = postgres(connectionString, {
+    max: 1,
+    fetch_types: false,
+    // Workers cannot safely reuse request-bound I/O objects across requests.
+    prepare: false,
+    idle_timeout: 5,
+    connect_timeout: 10,
   });
+
+  return drizzle(sqlClient, { schema });
 }

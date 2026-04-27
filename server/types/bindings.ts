@@ -8,7 +8,6 @@ export interface Bindings {
   KV_NAMESPACE: KVNamespace;
 
   // Secrets Store / local .dev.vars fallback
-  DATABASE_URL: string | SecretStoreSecret;
   GITHUB_CLIENT_ID: string | SecretStoreSecret;
   GITHUB_CLIENT_SECRET: string | SecretStoreSecret;
   GOOGLE_CLIENT_ID: string | SecretStoreSecret;

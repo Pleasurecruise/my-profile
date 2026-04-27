@@ -1,8 +1,9 @@
 import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { getConfig, getSecret } from "./lib/runtime-config";
+import { getDb } from "./lib/db";
+import * as schema from "./lib/schema";
 import { sendEmail } from "./lib/email";
-import { getPrisma } from "./lib/prisma";
 import type { Bindings } from "./types/bindings";
 import type { ResolvedAuthConfig } from "./types/config";
 
@@ -20,7 +21,10 @@ async function createAuth(env: Bindings, config: ResolvedAuthConfig) {
     advanced: {
       useSecureCookies: authBaseUrl.protocol === "https:",
     },
-    database: prismaAdapter(getPrisma(config.databaseUrl), { provider: "postgresql" }),
+    database: drizzleAdapter(getDb(env.HYPERDRIVE.connectionString), {
+      provider: "pg",
+      schema,
+    }),
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
@@ -73,11 +77,8 @@ async function createAuth(env: Bindings, config: ResolvedAuthConfig) {
 
 export type Auth = Awaited<ReturnType<typeof createAuth>>;
 
-const authInstances = new Map<string, Auth>();
-
 export async function getAuth(env: Bindings): Promise<Auth> {
   const config: ResolvedAuthConfig = {
-    databaseUrl: await getSecret(env.DATABASE_URL, "DATABASE_URL"),
     authSecret: await getConfig(env, "BETTER_AUTH_SECRET"),
     authUrl: await getConfig(env, "BETTER_AUTH_URL"),
     githubClientId: await getSecret(env.GITHUB_CLIENT_ID, "GITHUB_CLIENT_ID"),
@@ -85,20 +86,6 @@ export async function getAuth(env: Bindings): Promise<Auth> {
     googleClientId: await getSecret(env.GOOGLE_CLIENT_ID, "GOOGLE_CLIENT_ID"),
     googleClientSecret: await getSecret(env.GOOGLE_CLIENT_SECRET, "GOOGLE_CLIENT_SECRET"),
   };
-  const cacheKey = [
-    config.databaseUrl,
-    config.authSecret,
-    config.authUrl,
-    config.githubClientId,
-    config.githubClientSecret,
-    config.googleClientId,
-    config.googleClientSecret,
-  ].join("\0");
-  const existingAuth = authInstances.get(cacheKey);
-  if (existingAuth) return existingAuth;
 
-  const auth = await createAuth(env, config);
-
-  authInstances.set(cacheKey, auth);
-  return auth;
+  return createAuth(env, config);
 }

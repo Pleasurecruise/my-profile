@@ -1,8 +1,9 @@
 import { Hono } from "hono";
-import { sql } from "kysely";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "../lib/db";
 import { getConfig } from "../lib/runtime-config";
+import { amIOkStatus } from "../lib/schema";
 import type { Bindings } from "../types/bindings";
 
 const bodySchema = z.object({
@@ -14,11 +15,9 @@ const bodySchema = z.object({
 export const amIOk = new Hono<{ Bindings: Bindings }>()
   .get("/", async (c) => {
     const db = getDb(c.env.HYPERDRIVE.connectionString);
-    const status = await db
-      .selectFrom("am_i_ok_status")
-      .selectAll()
-      .where("id", "=", 1)
-      .executeTakeFirst();
+    const status = await db.query.amIOkStatus.findFirst({
+      where: eq(amIOkStatus.id, 1),
+    });
     return c.json(status);
   })
   .post("/", async (c) => {
@@ -42,15 +41,16 @@ export const amIOk = new Hono<{ Bindings: Bindings }>()
     };
 
     await db
-      .insertInto("am_i_ok_status")
+      .insert(amIOkStatus)
       .values(values)
-      .onConflict((oc) =>
-        oc.column("id").doUpdateSet({
+      .onConflictDoUpdate({
+        target: amIOkStatus.id,
+        set: {
           apps: values.apps,
           deviceName: values.deviceName,
-          updatedAt: sql<Date>`now()`,
-        }),
-      )
+          updatedAt: sql`now()`,
+        },
+      })
       .execute();
 
     return c.json({ ok: true });
