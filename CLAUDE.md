@@ -13,7 +13,7 @@ This project uses **pnpm** with a workspace. Always use `pnpm` commands, never `
 ## Development Commands
 
 ```bash
-pnpm dev       # Cloudflare Workers dev server (wrangler + @cloudflare/vite-plugin)
+pnpm dev       # Cloudflare Workers dev server (wrangler dev + @cloudflare/vite-plugin)
 pnpm build     # Production build
 pnpm check     # Type check (vp check && tsgo --noEmit)
 pnpm lint      # Lint (vite-plus)
@@ -33,22 +33,23 @@ pnpm format    # Format (vite-plus)
 - **TailwindCSS v4** — no `tailwind.config.ts`, configured via CSS variables in `globals.css`
 - **Hono** — API server, entry point `server/app.ts` exported as `export default app` (Workers format)
 - **Cloudflare Workers** — deployment target; wrangler.toml defines all platform bindings
-- **Kysely + pg** — SQL access to PostgreSQL via Hyperdrive
-- **Better Auth 1.6** — authentication (OAuth + email/password); uses `cloudflare:workers` env
+- **Drizzle ORM + postgres-js** — SQL access to PostgreSQL via Hyperdrive; schema defined in `server/lib/schema.ts`
+- **Better Auth 1.6** — authentication (OAuth + email/password); initialized per-request via `getAuth(env)`
 
 ### Cloudflare Bindings
 
 Declared in `wrangler.toml`, typed in `server/types/bindings.ts`:
 
-| Binding       | Type       | Purpose                     |
-| ------------- | ---------- | --------------------------- |
-| `ASSETS`      | Static     | Serves the built SPA        |
-| `BLOG_BUCKET` | R2         | Blog Markdown files storage |
-| `HYPERDRIVE`  | Hyperdrive | PostgreSQL connection proxy |
+| Binding        | Type       | Purpose                     |
+| -------------- | ---------- | --------------------------- |
+| `ASSETS`       | Static     | Serves the built SPA        |
+| `BLOG_BUCKET`  | R2         | Blog Markdown files storage |
+| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy |
+| `KV_NAMESPACE` | KV         | Runtime config values       |
 
-Secrets (`.dev.vars` locally, `wrangler secret put` in production): `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GITHUB_CLIENT_ID/SECRET`, `GOOGLE_CLIENT_ID/SECRET`, `RESEND_API_KEY`, `RESEND_FROM`, `AM_I_OK_SECRET`, `NOTION_TOKEN`, `OPENAI_API_KEY`, `OPENAI_API_URL?`, `OPENAI_MODEL?`.
+Local dev uses `wrangler.dev.toml` + `.dev.vars`. Remote/prod uses `wrangler.toml`, `KV_NAMESPACE`, and `[[secrets_store_secrets]]` bindings.
 
-All env values are accessed via `c.env` (Hono context) or `env` from `cloudflare:workers` — **never** `process.env`.
+All env values are accessed via Workers bindings — **never** `process.env`.
 
 ### Workspace Structure
 
@@ -104,7 +105,7 @@ src/
 ```
 server/
 ├── app.ts               # Hono app — CORS, auth middleware, route registration; default export
-├── auth.ts              # Better Auth instance (reads env from cloudflare:workers)
+├── auth.ts              # Better Auth instance (initialized via getAuth(env))
 ├── routes/              # API route handlers
 │   ├── am-i-ok.ts       # Status push/fetch
 │   ├── blog.ts          # Blog content from R2
@@ -115,15 +116,18 @@ server/
 ├── lib/                 # Server-side helpers
 │   ├── auth-middleware.ts
 │   ├── blog.ts          # R2 fetch + compile
+│   ├── db.ts            # Drizzle ORM client (postgres-js + Hyperdrive)
 │   ├── email.ts         # Resend email client
 │   ├── notion-gallery.ts # Notion API for gallery photos
-│   ├── db.ts            # Kysely + pg database helper
+│   ├── runtime-config.ts # Secret Store + KV + .dev.vars config resolution
+│   ├── schema.ts        # Drizzle table definitions (auth tables + am_i_ok_status)
 │   └── story.ts         # Story content helper
 └── types/               # Server-side type definitions
     ├── auth.ts          # AuthBindings for Hono
     ├── bindings.ts      # Cloudflare Workers bindings interface
-    ├── cloudflare.ts    # R2Bucket, Hyperdrive, Assets types
+    ├── cloudflare.ts    # R2Bucket, Hyperdrive, Assets, KVNamespace, SecretStoreSecret types
     ├── cloudflare-workers.d.ts  # cloudflare:workers module shim
+    ├── config.ts        # ResolvedAuthConfig, KvConfigKey, SecretBackedValue types
     └── notion.ts        # Notion API response types
 ```
 
@@ -143,7 +147,7 @@ types/
 - **Site data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
 - **Blog posts**: Markdown files stored in **Cloudflare R2** (`BLOG_BUCKET`), fetched via `server/lib/blog.ts`
 - **Gallery**: Photos sourced from **Notion** database via `server/lib/notion-gallery.ts`
-- **Database**: PostgreSQL via Kysely/pg + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
+- **Database**: PostgreSQL via **Drizzle ORM** + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
 
 ### Special Features
 
@@ -199,8 +203,8 @@ Avoid `any` in TypeScript; for unified plugin chains use `Plugin` type cast inst
 No `process.env` — all env is accessed via Cloudflare Workers bindings.
 
 - **Local dev**: put secrets in `.dev.vars` (see `.dev.vars.example`); wrangler injects them as `c.env`
-- **Production**: `wrangler secret put <NAME>` for each secret; platform bindings in `wrangler.toml`
-- `server/auth.ts` reads env via `import { env } from "cloudflare:workers"` at module load time
+- **Production**: platform bindings live in `wrangler.toml`; config comes from `KV_NAMESPACE` and Secret Store bindings
+- `server/auth.ts` receives `env: Bindings` per-request via `getAuth(env)`; secrets resolved through `runtime-config.ts` (KV → Secret Store → `.dev.vars`)
 
 Key variables:
 
@@ -216,27 +220,29 @@ Key variables:
 
 ## Important Files
 
-| File                                              | Purpose                                              |
-| ------------------------------------------------- | ---------------------------------------------------- |
-| `src/data/resume.tsx`                             | All personal data, navbar items, projects            |
-| `server/app.ts`                                   | Hono app entry — route registration, default export  |
-| `server/auth.ts`                                  | Better Auth instance (cloudflare:workers env)        |
-| `server/lib/blog.ts`                              | Blog fetch from R2 + compile                         |
-| `server/lib/email.ts`                             | Resend transactional email                           |
-| `server/lib/notion-gallery.ts`                    | Gallery photos from Notion API                       |
-| `server/lib/db.ts`                                | Kysely + pg database helper                          |
-| `server/types/bindings.ts`                        | Cloudflare Workers bindings interface                |
-| `types/blog.ts`                                   | Shared blog types (@shared/blog)                     |
-| `wrangler.toml`                                   | Cloudflare Workers config (bindings, R2, Hyperdrive) |
-| `.dev.vars.example`                               | Local dev secrets template                           |
-| `packages/ui/src/terminal/core/commands.ts`       | Terminal slash commands                              |
-| `packages/ui/src/markdown/compiler/index.ts`      | Markdown → MDX compiler (unified pipeline)           |
-| `packages/ui/src/markdown/compiler/shiki.ts`      | Shiki highlighter singleton (bundled langs, lazy)    |
-| `packages/ui/src/markdown/compiler/rehype-toc.ts` | TOC extraction + heading anchor injection            |
-| `server/routes/am-i-ok.ts`                        | Status push/fetch API                                |
-| `scripts/am-i-ok-agent.sh`                        | macOS agent script                                   |
-| `src/routes/__root.tsx`                           | Root layout, providers, global UI                    |
-| `src/styles/globals.css`                          | Global styles, design tokens, article/code block CSS |
+| File                                              | Purpose                                               |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `src/data/resume.tsx`                             | All personal data, navbar items, projects             |
+| `server/app.ts`                                   | Hono app entry — route registration, default export   |
+| `server/auth.ts`                                  | Better Auth instance (initialized via `getAuth(env)`) |
+| `server/lib/blog.ts`                              | Blog fetch from R2 + compile                          |
+| `server/lib/email.ts`                             | Resend transactional email                            |
+| `server/lib/notion-gallery.ts`                    | Gallery photos from Notion API                        |
+| `server/lib/db.ts`                                | Drizzle ORM client (postgres-js + Hyperdrive)         |
+| `server/lib/schema.ts`                            | Drizzle table definitions (auth + am_i_ok_status)     |
+| `server/lib/runtime-config.ts`                    | Config resolution: KV → Secret Store → `.dev.vars`    |
+| `server/types/bindings.ts`                        | Cloudflare Workers bindings interface                 |
+| `types/blog.ts`                                   | Shared blog types (@shared/blog)                      |
+| `wrangler.toml`                                   | Cloudflare Workers config (bindings, R2, Hyperdrive)  |
+| `.dev.vars.example`                               | Local dev secrets template                            |
+| `packages/ui/src/terminal/core/commands.ts`       | Terminal slash commands                               |
+| `packages/ui/src/markdown/compiler/index.ts`      | Markdown → MDX compiler (unified pipeline)            |
+| `packages/ui/src/markdown/compiler/shiki.ts`      | Shiki highlighter singleton (bundled langs, lazy)     |
+| `packages/ui/src/markdown/compiler/rehype-toc.ts` | TOC extraction + heading anchor injection             |
+| `server/routes/am-i-ok.ts`                        | Status push/fetch API                                 |
+| `scripts/am-i-ok-agent.sh`                        | macOS agent script                                    |
+| `src/routes/__root.tsx`                           | Root layout, providers, global UI                     |
+| `src/styles/globals.css`                          | Global styles, design tokens, article/code block CSS  |
 
 ## License
 

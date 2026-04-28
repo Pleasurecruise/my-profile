@@ -23,7 +23,7 @@ app.use(
     credentials: true,
   }),
 );
-app.use("/api/*", authMiddleware);
+app.use("/api/chat/*", authMiddleware);
 
 // Better Auth — handles /api/auth/*
 app.all("/api/auth", async (c) => {

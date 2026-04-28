@@ -23,3 +23,38 @@ localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"
 [[kv_namespaces]]
 binding = "KV_NAMESPACE"
 id = "38dc02a015f340e98825c6ad89e18b24"
+
+[[secrets_store_secrets]]
+binding = "GITHUB_CLIENT_ID"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "GITHUB_CLIENT_ID"
+
+[[secrets_store_secrets]]
+binding = "GITHUB_CLIENT_SECRET"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "GITHUB_CLIENT_SECRET"
+
+[[secrets_store_secrets]]
+binding = "GOOGLE_CLIENT_ID"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "GOOGLE_CLIENT_ID"
+
+[[secrets_store_secrets]]
+binding = "GOOGLE_CLIENT_SECRET"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "GOOGLE_CLIENT_SECRET"
+
+[[secrets_store_secrets]]
+binding = "RESEND_API_KEY"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "RESEND_API_KEY"
+
+[[secrets_store_secrets]]
+binding = "NOTION_TOKEN"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "NOTION_TOKEN"
+
+[[secrets_store_secrets]]
+binding = "OPENAI_API_KEY"
+store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
+secret_name = "OPENAI_API_KEY"

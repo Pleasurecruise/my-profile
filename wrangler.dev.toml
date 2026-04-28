@@ -1,0 +1,25 @@
+name = "my-profile"
+account_id = "fb71c4eceaf623ae1b19b8b37d7a38cf"
+main = "server/app.ts"
+compatibility_date = "2025-04-26"
+compatibility_flags = ["nodejs_compat", "no_handle_cross_request_promise_resolution"]
+
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
+
+[[r2_buckets]]
+binding = "BLOG_BUCKET"
+bucket_name = "cherry-studio"
+remote = true
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "806b06d49b6541caaf7c1a703eedd77b"
+localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"
+
+[[kv_namespaces]]
+binding = "KV_NAMESPACE"
+id = "38dc02a015f340e98825c6ad89e18b24"

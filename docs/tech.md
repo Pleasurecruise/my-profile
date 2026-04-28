@@ -23,15 +23,15 @@ At runtime it combines:
 | `vite-plus`               | `0.1.19`   | Vite-based dev/build/lint/format workflow |
 | `@cloudflare/vite-plugin` | `1.33.2`   | Runs Workers runtime locally during dev   |
 | `react` / `react-dom`     | `19.2.5`   | React 19 SPA                              |
-| `@tanstack/react-router`  | `1.168.24` | File-based client routing                 |
+| `@tanstack/react-router`  | `1.168.25` | File-based client routing                 |
 | `hono`                    | `4.12.15`  | API server (Workers-compatible)           |
 | `typescript`              | `6.0.3`    | Main language across app and workspace    |
-| `pnpm`                    | `10.33.0`  | Workspace package manager                 |
+| `pnpm`                    | `10.33.2`  | Workspace package manager                 |
 
 Implementation details:
 
 - `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and the Cloudflare plugin
-- dev and build flow through `vp dev` and `vp build`
+- local dev runs through `wrangler dev --config wrangler.dev.toml`; production build runs through `vp build`; remote/prod bindings live in `wrangler.toml`
 - `server/app.ts` uses `export default app` — the Cloudflare Workers entry format
 - `@my-profile/ui` is consumed as a local workspace package
 
@@ -91,7 +91,7 @@ Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkSt
 
 ### Hyperdrive
 
-`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. Both Better Auth and route-level queries use `runtimeEnv.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` in `wrangler.toml` points to a local Postgres instance.
+`HYPERDRIVE` is a Workers binding declared in both `wrangler.toml` and `wrangler.dev.toml`. Better Auth uses `env.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` points to `postgresql://pleasure1234:123456@localhost:5432/mydb`.
 
 ## API Layer
 
@@ -193,7 +193,7 @@ Transactional email (verification, password reset) is sent via **Resend** (`rese
 Key scripts:
 
 ```bash
-pnpm dev          # wrangler + Vite dev server
+pnpm dev          # wrangler dev with wrangler.dev.toml
 pnpm build        # production build
 pnpm check        # vp check && tsgo --noEmit
 pnpm lint         # vp lint
@@ -204,7 +204,8 @@ pnpm format       # vp fmt
 
 All environment values are **Cloudflare Workers bindings** — no `process.env`.
 
-- **Platform bindings** (R2, Hyperdrive, Assets) are declared in `wrangler.toml`
-- **Secrets** are set with `wrangler secret put <NAME>` in production; stored in `.dev.vars` locally
+- **Local dev bindings** live in `wrangler.dev.toml`; **remote/prod bindings** live in `wrangler.toml`
+- **KV-backed config** is read from `KV_NAMESPACE`, with `.dev.vars` as the local fallback
+- **Secret values** are bound through `[[secrets_store_secrets]]` in `wrangler.toml`, with `.dev.vars` as the local fallback
 - Server code reads env via `c.env` in Hono handlers and passes bindings through helper functions where needed
 - All binding types are defined in `server/types/bindings.ts`

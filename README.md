@@ -17,7 +17,6 @@ Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · D
 - **CV** — resume page with work, projects, and hackathons
 - **Story** — personal story page with interactive map
 - **Auth** — sign up, login, email verification, password reset (Better Auth + GitHub/Google OAuth)
-- **llms.txt** — LLM-friendly site summary at `/llms.txt`
 
 ## Getting Started
 
@@ -28,7 +27,7 @@ pnpm dev
 ```
 
 > Local dev runs via `wrangler dev` (powered by `@cloudflare/vite-plugin`).  
-> Secrets in `.dev.vars` are injected as `c.env` bindings automatically.
+> `pnpm dev` uses `wrangler.dev.toml`, and `.dev.vars` is injected as `c.env` bindings automatically.
 
 ## Environment
 
@@ -39,7 +38,7 @@ This project now splits runtime values by storage type.
 
 For local dev, keep using `.dev.vars` as a flat fallback source.
 
-Platform bindings are declared in `wrangler.toml`:
+Remote/prod bindings are declared in `wrangler.toml`:
 
 | Binding        | Type       | Purpose                     |
 | -------------- | ---------- | --------------------------- |
@@ -73,7 +72,7 @@ Secret Store bindings:
 ## Commands
 
 ```bash
-pnpm dev          # Cloudflare Workers dev (wrangler + Vite)
+pnpm dev          # Local Workers dev with .dev.vars
 pnpm build        # Production build
 pnpm check        # Type check (vp check && tsgo --noEmit)
 pnpm lint         # Lint (vite-plus)
@@ -87,13 +86,12 @@ pnpm build
 wrangler deploy
 ```
 
-Production secrets are set per-variable:
+Production runtime values are split by binding type:
 
 ```bash
-wrangler secret put GITHUB_CLIENT_ID
-wrangler secret put GITHUB_CLIENT_SECRET
-wrangler secret put RESEND_API_KEY
-# ...
+# KV-backed config values live in KV_NAMESPACE
+# Secret values are bound through [[secrets_store_secrets]] in wrangler.toml
+# Local fallback values live in .dev.vars
 ```
 
 ## Am I OK Agent

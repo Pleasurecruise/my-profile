@@ -64,7 +64,7 @@ function buildTreeNodes(paths: string[]): BlogTreeNode[] {
 
 async function listBlogFilePaths(bucket: R2Bucket): Promise<string[]> {
   const prefix = `${BLOG_PREFIX}/`;
-  const filePaths: string[] = [];
+  const filePaths = [];
   let cursor: string | undefined;
 
   do {
