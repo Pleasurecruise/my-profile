@@ -23,11 +23,11 @@ type TreeViewElement = {
 
 type TreeContextProps = {
   selectedId: string | undefined;
-  expandedItems: string[] | undefined;
+  expandedItems: string[];
   indicator: boolean;
   handleExpand: (id: string) => void;
   selectItem: (id: string) => void;
-  setExpandedItems?: React.Dispatch<React.SetStateAction<string[] | undefined>>;
+  setExpandedItems?: React.Dispatch<React.SetStateAction<string[]>>;
   openIcon?: React.ReactNode;
   closeIcon?: React.ReactNode;
   direction: "rtl" | "ltr";
@@ -60,7 +60,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
       className,
       elements,
       initialSelectedId,
-      initialExpandedItems,
+      initialExpandedItems = [],
       children,
       indicator = true,
       openIcon,
@@ -71,7 +71,7 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
     ref,
   ) => {
     const [selectedId, setSelectedId] = useState<string | undefined>(initialSelectedId);
-    const [expandedItems, setExpandedItems] = useState<string[] | undefined>(initialExpandedItems);
+    const [expandedItems, setExpandedItems] = useState<string[]>(initialExpandedItems);
 
     const selectItem = useCallback((id: string) => {
       setSelectedId(id);
@@ -79,10 +79,10 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
 
     const handleExpand = useCallback((id: string) => {
       setExpandedItems((prev) => {
-        if (prev?.includes(id)) {
+        if (prev.includes(id)) {
           return prev.filter((item) => item !== id);
         }
-        return [...(prev ?? []), id];
+        return [...prev, id];
       });
     }, []);
 
@@ -94,11 +94,11 @@ const Tree = forwardRef<HTMLDivElement, TreeViewProps>(
           const newPath = [...currentPath, currentElement.id];
           if (currentElement.id === selectId) {
             if (isSelectable) {
-              setExpandedItems((prev) => Array.from(new Set([...(prev ?? []), ...newPath])));
+              setExpandedItems((prev) => Array.from(new Set([...prev, ...newPath])));
             } else {
               if (newPath.includes(currentElement.id)) {
                 newPath.pop();
-                setExpandedItems((prev) => Array.from(new Set([...(prev ?? []), ...newPath])));
+                setExpandedItems((prev) => Array.from(new Set([...prev, ...newPath])));
               }
             }
             return;
@@ -289,7 +289,7 @@ const CollapseButton = forwardRef<
     const expandTree = (element: TreeViewElement) => {
       const isSelectable = element.isSelectable ?? true;
       if (isSelectable && element.children && element.children.length > 0) {
-        setExpandedItems?.((prev) => [...(prev ?? []), element.id]);
+        setExpandedItems?.((prev) => [...prev, element.id]);
         element.children.forEach(expandTree);
       }
     };

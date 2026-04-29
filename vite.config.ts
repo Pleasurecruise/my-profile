@@ -24,10 +24,20 @@ export default defineConfig({
     outDir: "dist/client",
   },
   lint: {
-    ignorePatterns: ["dist/**", "src/generated/**", "src/routeTree.gen.ts"],
+    ignorePatterns: [
+      "dist/**",
+      "src/generated/**",
+      "src/routeTree.gen.ts",
+      "worker-configuration.d.ts",
+    ],
   },
   fmt: {
     indent: "tab",
-    ignorePatterns: ["dist/**", "src/generated/**", "src/routeTree.gen.ts"],
+    ignorePatterns: [
+      "dist/**",
+      "src/generated/**",
+      "src/routeTree.gen.ts",
+      "worker-configuration.d.ts",
+    ],
   },
 });

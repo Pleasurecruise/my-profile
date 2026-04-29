@@ -4,6 +4,9 @@ main = "server/app.ts"
 compatibility_date = "2025-04-26"
 compatibility_flags = ["nodejs_compat", "no_handle_cross_request_promise_resolution"]
 
+[placement]
+mode = "smart"
+
 [assets]
 directory = "./dist/client"
 binding = "ASSETS"

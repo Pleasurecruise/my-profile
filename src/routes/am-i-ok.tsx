@@ -116,8 +116,6 @@ function AmIOkPage() {
   }, []);
 
   const online = status ? isOnline(status.updatedAt) : false;
-  const apps = status?.apps ?? [];
-
   return (
     <main className="flex flex-col space-y-6">
       <BlurFade delay={0}>
@@ -141,7 +139,7 @@ function AmIOkPage() {
               <span className="text-sm font-medium text-green-600 dark:text-green-400">Online</span>
             </div>
             <div className="flex items-center gap-4">
-              {apps.map((appName, i) => {
+              {status.apps.map((appName, i) => {
                 const icon = getAppIcon(appName);
                 return (
                   <div key={appName} className="flex items-center gap-3">

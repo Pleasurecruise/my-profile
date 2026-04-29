@@ -1,6 +1,6 @@
 export interface TerminalConfig {
   /** Shown in the title bar and prompt, e.g. "pleasure1234@website" */
-  hostname?: string;
+  hostname: string;
 
   /** /skills output */
   skills: string[];
@@ -22,7 +22,7 @@ export interface TerminalConfig {
   friends: Array<{ name: string; url: string }>;
 
   /** /go destinations — key is the route name, value is the path */
-  routes?: Record<string, string>;
+  routes: Record<string, string>;
 
   /** /am-i-ok fetch URL, defaults to "/api/am-i-ok" */
   amIOkUrl?: string;
@@ -38,7 +38,7 @@ export interface TerminalConfig {
     degree?: string;
     graduationYear?: string;
     bio?: string;
-    contributions?: Array<{ label: string; url: string }>;
-    founded?: Array<{ label: string; url: string }>;
+    contributions: Array<{ label: string; url: string }>;
+    founded: Array<{ label: string; url: string }>;
   };
 }

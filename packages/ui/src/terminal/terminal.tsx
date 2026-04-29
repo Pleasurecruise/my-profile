@@ -14,7 +14,7 @@ interface TerminalProps {
 }
 
 export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
-  const hostname = config.hostname ?? "user@website";
+  const hostname = config.hostname;
   const PROMPT = `${hostname}:~$`;
 
   const idRef = useRef(0);

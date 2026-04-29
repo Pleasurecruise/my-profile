@@ -37,7 +37,8 @@ function McArt() {
 
   useEffect(() => {
     startTransition(() => {
-      setLines(MC_ARTS[Math.floor(Math.random() * MC_ARTS.length)] ?? []);
+      const art = MC_ARTS[Math.floor(Math.random() * MC_ARTS.length)];
+      if (art) setLines(art);
     });
   }, []);
 
@@ -81,8 +82,8 @@ export function MOTD({ profile }: MOTDProps) {
       }));
     });
     fetch("https://api.ipify.org?format=json")
-      .then((r) => r.json())
-      .then((d: { ip: string }) => setInfo((prev) => ({ ...prev, ip: d.ip })))
+      .then((r) => r.json() as Promise<{ ip: string }>)
+      .then((d) => setInfo((prev) => ({ ...prev, ip: d.ip })))
       .catch(() => setInfo((prev) => ({ ...prev, ip: "unavailable" })));
   }, []);
 
@@ -100,8 +101,7 @@ export function MOTD({ profile }: MOTDProps) {
     </a>
   );
 
-  const founded = profile.founded ?? [];
-  const contributions = profile.contributions ?? [];
+  const { founded, contributions } = profile;
 
   return (
     <div className="mb-2 font-mono text-sm leading-relaxed">

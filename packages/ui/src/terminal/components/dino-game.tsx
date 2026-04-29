@@ -21,7 +21,7 @@ export function DinoGame({ onExit }: DinoGameProps) {
     if (!document.getElementById(DINO_STYLE_ID)) {
       const style = document.createElement("style");
       style.id = DINO_STYLE_ID;
-      document.head.prepend(style);
+      document.head.appendChild(style);
     }
     return () => {
       document.getElementById(DINO_STYLE_ID)?.remove();

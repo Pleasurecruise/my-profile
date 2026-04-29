@@ -10,12 +10,15 @@ import { ArticleHeader } from "@/components/blog/article-header";
 import { ArticleSide } from "@/components/blog/article-side";
 import { Toc } from "@/components/blog/toc";
 import type { BlogPostData } from "@shared/blog";
-import { DATA } from "@/data/resume";
 
 export const Route = createFileRoute("/blog/$")({
   loader: async ({ params }): Promise<BlogPostData> => {
     const slug = params["_splat"] ?? "";
-    const res = await fetch(`/api/blog/post/${encodeURIComponent(slug)}`);
+    const encodedSlug = slug
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
+    const res = await fetch(`/api/blog/post/${encodedSlug}`);
     if (!res.ok) throw notFound();
     return res.json() as Promise<BlogPostData>;
   },
@@ -35,7 +38,11 @@ function useMdxContent(code: string) {
 
 function BlogPostPage() {
   const post = Route.useLoaderData();
-  const postUrl = `${DATA.url}/blog/${post.slug}`;
+  const encodedSlug = post.slug
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+  const postUrl = `${window.location.origin}/blog/${encodedSlug}`;
   const Content = useMdxContent(post.code);
 
   return (

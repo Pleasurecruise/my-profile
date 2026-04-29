@@ -1,6 +1,6 @@
 import { compileForClient } from "@my-profile/ui/markdown";
 import type { BlogFileTreeData, BlogPostData, BlogTreeNode } from "@shared/blog";
-import type { R2Bucket } from "../types/cloudflare";
+import type { Bindings } from "../types/bindings";
 
 export type { BlogFileTreeData, BlogPostData, BlogTreeNode };
 
@@ -62,7 +62,7 @@ function buildTreeNodes(paths: string[]): BlogTreeNode[] {
   return sortTreeNodes(rootNodes);
 }
 
-async function listBlogFilePaths(bucket: R2Bucket): Promise<string[]> {
+async function listBlogFilePaths(bucket: Bindings["BLOG_BUCKET"]): Promise<string[]> {
   const prefix = `${BLOG_PREFIX}/`;
   const filePaths = [];
   let cursor: string | undefined;
@@ -81,17 +81,20 @@ async function listBlogFilePaths(bucket: R2Bucket): Promise<string[]> {
   return filePaths;
 }
 
-export async function getBlogFileTree(bucket: R2Bucket): Promise<BlogFileTreeData> {
+export async function getBlogFileTree(bucket: Bindings["BLOG_BUCKET"]): Promise<BlogFileTreeData> {
   const paths = await listBlogFilePaths(bucket);
   return { rootName: BLOG_PREFIX, nodes: buildTreeNodes(paths) };
 }
 
-export async function getAllBlogSlugs(bucket: R2Bucket): Promise<string[]> {
+export async function getAllBlogSlugs(bucket: Bindings["BLOG_BUCKET"]): Promise<string[]> {
   const paths = await listBlogFilePaths(bucket);
   return paths.filter((p) => p.endsWith(".md"));
 }
 
-export async function getBlogPost(bucket: R2Bucket, slug: string): Promise<BlogPostData | null> {
+export async function getBlogPost(
+  bucket: Bindings["BLOG_BUCKET"],
+  slug: string,
+): Promise<BlogPostData | null> {
   const decodedSlug = decodeURIComponent(slug);
   const key = `${BLOG_PREFIX}/${decodedSlug}`;
 

@@ -26,7 +26,11 @@ function TreeNode({ node }: { node: BlogTreeNode }) {
   }
 
   const handleClick = () => {
-    void navigate({ to: `/blog/${encodeURIComponent(node.path)}` });
+    const encodedPath = node.path
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
+    void navigate({ to: `/blog/${encodedPath}` });
   };
 
   return (

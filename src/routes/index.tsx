@@ -17,6 +17,8 @@ export const Route = createFileRoute("/")({
 const BLUR_FADE_DELAY = 0.04;
 
 function HomePage() {
+  const siteUrl = window.location.origin.replace(/^https?:\/\//, "");
+
   return (
     <main className="flex flex-col min-h-dvh">
       <section id="hero">
@@ -176,10 +178,10 @@ function HomePage() {
                 <span className="text-foreground">name</span>: Pleasure1234
               </li>
               <li>
-                <span className="text-foreground">url</span>: yiming1234.cn
+                <span className="text-foreground">url</span>: {siteUrl}
               </li>
               <li>
-                <span className="text-foreground">avatar</span>: yiming1234.cn/profile/me.png
+                <span className="text-foreground">avatar</span>: {siteUrl}/profile/me.png
               </li>
               <li>
                 <span className="text-foreground">description</span>: Any shortcomings are kindly

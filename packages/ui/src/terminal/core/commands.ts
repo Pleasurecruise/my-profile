@@ -26,7 +26,7 @@ export const TOP_COMMANDS: SelectorItem[] = [
 ];
 
 function getGoDestinations(config: TerminalConfig): SelectorItem[] {
-  return Object.keys(config.routes ?? {}).map((key) => ({
+  return Object.keys(config.routes).map((key) => ({
     label: key,
     value: `/go ${key}`,
     desc: key.charAt(0).toUpperCase() + key.slice(1),
@@ -46,7 +46,7 @@ export function getSelectorItems(input: string, config: TerminalConfig): Selecto
 }
 
 function buildHelpText(config: TerminalConfig): string {
-  const routeNames = Object.keys(config.routes ?? {}).join(" | ");
+  const routeNames = Object.keys(config.routes).join(" | ");
   return `Available slash commands:
   /help        - Show this help message
   /skills      - Tech stack
@@ -65,8 +65,8 @@ export function resolveCommand(
   rest: string,
   config: TerminalConfig,
 ): SlashCommandResult | null {
-  const routes = config.routes ?? {};
-  const hostname = config.hostname ?? "user@website";
+  const routes = config.routes;
+  const hostname = config.hostname;
 
   switch (slug) {
     case "help":
