@@ -2,9 +2,7 @@ import { Hono } from "hono";
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { getDb } from "../lib/db";
-import { getConfig } from "../lib/runtime-config";
 import { amIOkStatus } from "../lib/schema";
-import type { Bindings } from "../types/bindings";
 
 const bodySchema = z.object({
   app: z.string().optional(),
@@ -12,7 +10,7 @@ const bodySchema = z.object({
   device: z.string().optional(),
 });
 
-export const amIOk = new Hono<{ Bindings: Bindings }>()
+export const amIOk = new Hono<{ Bindings: Cloudflare.Env }>()
   .get("/", async (c) => {
     const db = getDb(c.env.HYPERDRIVE.connectionString);
     const status = await db.query.amIOkStatus.findFirst({
@@ -22,7 +20,7 @@ export const amIOk = new Hono<{ Bindings: Bindings }>()
   })
   .post("/", async (c) => {
     const authHeader = c.req.header("Authorization");
-    const amIOkSecret = await getConfig(c.env, "AM_I_OK_SECRET");
+    const amIOkSecret = c.env.AM_I_OK_SECRET;
     if (authHeader !== `Bearer ${amIOkSecret}`) {
       return c.json({ error: "Unauthorized" }, 401);
     }

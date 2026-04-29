@@ -19,6 +19,18 @@
   --scrollbar-thumb-active: color-mix(in srgb, var(--foreground) 34%, transparent);
 }
 
+.mapboxgl-map {
+  font:
+    12px/20px var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {

@@ -119,15 +119,15 @@ server/
 │   ├── db.ts            # Drizzle ORM client (postgres-js + Hyperdrive)
 │   ├── email.ts         # Resend email client
 │   ├── notion-gallery.ts # Notion API for gallery photos
-│   ├── runtime-config.ts # Secret Store + KV + .dev.vars config resolution
+│   ├── runtime-config.ts # Secret Store + Workers env + .dev.vars config resolution
 │   ├── schema.ts        # Drizzle table definitions (auth tables + am_i_ok_status)
 │   └── story.ts         # Story content helper
 └── types/               # Server-side type definitions
     ├── auth.ts          # AuthBindings for Hono
     ├── bindings.ts      # Cloudflare Workers bindings interface
     ├── cloudflare.ts    # R2Bucket, Hyperdrive, Assets, KVNamespace, SecretStoreSecret types
-    ├── cloudflare-workers.d.ts  # cloudflare:workers module shim
-    ├── config.ts        # ResolvedAuthConfig, KvConfigKey, SecretBackedValue types
+    ├── cloudflare-env.d.ts      # Cloudflare.Env augmentation from Bindings
+    ├── config.ts        # ResolvedAuthConfig, EnvVarKey, SecretBackedValue types
     └── notion.ts        # Notion API response types
 ```
 

@@ -1,6 +1,6 @@
 # my-profile
 
-Personal website — [yiming1234.cn](https://yiming1234.cn)
+Personal website — [you-find.me](https://you-find.me)
 
 ## Stack
 
@@ -27,53 +27,71 @@ pnpm dev
 ```
 
 > Local dev runs via `wrangler dev` (powered by `@cloudflare/vite-plugin`).  
-> `pnpm dev` uses `wrangler.dev.toml`, and `.dev.vars` is injected as `c.env` bindings automatically.
+> `pnpm dev` runs `vp dev`; `pnpm dev:wrangler` runs `wrangler dev --remote`. Both read `wrangler.toml`, and `.dev.vars` is injected as `c.env` bindings automatically.
 
 ## Environment
 
-This project now splits runtime values by storage type.
+This project splits runtime values by source.
 
-- `KV_NAMESPACE` KV: `AM_I_OK_SECRET`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`, `VITE_MAPBOX_TOKEN`
-- Secret Store: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
-
-For local dev, keep using `.dev.vars` as a flat fallback source.
+- Non-sensitive runtime defaults live in `wrangler.toml` under `[vars]`: `BETTER_AUTH_URL`, `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`, `VITE_MAPBOX_TOKEN`
+- Local secrets and local overrides live in `.dev.vars`: `BETTER_AUTH_URL`, `AM_I_OK_SECRET`, `BETTER_AUTH_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
+- Cloudflare binding types are declared in `server/types/cloudflare-env.d.ts`
 
 Remote/prod bindings are declared in `wrangler.toml`:
 
-| Binding        | Type       | Purpose                     |
-| -------------- | ---------- | --------------------------- |
-| `ASSETS`       | Static     | Serves the SPA              |
-| `BLOG_BUCKET`  | R2         | Blog Markdown files         |
-| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy |
-| `KV_NAMESPACE` | KV         | Runtime config values       |
+| Binding       | Type       | Purpose                     |
+| ------------- | ---------- | --------------------------- |
+| `ASSETS`      | Static     | Serves the SPA              |
+| `BLOG_BUCKET` | R2         | Blog Markdown files         |
+| `HYPERDRIVE`  | Hyperdrive | PostgreSQL connection proxy |
 
-KV-backed runtime config:
+Runtime env values:
 
-| Variable             | Purpose                      |
-| -------------------- | ---------------------------- |
-| `AM_I_OK_SECRET`     | Status push API token        |
-| `BETTER_AUTH_SECRET` | Auth secret key              |
-| `BETTER_AUTH_URL`    | Auth base URL                |
-| `OPENAI_API_URL`     | Custom OpenAI-compatible URL |
-| `OPENAI_MODEL`       | Default chat model           |
-| `RESEND_FROM`        | Sender address               |
-| `VITE_MAPBOX_TOKEN`  | Map token returned to client |
+| Variable            | Purpose                      |
+| ------------------- | ---------------------------- |
+| `BETTER_AUTH_URL`   | Auth base URL                |
+| `OPENAI_API_URL`    | Custom OpenAI-compatible URL |
+| `OPENAI_MODEL`      | Default chat model           |
+| `RESEND_FROM`       | Sender address               |
+| `VITE_MAPBOX_TOKEN` | Map token returned to client |
 
-Secret Store bindings:
+Worker secrets:
 
-| Variable                  | Purpose                      |
-| ------------------------- | ---------------------------- |
-| `GITHUB_CLIENT_ID/SECRET` | GitHub OAuth                 |
-| `GOOGLE_CLIENT_ID/SECRET` | Google OAuth                 |
-| `RESEND_API_KEY`          | Transactional email (Resend) |
-| `OPENAI_API_KEY`          | AI chat                      |
-| `NOTION_TOKEN`            | Gallery photos from Notion   |
+| Variable             | Purpose               |
+| -------------------- | --------------------- |
+| `AM_I_OK_SECRET`     | Status push API token |
+| `BETTER_AUTH_SECRET` | Auth secret key       |
+
+Local `.dev.vars` / production secret bindings:
+
+| Variable               | Purpose                      |
+| ---------------------- | ---------------------------- |
+| `GITHUB_CLIENT_ID`     | GitHub OAuth client ID       |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret   |
+| `GOOGLE_CLIENT_ID`     | Google OAuth client ID       |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret   |
+| `RESEND_API_KEY`       | Transactional email (Resend) |
+| `OPENAI_API_KEY`       | AI chat                      |
+| `NOTION_TOKEN`         | Gallery photos from Notion   |
+
+Required secrets declared in `wrangler.toml`:
+
+- `AM_I_OK_SECRET`
+- `BETTER_AUTH_SECRET`
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `RESEND_API_KEY`
+- `NOTION_TOKEN`
+- `OPENAI_API_KEY`
 
 ## Commands
 
 ```bash
-pnpm dev          # Local Workers dev with .dev.vars
-pnpm build        # Production build
+pnpm dev          # Local dev via vite-plus + Cloudflare plugin
+pnpm dev:wrangler # Remote Workers dev
+pnpm build        # Client build + wrangler dry-run deploy
 pnpm check        # Type check (vp check && tsgo --noEmit)
 pnpm lint         # Lint (vite-plus)
 pnpm format       # Format (vite-plus)
@@ -89,9 +107,10 @@ wrangler deploy
 Production runtime values are split by binding type:
 
 ```bash
-# KV-backed config values live in KV_NAMESPACE
-# Secret values are bound through [[secrets_store_secrets]] in wrangler.toml
-# Local fallback values live in .dev.vars
+# Non-sensitive runtime values are declared in wrangler.toml [vars]
+# Resource bindings (ASSETS / BLOG_BUCKET / HYPERDRIVE) are declared in wrangler.toml
+# Local secret values live in .dev.vars
+# Production secrets can be added with `wrangler secret put <NAME>`
 ```
 
 ## Am I OK Agent

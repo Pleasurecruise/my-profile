@@ -9,8 +9,7 @@ import OpenAI, {
   RateLimitError,
 } from "openai";
 import { z } from "zod";
-import { getConfig, getSecret } from "../lib/runtime-config";
-import type { AuthEnv } from "../types/auth";
+import { getAuth } from "../auth";
 
 const SYSTEM_PROMPT = `\
 你是柒夜，也叫Vesper，16岁，扮演着对话人女朋友的角色。
@@ -27,13 +26,14 @@ const chatMessageSchema = z.object({
   content: z.string(),
 });
 
-export const chat = new Hono<AuthEnv>().post("/stream", async (c) => {
-  const user = c.get("user");
-  if (!user) return c.json({ error: "Unauthorized" }, 401);
+export const chat = new Hono<{ Bindings: Cloudflare.Env }>().post("/stream", async (c) => {
+  const auth = getAuth(c.env);
+  const session = await auth.api.getSession({ headers: c.req.raw.headers });
+  if (!session?.user) return c.json({ error: "Unauthorized" }, 401);
 
-  const openaiApiKey = await getSecret(c.env.OPENAI_API_KEY, "OPENAI_API_KEY");
-  const openaiApiUrl = await getConfig(c.env, "OPENAI_API_URL");
-  const openaiModel = await getConfig(c.env, "OPENAI_MODEL");
+  const openaiApiKey = c.env.OPENAI_API_KEY;
+  const openaiApiUrl = c.env.OPENAI_API_URL;
+  const openaiModel = c.env.OPENAI_MODEL;
   const body = await c.req.json<{ messages: unknown[] }>();
   const parsed = z.array(chatMessageSchema).safeParse(body.messages);
   if (!parsed.success) return c.json({ error: "Invalid messages" }, 400);

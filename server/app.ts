@@ -2,8 +2,6 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { getAuth } from "./auth";
-import { authMiddleware } from "./lib/auth-middleware";
-import type { AuthEnv } from "./types/auth";
 import { amIOk } from "./routes/am-i-ok";
 import { blog } from "./routes/blog";
 import { chat } from "./routes/chat";
@@ -11,7 +9,7 @@ import { gallery } from "./routes/gallery";
 import { presence } from "./routes/presence";
 import { story } from "./routes/story";
 
-const app = new Hono<AuthEnv>();
+const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
 app.use("*", logger());
 app.use(
@@ -23,17 +21,10 @@ app.use(
     credentials: true,
   }),
 );
-app.use("/api/chat/*", authMiddleware);
 
 // Better Auth — handles /api/auth/*
-app.all("/api/auth", async (c) => {
-  const auth = await getAuth(c.env);
-  return auth.handler(c.req.raw);
-});
-app.all("/api/auth/*", async (c) => {
-  const auth = await getAuth(c.env);
-  return auth.handler(c.req.raw);
-});
+app.all("/api/auth", (c) => getAuth(c.env).handler(c.req.raw));
+app.all("/api/auth/*", (c) => getAuth(c.env).handler(c.req.raw));
 
 // API routes
 app

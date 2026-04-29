@@ -1,6 +1,5 @@
 import { compileForClient } from "@my-profile/ui/markdown";
 import type { BlogFileTreeData, BlogPostData, BlogTreeNode } from "@shared/blog";
-import type { Bindings } from "../types/bindings";
 
 export type { BlogFileTreeData, BlogPostData, BlogTreeNode };
 
@@ -62,7 +61,7 @@ function buildTreeNodes(paths: string[]): BlogTreeNode[] {
   return sortTreeNodes(rootNodes);
 }
 
-async function listBlogFilePaths(bucket: Bindings["BLOG_BUCKET"]): Promise<string[]> {
+async function listBlogFilePaths(bucket: Cloudflare.Env["BLOG_BUCKET"]): Promise<string[]> {
   const prefix = `${BLOG_PREFIX}/`;
   const filePaths = [];
   let cursor: string | undefined;
@@ -81,18 +80,20 @@ async function listBlogFilePaths(bucket: Bindings["BLOG_BUCKET"]): Promise<strin
   return filePaths;
 }
 
-export async function getBlogFileTree(bucket: Bindings["BLOG_BUCKET"]): Promise<BlogFileTreeData> {
+export async function getBlogFileTree(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+): Promise<BlogFileTreeData> {
   const paths = await listBlogFilePaths(bucket);
   return { rootName: BLOG_PREFIX, nodes: buildTreeNodes(paths) };
 }
 
-export async function getAllBlogSlugs(bucket: Bindings["BLOG_BUCKET"]): Promise<string[]> {
+export async function getAllBlogSlugs(bucket: Cloudflare.Env["BLOG_BUCKET"]): Promise<string[]> {
   const paths = await listBlogFilePaths(bucket);
   return paths.filter((p) => p.endsWith(".md"));
 }
 
 export async function getBlogPost(
-  bucket: Bindings["BLOG_BUCKET"],
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
   slug: string,
 ): Promise<BlogPostData | null> {
   const decodedSlug = decodeURIComponent(slug);

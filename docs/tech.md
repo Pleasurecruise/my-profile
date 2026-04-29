@@ -20,8 +20,8 @@ At runtime it combines:
 
 | Package                   | Version    | Notes                                     |
 | ------------------------- | ---------- | ----------------------------------------- |
-| `vite-plus`               | `0.1.19`   | Vite-based dev/build/lint/format workflow |
-| `@cloudflare/vite-plugin` | `1.33.2`   | Runs Workers runtime locally during dev   |
+| `vite-plus`               | `0.1.20`   | Vite-based dev/build/lint/format workflow |
+| `@cloudflare/vite-plugin` | `1.34.0`   | Runs Workers runtime locally during dev   |
 | `react` / `react-dom`     | `19.2.5`   | React 19 SPA                              |
 | `@tanstack/react-router`  | `1.168.25` | File-based client routing                 |
 | `hono`                    | `4.12.15`  | API server (Workers-compatible)           |
@@ -31,7 +31,7 @@ At runtime it combines:
 Implementation details:
 
 - `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and the Cloudflare plugin
-- local dev runs through `wrangler dev --config wrangler.dev.toml`; production build runs through `vp build`; remote/prod bindings live in `wrangler.toml`
+- `pnpm dev` runs `vp dev`; `pnpm dev:wrangler` runs `wrangler dev --remote`; `pnpm build` runs `vp build && wrangler deploy --dry-run`
 - `server/app.ts` uses `export default app` — the Cloudflare Workers entry format
 - `@my-profile/ui` is consumed as a local workspace package
 
@@ -91,7 +91,7 @@ Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkSt
 
 ### Hyperdrive
 
-`HYPERDRIVE` is a Workers binding declared in both `wrangler.toml` and `wrangler.dev.toml`. Better Auth uses `env.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` points to `postgresql://pleasure1234:123456@localhost:5432/mydb`.
+`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. Better Auth uses `env.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` points to `postgresql://pleasure1234:123456@localhost:5432/mydb`.
 
 ## API Layer
 
@@ -111,8 +111,8 @@ The API is plain **Hono** routes — no tRPC. All routes are registered in `serv
 
 The chat feature is built with:
 
-- **OpenAI SDK** `6.34.0`
-- **Vercel AI SDK** `6.0.168` (`ai`)
+- **OpenAI SDK** `6.35.0`
+- **Vercel AI SDK** `6.0.170` (`ai`)
 
 Implementation: responses are streamed; base URL and model are configurable via `OPENAI_API_URL` / `OPENAI_MODEL` secrets.
 
@@ -184,17 +184,18 @@ Transactional email (verification, password reset) is sent via **Resend** (`rese
 
 ## Tooling
 
-- **vite-plus** `0.1.19` — unified dev/build/lint/format (wraps Vite + Biome)
+- **vite-plus** `0.1.20` — unified dev/build/lint/format workflow
 - **tsx** — runs TypeScript scripts directly
-- **wrangler** `4.85.0` — Cloudflare Workers CLI (deploy, secret management, local dev)
+- **wrangler** `4.86.0` — Cloudflare Workers CLI (deploy, secret management, local dev)
 - **vitest** `4.1.5` — test runner
 - **tsgo** (`@typescript/native-preview`) — TypeScript Go native type-check preview
 
 Key scripts:
 
 ```bash
-pnpm dev          # wrangler dev with wrangler.dev.toml
-pnpm build        # production build
+pnpm dev          # local dev via vite-plus + Cloudflare plugin
+pnpm dev:wrangler # remote Workers dev
+pnpm build        # client build + wrangler dry-run deploy
 pnpm check        # vp check && tsgo --noEmit
 pnpm lint         # vp lint
 pnpm format       # vp fmt
@@ -204,8 +205,21 @@ pnpm format       # vp fmt
 
 All environment values are **Cloudflare Workers bindings** — no `process.env`.
 
-- **Local dev bindings** live in `wrangler.dev.toml`; **remote/prod bindings** live in `wrangler.toml`
-- **KV-backed config** is read from `KV_NAMESPACE`, with `.dev.vars` as the local fallback
-- **Secret values** are bound through `[[secrets_store_secrets]]` in `wrangler.toml`, with `.dev.vars` as the local fallback
+- **Non-sensitive runtime defaults** live in `wrangler.toml` under `[vars]`
+- **Resource bindings** (`ASSETS`, `BLOG_BUCKET`, `HYPERDRIVE`) live in `wrangler.toml`
+- **Required secrets** are declared in `wrangler.toml` under `[secrets]`
+- **Local secret values and local overrides** live in `.dev.vars`
 - Server code reads env via `c.env` in Hono handlers and passes bindings through helper functions where needed
-- All binding types are defined in `server/types/bindings.ts`
+- All binding types are defined in `server/types/cloudflare-env.d.ts`
+
+Current required secrets:
+
+- `AM_I_OK_SECRET`
+- `BETTER_AUTH_SECRET`
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `RESEND_API_KEY`
+- `NOTION_TOKEN`
+- `OPENAI_API_KEY`

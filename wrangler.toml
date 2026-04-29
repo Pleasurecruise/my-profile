@@ -2,7 +2,27 @@ name = "my-profile"
 account_id = "fb71c4eceaf623ae1b19b8b37d7a38cf"
 main = "server/app.ts"
 compatibility_date = "2025-04-26"
-compatibility_flags = ["nodejs_compat", "no_handle_cross_request_promise_resolution"]
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+BETTER_AUTH_URL = "https://you-find.me"
+OPENAI_API_URL = "https://api.siliconflow.cn/v1"
+OPENAI_MODEL = "deepseek-ai/DeepSeek-V4-Flash"
+RESEND_FROM = "pleasure@yiming1234.cn"
+VITE_MAPBOX_TOKEN = "pk.eyJ1IjoicGxlYXN1cmUxMjM0IiwiYSI6ImNtazJ2MXFwZDBiaDUzY3M4aXhnNGRxaWwifQ.v_BxUgGMO-diXUrd_juyQw"
+
+[secrets]
+required = [
+  "AM_I_OK_SECRET",
+  "BETTER_AUTH_SECRET",
+  "GITHUB_CLIENT_ID",
+  "GITHUB_CLIENT_SECRET",
+  "GOOGLE_CLIENT_ID",
+  "GOOGLE_CLIENT_SECRET",
+  "RESEND_API_KEY",
+  "NOTION_TOKEN",
+  "OPENAI_API_KEY",
+]
 
 [placement]
 mode = "smart"
@@ -22,42 +42,3 @@ remote = true
 binding = "HYPERDRIVE"
 id = "806b06d49b6541caaf7c1a703eedd77b"
 localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"
-
-[[kv_namespaces]]
-binding = "KV_NAMESPACE"
-id = "38dc02a015f340e98825c6ad89e18b24"
-
-[[secrets_store_secrets]]
-binding = "GITHUB_CLIENT_ID"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "GITHUB_CLIENT_ID"
-
-[[secrets_store_secrets]]
-binding = "GITHUB_CLIENT_SECRET"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "GITHUB_CLIENT_SECRET"
-
-[[secrets_store_secrets]]
-binding = "GOOGLE_CLIENT_ID"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "GOOGLE_CLIENT_ID"
-
-[[secrets_store_secrets]]
-binding = "GOOGLE_CLIENT_SECRET"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "GOOGLE_CLIENT_SECRET"
-
-[[secrets_store_secrets]]
-binding = "RESEND_API_KEY"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "RESEND_API_KEY"
-
-[[secrets_store_secrets]]
-binding = "NOTION_TOKEN"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "NOTION_TOKEN"
-
-[[secrets_store_secrets]]
-binding = "OPENAI_API_KEY"
-store_id = "4426f6d9762e46f2bbfeabd0e3bc26e3"
-secret_name = "OPENAI_API_KEY"
