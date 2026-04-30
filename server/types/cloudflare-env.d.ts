@@ -4,6 +4,7 @@ declare global {
       ASSETS: Fetcher;
       BLOG_BUCKET: R2Bucket;
       HYPERDRIVE: Hyperdrive;
+      KV_NAMESPACE: KVNamespace;
 
       GITHUB_CLIENT_ID: string;
       GOOGLE_CLIENT_ID: string;

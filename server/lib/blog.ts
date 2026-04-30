@@ -1,5 +1,12 @@
 import { compileForClient } from "@my-profile/ui/markdown";
 import type { BlogFileTreeData, BlogPostData, BlogTreeNode } from "@shared/blog";
+import {
+  writeBlogPostKv,
+  readBlogPostKv,
+  writeBlogTreeKv,
+  readBlogTreeKv,
+  deleteFeedXmlKv,
+} from "./blog-kv";
 
 export type { BlogFileTreeData, BlogPostData, BlogTreeNode };
 
@@ -11,7 +18,10 @@ function normalizeRelativePath(p: string) {
 
 function sortTreeNodes(nodes: BlogTreeNode[]): BlogTreeNode[] {
   return nodes
-    .map((n) => ({ ...n, children: n.children ? sortTreeNodes(n.children) : undefined }))
+    .map((n) => ({
+      ...n,
+      children: n.children ? sortTreeNodes(n.children) : undefined,
+    }))
     .sort((a, b) => {
       if (a.type === b.type) return a.name.localeCompare(b.name);
       return a.type === "folder" ? -1 : 1;
@@ -55,7 +65,12 @@ function buildTreeNodes(paths: string[]): BlogTreeNode[] {
     const filePath = currentPath ? `${currentPath}/${fileName}` : fileName;
     if (seenFiles.has(filePath)) continue;
     seenFiles.add(filePath);
-    currentChildren.push({ id: `file-${filePath}`, name: fileName, path: filePath, type: "file" });
+    currentChildren.push({
+      id: `file-${filePath}`,
+      name: fileName,
+      path: filePath,
+      type: "file",
+    });
   }
 
   return sortTreeNodes(rootNodes);
@@ -80,7 +95,24 @@ async function listBlogFilePaths(bucket: Cloudflare.Env["BLOG_BUCKET"]): Promise
   return filePaths;
 }
 
-export async function getBlogFileTree(
+async function fetchPostFromR2(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+  slug: string,
+): Promise<BlogPostData | null> {
+  const decodedSlug = decodeURIComponent(slug);
+  const obj = await bucket.get(`${BLOG_PREFIX}/${decodedSlug}`);
+  if (!obj) return null;
+
+  const markdown = await obj.text();
+  const { code, excerpt, toc } = await compileForClient(markdown);
+  const fileName = decodedSlug.split("/").pop() ?? decodedSlug;
+  const h1Match = markdown.match(/^#\s+(.+)$/m);
+  const title = h1Match?.[1]?.trim() ?? fileName.replace(/\.md$/, "");
+
+  return { slug: decodedSlug, title, code, excerpt, toc };
+}
+
+async function fetchFileTreeFromR2(
   bucket: Cloudflare.Env["BLOG_BUCKET"],
 ): Promise<BlogFileTreeData> {
   const paths = await listBlogFilePaths(bucket);
@@ -94,23 +126,47 @@ export async function getAllBlogSlugs(bucket: Cloudflare.Env["BLOG_BUCKET"]): Pr
 
 export async function getBlogPost(
   bucket: Cloudflare.Env["BLOG_BUCKET"],
+  kv: KVNamespace,
   slug: string,
 ): Promise<BlogPostData | null> {
-  const decodedSlug = decodeURIComponent(slug);
-  const key = `${BLOG_PREFIX}/${decodedSlug}`;
+  const cached = await readBlogPostKv(kv, slug);
+  if (cached) return cached;
 
-  const obj = await bucket.get(key);
-  if (!obj) return null;
+  const post = await fetchPostFromR2(bucket, slug);
+  if (!post) return null;
 
-  const markdown = await obj.text();
-  const { code, excerpt, frontmatter, toc } = await compileForClient(markdown);
+  await writeBlogPostKv(kv, slug, post);
+  return post;
+}
 
-  const fileName = decodedSlug.split("/").pop() ?? decodedSlug;
-  const h1Match = markdown.match(/^#\s+(.+)$/m);
-  const title =
-    (frontmatter.title as string | undefined) ??
-    h1Match?.[1]?.trim() ??
-    fileName.replace(/\.md$/, "");
+export async function getBlogFileTree(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+  kv: KVNamespace,
+): Promise<BlogFileTreeData> {
+  const cached = await readBlogTreeKv(kv);
+  if (cached) return cached;
 
-  return { slug, title, code, excerpt, toc, frontmatter };
+  const tree = await fetchFileTreeFromR2(bucket);
+  await writeBlogTreeKv(kv, tree);
+  return tree;
+}
+
+export async function rebuildBlogPostKv(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+  kv: KVNamespace,
+  slug: string,
+): Promise<BlogPostData | null> {
+  const post = await fetchPostFromR2(bucket, slug);
+  if (!post) return null;
+  await Promise.all([writeBlogPostKv(kv, slug, post), deleteFeedXmlKv(kv)]);
+  return post;
+}
+
+export async function rebuildBlogTreeKv(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+  kv: KVNamespace,
+): Promise<BlogFileTreeData> {
+  const tree = await fetchFileTreeFromR2(bucket);
+  await Promise.all([writeBlogTreeKv(kv, tree), deleteFeedXmlKv(kv)]);
+  return tree;
 }

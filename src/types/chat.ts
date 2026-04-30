@@ -5,6 +5,6 @@ export type ChatMessage = {
   content: string;
   role: "user" | "assistant";
   timestamp?: Date;
-  user?: { name: string; image?: string };
+  user?: { name: string; image?: string | null };
   status?: MessageStatus;
 };

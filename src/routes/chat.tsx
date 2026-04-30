@@ -72,9 +72,7 @@ function ChatPage() {
       content,
       role: "user",
       timestamp: new Date(),
-      user: session?.user
-        ? { name: session.user.name, image: session.user.image ?? undefined }
-        : undefined,
+      user: session?.user ? { name: session.user.name, image: session.user.image } : undefined,
     };
 
     const assistantId = `assistant-${Date.now()}`;

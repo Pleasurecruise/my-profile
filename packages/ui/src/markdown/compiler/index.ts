@@ -2,13 +2,10 @@ import { compile as compileMdx } from "@mdx-js/mdx";
 import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import type { Root as MdastRoot, Text } from "mdast";
 import rehypeRaw from "rehype-raw";
-import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
-import type { Plugin } from "unified";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
-import { parse as parseYaml } from "yaml";
 import { rehypeTables } from "./rehype-tables";
 import type { TocEntry } from "./rehype-toc";
 import { rehypeToc } from "./rehype-toc";
@@ -16,43 +13,16 @@ import { getHighlighter } from "./shiki";
 
 export type { TocEntry };
 
-export interface Frontmatter {
-  title: string;
-  description?: string;
-  category?: string;
-  tags?: string[];
-  created_at?: string;
-  updated_at?: string;
-  published?: boolean;
-}
-
 export interface CompileRawResult {
   code: string;
-  frontmatter: Frontmatter;
   toc: TocEntry[];
   excerpt: string;
 }
 
-const remarkExtractFrontmatter: Plugin<[{ store: { raw?: string } }], MdastRoot> =
-  (options) => (tree) => {
-    for (const [index, node] of tree.children.entries()) {
-      if (node.type === "yaml") {
-        options.store.raw = (node as { value: string }).value;
-        tree.children.splice(index, 1);
-        return;
-      }
-    }
-  };
-
 export async function compileForClient(source: string): Promise<CompileRawResult> {
-  const fmStore: { raw?: string } = {};
   const toc: TocEntry[] = [];
 
-  const excerptTree = unified()
-    .use(remarkParse)
-    .use(remarkGfm)
-    .use(remarkFrontmatter, ["yaml"])
-    .parse(source) as MdastRoot;
+  const excerptTree = unified().use(remarkParse).use(remarkGfm).parse(source) as MdastRoot;
 
   const excerptSegments: string[] = [];
   visit(excerptTree, (node) => {
@@ -66,11 +36,7 @@ export async function compileForClient(source: string): Promise<CompileRawResult
   const compiled = await compileMdx(source, {
     format: "md",
     outputFormat: "function-body",
-    remarkPlugins: [
-      remarkGfm,
-      [remarkFrontmatter, ["yaml"]],
-      [remarkExtractFrontmatter, { store: fmStore }],
-    ],
+    remarkPlugins: [remarkGfm],
     remarkRehypeOptions: { allowDangerousHtml: true },
     rehypePlugins: [
       rehypeRaw,
@@ -94,9 +60,5 @@ export async function compileForClient(source: string): Promise<CompileRawResult
     ],
   });
 
-  const frontmatter: Frontmatter = fmStore.raw
-    ? (parseYaml(fmStore.raw) as Frontmatter)
-    : { title: "" };
-
-  return { code: String(compiled), frontmatter, toc, excerpt };
+  return { code: String(compiled), toc, excerpt };
 }

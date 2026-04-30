@@ -1,4 +1,4 @@
-import type { Frontmatter, TocEntry } from "@my-profile/ui/markdown";
+import type { TocEntry } from "@my-profile/ui/markdown";
 
 export type BlogTreeNode = {
   id: string;
@@ -19,5 +19,4 @@ export type BlogPostData = {
   code: string;
   excerpt: string;
   toc: TocEntry[];
-  frontmatter: Frontmatter;
 };

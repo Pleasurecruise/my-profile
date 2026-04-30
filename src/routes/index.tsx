@@ -10,7 +10,26 @@ import { Highlighter } from "@/components/magicui/highlighter";
 import { FRIENDS } from "@/data/links";
 import { DATA } from "@/data/resume";
 
+const SITE_URL = "https://you-find.me";
+const SITE_TITLE = "Pleasure1234";
+const SITE_DESCRIPTION = "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: SITE_TITLE },
+      { name: "description", content: SITE_DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:title", content: SITE_TITLE },
+      { property: "og:description", content: SITE_DESCRIPTION },
+      { property: "og:image", content: `${SITE_URL}/api/og/home` },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: SITE_TITLE },
+      { name: "twitter:description", content: SITE_DESCRIPTION },
+      { name: "twitter:image", content: `${SITE_URL}/api/og/home` },
+    ],
+  }),
   component: HomePage,
 });
 

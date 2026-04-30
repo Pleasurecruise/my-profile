@@ -11,6 +11,8 @@ import { ArticleSide } from "@/components/blog/article-side";
 import { Toc } from "@/components/blog/toc";
 import type { BlogPostData } from "@shared/blog";
 
+const SITE_URL = "https://you-find.me";
+
 export const Route = createFileRoute("/blog/$")({
   loader: async ({ params }): Promise<BlogPostData> => {
     const slug = params["_splat"] ?? "";
@@ -21,6 +23,31 @@ export const Route = createFileRoute("/blog/$")({
     const res = await fetch(`/api/blog/post/${encodedSlug}`);
     if (!res.ok) throw notFound();
     return res.json() as Promise<BlogPostData>;
+  },
+  head: ({ loaderData }) => {
+    if (!loaderData) return {};
+    const { title, excerpt, slug } = loaderData;
+    const encodedSlug = slug
+      .split("/")
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
+    const pageUrl = `${SITE_URL}/blog/${encodedSlug}`;
+    const ogImage = `${SITE_URL}/api/og/blog/${encodedSlug}`;
+    return {
+      meta: [
+        { title: `${title} · Pleasure1234` },
+        ...(excerpt ? [{ name: "description", content: excerpt }] : []),
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: pageUrl },
+        { property: "og:title", content: title },
+        ...(excerpt ? [{ property: "og:description", content: excerpt }] : []),
+        { property: "og:image", content: ogImage },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        ...(excerpt ? [{ name: "twitter:description", content: excerpt }] : []),
+        { name: "twitter:image", content: ogImage },
+      ],
+    };
   },
   component: BlogPostPage,
   notFoundComponent: () => <div className="text-muted-foreground text-sm">Post not found.</div>,

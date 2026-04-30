@@ -4,10 +4,11 @@ import { logger } from "hono/logger";
 import { getAuth } from "./auth";
 import { amIOk } from "./routes/am-i-ok";
 import { blog } from "./routes/blog";
+import { feed } from "./routes/feed";
 import { chat } from "./routes/chat";
 import { gallery } from "./routes/gallery";
+import { og } from "./routes/og";
 import { presence } from "./routes/presence";
-import { story } from "./routes/story";
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
@@ -31,8 +32,9 @@ app
   .route("/api/blog", blog)
   .route("/api/chat", chat)
   .route("/api/am-i-ok", amIOk)
+  .route("/api/og", og)
   .route("/api/presence", presence)
   .route("/api/gallery", gallery)
-  .route("/api/story", story);
+  .route("/feed.xml", feed);
 
 export default app;

@@ -9,20 +9,6 @@ BETTER_AUTH_URL = "https://you-find.me"
 OPENAI_API_URL = "https://api.siliconflow.cn/v1"
 OPENAI_MODEL = "deepseek-ai/DeepSeek-V4-Flash"
 RESEND_FROM = "pleasure@yiming1234.cn"
-VITE_MAPBOX_TOKEN = "pk.eyJ1IjoicGxlYXN1cmUxMjM0IiwiYSI6ImNtazJ2MXFwZDBiaDUzY3M4aXhnNGRxaWwifQ.v_BxUgGMO-diXUrd_juyQw"
-
-[secrets]
-required = [
-  "AM_I_OK_SECRET",
-  "BETTER_AUTH_SECRET",
-  "GITHUB_CLIENT_ID",
-  "GITHUB_CLIENT_SECRET",
-  "GOOGLE_CLIENT_ID",
-  "GOOGLE_CLIENT_SECRET",
-  "RESEND_API_KEY",
-  "NOTION_TOKEN",
-  "OPENAI_API_KEY",
-]
 
 [placement]
 mode = "smart"
@@ -31,7 +17,7 @@ mode = "smart"
 directory = "./dist/client"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
-run_worker_first = ["/api/*"]
+run_worker_first = ["/api/*", "/feed.xml"]
 
 [[r2_buckets]]
 binding = "BLOG_BUCKET"
@@ -42,3 +28,12 @@ remote = true
 binding = "HYPERDRIVE"
 id = "806b06d49b6541caaf7c1a703eedd77b"
 localConnectionString = "postgresql://pleasure1234:123456@localhost:5432/mydb"
+
+[[kv_namespaces]]
+binding = "KV_NAMESPACE"
+id = "181e49e1558c47efb58170a55395d973"
+
+[observability]
+[observability.logs]
+enabled = true
+invocation_logs = true

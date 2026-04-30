@@ -13,3 +13,6 @@ export const TRAVEL_LOCATIONS = [
   { name: "Monaco", location: [43.7384, 7.4246], size: 0.08 },
   { name: "Paris", location: [48.8566, 2.3522], size: 0.08 },
 ] as const;
+
+export const MAPBOX_TOKEN =
+  "pk.eyJ1IjoicGxlYXN1cmUxMjM0IiwiYSI6ImNtazJ2MXFwZDBiaDUzY3M4aXhnNGRxaWwifQ.v_BxUgGMO-diXUrd_juyQw";

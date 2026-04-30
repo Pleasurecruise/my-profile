@@ -1,5 +1,5 @@
 import { CherryBlossom } from "@my-profile/ui";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { FloatingTerminal } from "@/components/layout/floating-terminal";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
@@ -34,6 +34,7 @@ function RootLayout() {
           <div className="bg-noise absolute inset-0 opacity-[0.05] dark:opacity-[0.025]" />
         </div>
 
+        <HeadContent />
         <CherryBlossom />
         <ScrollProgress />
 

@@ -14,6 +14,13 @@ export default defineConfig({
     tailwindcss(),
     cloudflare(),
   ],
+  environments: {
+    my_profile: {
+      optimizeDeps: {
+        exclude: ["@cloudflare/pages-plugin-vercel-og", "@cloudflare/pages-plugin-vercel-og/api"],
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": new URL("./src", import.meta.url).pathname,
