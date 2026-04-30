@@ -151,6 +151,43 @@ export async function getBlogFileTree(
   return tree;
 }
 
+export async function getBlogPostMeta(
+  bucket: Cloudflare.Env["BLOG_BUCKET"],
+  kv: KVNamespace,
+  slug: string,
+): Promise<{ title: string; excerpt: string } | null> {
+  const cached = await readBlogPostKv(kv, slug);
+  if (cached) return { title: cached.title, excerpt: cached.excerpt };
+
+  const decodedSlug = decodeURIComponent(slug);
+  const obj = await bucket.get(`${BLOG_PREFIX}/${decodedSlug}`);
+  if (!obj) return null;
+
+  const markdown = await obj.text();
+  const fileName = decodedSlug.split("/").pop() ?? decodedSlug;
+  const h1Match = markdown.match(/^#\s+(.+)$/m);
+  const title = h1Match?.[1]?.trim() ?? fileName.replace(/\.md$/, "");
+
+  const lines = markdown.split("\n");
+  const textLines: string[] = [];
+  let inCodeBlock = false;
+  for (const line of lines) {
+    if (line.startsWith("```")) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock || line.startsWith("#") || line.startsWith("|") || !line.trim()) continue;
+    textLines.push(line.trim());
+    if (textLines.length >= 3) break;
+  }
+  const excerpt = textLines
+    .join(" ")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .slice(0, 160);
+
+  return { title, excerpt };
+}
+
 export async function rebuildBlogPostKv(
   bucket: Cloudflare.Env["BLOG_BUCKET"],
   kv: KVNamespace,
