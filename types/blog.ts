@@ -20,3 +20,9 @@ export type BlogPostData = {
   excerpt: string;
   toc: TocEntry[];
 };
+
+export type BlogPostMeta = {
+  slug: string;
+  title: string;
+  excerpt: string;
+};

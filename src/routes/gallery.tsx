@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { GalleryPhoto } from "@shared/gallery";
+
+type GalleryPhoto = {
+  id: string;
+  img: string;
+  title: string;
+  ratio: number;
+};
 
 export const Route = createFileRoute("/gallery")({
   loader: async (): Promise<GalleryPhoto[]> => {

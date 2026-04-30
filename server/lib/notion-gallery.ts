@@ -1,5 +1,4 @@
 import { Client, isFullDatabase, isFullPage } from "@notionhq/client";
-import type { GalleryPhoto } from "@shared/gallery";
 import type {
   NotionImageBlock,
   NotionNumberProp,
@@ -7,7 +6,12 @@ import type {
   NotionTitleProp,
 } from "../types/notion";
 
-export type { GalleryPhoto };
+export type GalleryPhoto = {
+  id: string;
+  img: string;
+  title: string;
+  ratio: number;
+};
 
 const DATABASE_ID = "3351dc310951806a8c74e77e316b94f7";
 const CACHE_TTL_MS = 50 * 60 * 1000;
