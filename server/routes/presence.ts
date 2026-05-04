@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 const sessions = new Map<string, number>();
-const SESSION_TTL_MS = 120_000;
+const SESSION_TTL_MS = 180_000;
 const PresenceBodySchema = z.object({
   sessionId: z.string().max(63).optional(),
 });

@@ -1,24 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { PixelImage } from "@/components/magicui/pixel-image";
+import BlurFade from "@/components/magicui/blur-fade";
 
 type GalleryPhoto = {
-  id: string;
-  img: string;
-  title: string;
-  ratio: number;
+  key: string;
+  url: string;
 };
 
 export const Route = createFileRoute("/gallery")({
   loader: async (): Promise<GalleryPhoto[]> => {
     const res = await fetch("/api/gallery");
     if (!res.ok) throw new Error("Failed to load gallery");
-    return res.json() as Promise<GalleryPhoto[]>;
+    const keys = (await res.json()) as string[];
+    return keys.map((key) => ({ key, url: `/api/gallery/img/${key}` }));
   },
   component: GalleryPage,
 });
 
 function GalleryPage() {
   const photos = Route.useLoaderData();
-
   return (
     <div className="w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-24 pt-6 sm:pt-8">
       <section>
@@ -27,13 +30,6 @@ function GalleryPage() {
     </div>
   );
 }
-
-// Inline masonry gallery (avoids Next.js-specific imports from original file)
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { PixelImage } from "@/components/magicui/pixel-image";
-import BlurFade from "@/components/magicui/blur-fade";
 
 interface GridItem extends GalleryPhoto {
   x: number;
@@ -94,7 +90,7 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
       const col = colHeights.indexOf(Math.min(...colHeights));
       const x = col * (colW + GAP);
       const y = colHeights[col] ?? 0;
-      const ratio = ratios[item.id] ?? item.ratio;
+      const ratio = ratios[item.key] ?? 1;
       const h = colW * ratio;
       colHeights[col] = (colHeights[col] ?? 0) + h + GAP;
       return { ...item, x, y, w: colW, h };
@@ -108,7 +104,7 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
       <div ref={containerRef} className="relative w-full" style={{ height: totalH }}>
         {grid.map((item, i) => (
           <div
-            key={item.id}
+            key={item.key}
             className="absolute overflow-hidden rounded-lg"
             style={{ left: item.x, top: item.y, width: item.w, height: item.h }}
           >
@@ -119,13 +115,16 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
                 onClick={() => setSelected(item)}
               >
                 <PixelImage
-                  src={item.img}
-                  alt={item.title}
+                  src={item.url}
+                  alt=""
                   className="w-full h-full object-cover"
                   onLoad={(e) => {
                     const { naturalWidth, naturalHeight } = e.currentTarget;
                     if (naturalWidth && naturalHeight) {
-                      setRatios((prev) => ({ ...prev, [item.id]: naturalHeight / naturalWidth }));
+                      setRatios((prev) => ({
+                        ...prev,
+                        [item.key]: naturalHeight / naturalWidth,
+                      }));
                     }
                   }}
                 />
@@ -147,8 +146,8 @@ function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
                 onClick={() => setSelected(null)}
               >
                 <motion.img
-                  src={selected.img}
-                  alt={selected.title}
+                  src={selected.url}
+                  alt=""
                   className="max-w-[90vw] max-h-[90vh] rounded-xl object-contain shadow-2xl"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}

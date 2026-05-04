@@ -13,9 +13,7 @@ const bodySchema = z.object({
 export const amIOk = new Hono<{ Bindings: Cloudflare.Env }>()
   .get("/", async (c) => {
     const db = getDb(c.env.HYPERDRIVE.connectionString);
-    const status = await db.query.amIOkStatus.findFirst({
-      where: eq(amIOkStatus.id, 1),
-    });
+    const [status] = await db.select().from(amIOkStatus).where(eq(amIOkStatus.id, 1)).limit(1);
     return c.json(status);
   })
   .post("/", async (c) => {

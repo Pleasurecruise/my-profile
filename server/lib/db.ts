@@ -1,8 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "./schema";
 
-export function getDb(connectionString: string): ReturnType<typeof drizzle<typeof schema>> {
+export function getDb(connectionString: string) {
   const sqlClient = postgres(connectionString, {
     max: 1,
     fetch_types: false,
@@ -12,5 +11,5 @@ export function getDb(connectionString: string): ReturnType<typeof drizzle<typeo
     connect_timeout: 10,
   });
 
-  return drizzle(sqlClient, { schema });
+  return drizzle({ client: sqlClient });
 }

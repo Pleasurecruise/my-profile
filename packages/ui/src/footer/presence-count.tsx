@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const POLL_INTERVAL_MS = 30_000;
-const HEARTBEAT_INTERVAL_MS = 25_000;
+const POLL_INTERVAL_MS = 5 * 60_000;
+const HEARTBEAT_INTERVAL_MS = 60_000;
 const SESSION_STORAGE_KEY = "presence-session-id";
 
 function getSessionId(): string {

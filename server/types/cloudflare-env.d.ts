@@ -19,7 +19,6 @@ declare global {
       GITHUB_CLIENT_SECRET: string;
       GOOGLE_CLIENT_SECRET: string;
       RESEND_API_KEY: string;
-      NOTION_TOKEN: string;
       OPENAI_API_KEY: string;
     }
   }
