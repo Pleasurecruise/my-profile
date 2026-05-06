@@ -9,8 +9,10 @@ import { chat } from "./routes/chat";
 import { gallery } from "./routes/gallery";
 import { og } from "./routes/og";
 import { presence } from "./routes/presence";
+import { sitemap } from "./routes/sitemap";
 import { getBlogPostMeta } from "./lib/blog";
 import { injectOgTags } from "./lib/og-inject";
+import { SITE_URL } from "./lib/site";
 
 const app = new Hono<{ Bindings: Cloudflare.Env }>();
 
@@ -37,9 +39,8 @@ app
   .route("/api/og", og)
   .route("/api/presence", presence)
   .route("/api/gallery", gallery)
-  .route("/feed.xml", feed);
-
-const BASE_URL = "https://you-find.me";
+  .route("/feed.xml", feed)
+  .route("/sitemap.xml", sitemap);
 
 // Inject per-post OG tags server-side so crawlers see them without running JS
 app.get("/blog/*", async (c) => {
@@ -60,8 +61,8 @@ app.get("/blog/*", async (c) => {
   return injectOgTags(htmlResponse, {
     title: `${meta.title} · Pleasure1234`,
     description,
-    imageUrl: `${BASE_URL}/api/og/blog/${encodedSlug}`,
-    pageUrl: `${BASE_URL}/blog/${encodedSlug}`,
+    imageUrl: `${SITE_URL}/api/og/blog/${encodedSlug}`,
+    pageUrl: `${SITE_URL}/blog/${encodedSlug}`,
     type: "article",
   });
 });

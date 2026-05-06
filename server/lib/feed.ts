@@ -1,20 +1,12 @@
 import type { BlogPostMeta } from "@shared/blog";
 import { getAllBlogSlugs } from "./blog";
 import { readBlogPostKv } from "./blog-kv";
+import { escapeXml, SITE_URL, SITE_TITLE } from "./site";
 
 const BLOG_PREFIX = "blog";
-const SITE_URL = "https://you-find.me";
-const SITE_TITLE = "Pleasure1234's Blog";
 const FEED_LIMIT = 20;
-
-function escapeXml(str: string): string {
-  return (str ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&apos;");
-}
+const FEED_ID = `${SITE_URL}/`;
+const FEED_AUTHOR_NAME = "Pleasure1234";
 
 function extractExcerpt(markdown: string): string {
   const lines = markdown.split("\n");
@@ -79,8 +71,11 @@ export function buildFeedXml(posts: BlogPostMeta[]): string {
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>${escapeXml(SITE_URL)}</id>
+  <id>${escapeXml(FEED_ID)}</id>
   <title>${escapeXml(SITE_TITLE)}</title>
+  <author>
+    <name>${escapeXml(FEED_AUTHOR_NAME)}</name>
+  </author>
   <updated>${escapeXml(updated)}</updated>
   <link href="${escapeXml(SITE_URL)}" rel="alternate"/>
   <link href="${escapeXml(`${SITE_URL}/feed.xml`)}" rel="self"/>
