@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { getBlogFileTree, getBlogPost, rebuildBlogPostKv, rebuildBlogTreeKv } from "../lib/blog";
+import { invalidateSitemapKv } from "../lib/sitemap";
 
 export const blog = new Hono<{ Bindings: Cloudflare.Env }>()
   .get("/tree", async (c) => {
@@ -29,6 +30,9 @@ export const blog = new Hono<{ Bindings: Cloudflare.Env }>()
       return c.json({ ok: true, slug: post.slug });
     }
 
-    await rebuildBlogTreeKv(c.env.BLOG_BUCKET, c.env.KV_NAMESPACE);
+    await Promise.all([
+      rebuildBlogTreeKv(c.env.BLOG_BUCKET, c.env.KV_NAMESPACE),
+      invalidateSitemapKv(c.env.KV_NAMESPACE),
+    ]);
     return c.json({ ok: true });
   });

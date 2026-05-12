@@ -3,8 +3,7 @@ import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import type { Root as MdastRoot, Text } from "mdast";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import { unified } from "unified";
+import type { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 import { rehypeTables } from "./rehype-tables";
 import type { TocEntry } from "./rehype-toc";
@@ -19,24 +18,23 @@ export interface CompileRawResult {
   excerpt: string;
 }
 
+const remarkExcerpt: Plugin<[{ segments: string[] }], MdastRoot> = (options) => (tree) => {
+  visit(tree, (node) => {
+    if (node.type === "yaml" || node.type === "code" || node.type === "html") return;
+    if (node.type === "text") options.segments.push((node as Text).value);
+  });
+};
+
 export async function compileForClient(source: string): Promise<CompileRawResult> {
   const toc: TocEntry[] = [];
-
-  const excerptTree = unified().use(remarkParse).use(remarkGfm).parse(source) as MdastRoot;
-
   const excerptSegments: string[] = [];
-  visit(excerptTree, (node) => {
-    if (node.type === "yaml" || node.type === "code" || node.type === "html") return;
-    if (node.type === "text") excerptSegments.push((node as Text).value);
-  });
-  const excerpt = excerptSegments.join(" ").replace(/\s+/g, " ").trim();
 
   const highlighter = await getHighlighter();
 
   const compiled = await compileMdx(source, {
     format: "md",
     outputFormat: "function-body",
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, [remarkExcerpt, { segments: excerptSegments }]],
     remarkRehypeOptions: { allowDangerousHtml: true },
     rehypePlugins: [
       rehypeRaw,
@@ -59,6 +57,8 @@ export async function compileForClient(source: string): Promise<CompileRawResult
       rehypeTables,
     ],
   });
+
+  const excerpt = excerptSegments.join(" ").replace(/\s+/g, " ").trim();
 
   return { code: String(compiled), toc, excerpt };
 }

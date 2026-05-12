@@ -124,6 +124,8 @@ export async function getAllBlogSlugs(bucket: Cloudflare.Env["BLOG_BUCKET"]): Pr
   return paths.filter((p) => p.endsWith(".md"));
 }
 
+const compilingPosts = new Map<string, Promise<BlogPostData | null>>();
+
 export async function getBlogPost(
   bucket: Cloudflare.Env["BLOG_BUCKET"],
   kv: KVNamespace,
@@ -132,12 +134,27 @@ export async function getBlogPost(
   const cached = await readBlogPostKv(kv, slug);
   if (cached) return cached;
 
-  const post = await fetchPostFromR2(bucket, slug);
-  if (!post) return null;
+  const inflight = compilingPosts.get(slug);
+  if (inflight) return inflight;
 
-  await writeBlogPostKv(kv, slug, post);
-  return post;
+  const work = fetchPostFromR2(bucket, slug).then(
+    async (post) => {
+      compilingPosts.delete(slug);
+      if (!post) return null;
+      await writeBlogPostKv(kv, slug, post);
+      return post;
+    },
+    (err) => {
+      compilingPosts.delete(slug);
+      throw err;
+    },
+  );
+
+  compilingPosts.set(slug, work);
+  return work;
 }
+
+let compilingTree: Promise<BlogFileTreeData> | null = null;
 
 export async function getBlogFileTree(
   bucket: Cloudflare.Env["BLOG_BUCKET"],
@@ -146,9 +163,21 @@ export async function getBlogFileTree(
   const cached = await readBlogTreeKv(kv);
   if (cached) return cached;
 
-  const tree = await fetchFileTreeFromR2(bucket);
-  await writeBlogTreeKv(kv, tree);
-  return tree;
+  if (compilingTree) return compilingTree;
+
+  compilingTree = fetchFileTreeFromR2(bucket).then(
+    async (tree) => {
+      compilingTree = null;
+      await writeBlogTreeKv(kv, tree);
+      return tree;
+    },
+    (err) => {
+      compilingTree = null;
+      throw err;
+    },
+  );
+
+  return compilingTree;
 }
 
 export async function getBlogPostMeta(
