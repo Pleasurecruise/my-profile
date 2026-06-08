@@ -4,6 +4,7 @@ export const TRAVEL_LOCATIONS = [
   { name: "Hangzhou", location: [30.2741, 120.1551], size: 0.08 },
   { name: "Chengdu", location: [30.5728, 104.0668], size: 0.08 },
   { name: "Nottingham", location: [52.9548, -1.1581], size: 0.1 },
+  { name: "Lincoln", location: [53.2307, -0.5406], size: 0.1 },
   { name: "London", location: [51.5074, -0.1278], size: 0.08 },
   { name: "Manchester", location: [53.4808, -2.2426], size: 0.08 },
   { name: "Leeds", location: [53.8008, -1.5491], size: 0.08 },

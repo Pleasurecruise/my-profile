@@ -4,6 +4,58 @@ export interface FriendLink {
   avatar: string;
 }
 
+export interface MySeriesLink {
+  name: string;
+  url: string;
+  emoji: string;
+  description?: string;
+}
+
+export const MY_SERIES: MySeriesLink[] = [
+  {
+    name: "my-profile",
+    url: "https://you-find.me",
+    emoji: "🏠",
+    description: "Personal website & portfolio",
+  },
+  {
+    name: "my-memos",
+    url: "https://memos.you-find.me",
+    emoji: "📝",
+    description: "My digital memos & notes",
+  },
+  {
+    name: "my-moment",
+    url: "https://moment.you-find.me",
+    emoji: "⏳",
+    description: "Moments gallery & timeline",
+  },
+  {
+    name: "my-cv",
+    url: "https://resume.yiming1234.cn",
+    emoji: "📄",
+    description: "My CV & resume",
+  },
+  {
+    name: "my-monorepo",
+    url: "https://github.com/Pleasurecruise/my-monorepo",
+    emoji: "📦",
+    description: "AI infra monorepo template for quick startup",
+  },
+  {
+    name: "my-env",
+    url: "https://github.com/Pleasurecruise/my-env",
+    emoji: "🐳",
+    description: "Dev environment with Docker",
+  },
+  {
+    name: "my-minecraft",
+    url: "https://github.com/Pleasurecruise/my-minecraft",
+    emoji: "🎮",
+    description: "My Minecraft process",
+  },
+];
+
 export const FRIENDS: FriendLink[] = [
   {
     name: "xuanzhi33",

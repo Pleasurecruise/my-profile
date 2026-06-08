@@ -7,7 +7,7 @@ import { HelloSignature, PresenceCount, SiteAge } from "@my-profile/ui";
 import { Icons } from "@/components/shared/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
-import { FRIENDS } from "@/data/links";
+import { FRIENDS, MY_SERIES } from "@/data/links";
 import { DATA } from "@/data/resume";
 
 const SITE_URL = "https://you-find.me";
@@ -123,7 +123,7 @@ function HomePage() {
               digital nomad, shipping open source from wherever the road takes me.
             </p>
             <p className="text-[15px] leading-relaxed text-foreground">
-              Currently I am seeking a job opportunity. Click{" "}
+              Currently I'm seeking a job opportunity. Click{" "}
               <Highlighter action="underline">
                 <Link
                   to="/cv"
@@ -133,7 +133,7 @@ function HomePage() {
                   <ArrowUpRight className="w-3 h-3" />
                 </Link>
               </Highlighter>{" "}
-              to see my cv :3
+              to know me better :3
             </p>
           </div>
         </BlurFade>
@@ -147,7 +147,7 @@ function HomePage() {
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <div className="mx-auto w-full max-w-2xl">
-            <ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
+            <ul className="grid grid-flow-col auto-cols-fr grid-rows-4 gap-x-8 gap-y-3">
               {FRIENDS.map((friend) => (
                 <li key={friend.url}>
                   <a
@@ -173,8 +173,49 @@ function HomePage() {
         </BlurFade>
       </section>
 
-      <section id="friend-link" className="mt-10">
+      <section id="my-series" className="mt-16">
         <BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+          <div className="mx-auto w-full max-w-2xl mb-6">
+            <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+              My Series
+            </span>
+          </div>
+        </BlurFade>
+        <BlurFade delay={BLUR_FADE_DELAY * 5}>
+          <div className="mx-auto w-full max-w-2xl">
+            <ul className="grid grid-flow-col auto-cols-fr grid-rows-4 gap-x-8 gap-y-3">
+              {MY_SERIES.map((series) => (
+                <li key={series.url}>
+                  <a
+                    href={series.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
+                  >
+                    <span className="inline-flex w-5 h-5 items-center justify-center shrink-0 text-sm leading-none">
+                      {series.emoji}
+                    </span>
+                    <div className="min-w-0">
+                      <span className="flex items-center gap-1">
+                        {series.name}
+                        <ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </span>
+                      {series.description && (
+                        <span className="block text-[12px] text-muted-foreground/50 leading-tight">
+                          {series.description}
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </BlurFade>
+      </section>
+
+      <section id="friend-link" className="mt-10">
+        <BlurFade delay={BLUR_FADE_DELAY * 6}>
           <div className="space-y-4 mx-auto w-full max-w-2xl">
             <span className="italic block" style={{ fontFamily: "var(--font-newsreader)" }}>
               Add my link
@@ -212,7 +253,7 @@ function HomePage() {
       </section>
 
       <section id="contact" className="mt-16">
-        <BlurFade delay={BLUR_FADE_DELAY * 5}>
+        <BlurFade delay={BLUR_FADE_DELAY * 7}>
           <div className="space-y-4 mx-auto w-full max-w-2xl">
             <span className="italic block" style={{ fontFamily: "var(--font-newsreader)" }}>
               Connect
@@ -305,7 +346,7 @@ function HomePage() {
       </section>
 
       <footer className="mt-4 pt-4">
-        <BlurFade delay={BLUR_FADE_DELAY * 8}>
+        <BlurFade delay={BLUR_FADE_DELAY * 9}>
           <div className="mx-auto w-full max-w-2xl">
             <div className="flex items-center justify-between mb-4">
               <p className="text-lg text-muted-foreground/30">

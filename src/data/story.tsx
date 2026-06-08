@@ -4,35 +4,21 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 下面的内容可以算是我对年少时光的一个传记
 
-或许你能够通过下面的信息 来更好的了解我哦
-
-<div style="display:inline-flex;flex-direction:column;align-items:center;gap:16px;padding:24px;border:1px solid #e5e7eb;border-radius:16px;max-width:420px;background:#fff;">
-  <img src="https://avatars.githubusercontent.com/u/144885467" alt="Pleasure1234" style="width:96px;height:96px;border-radius:50%;object-fit:cover;" />
-  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
-    <div style="font-size:1.2rem;font-weight:700;">Pleasure1234</div>
-    <div style="font-size:0.85rem;color:#6b7280;">Core Developer @ CherryHQ · 前端小白, etc. · 中国 浙江省 宁波市 · 他</div>
-    <div style="font-size:0.9rem;color:#374151;text-align:left;line-height:1.8;">
-      🔭 诺丁汉大学计算机本科在读<br/>
-      😎 开源爱好者，给 Cherry Studio Dify LobeHub 等项目都贡献过代码，为校内计算机爱好者协会在 GitHub 创立了组织<br/>
-      👨‍💻 黑客松爱好者，在🇬🇧参加过多个大学黑客松<br/>
-      🌱 全栈 &amp; AI 开发，熟悉 React / Next / Vue，有算法与前端实习经历
-    </div>
-  </div>
-</div>
+或许你能够通过下面的信息 来更好的了解我
 
 ### 名字的由来
 
-我在不同平台有很多昵称 比如 Pleasurecruise Pleasure1234 Pleasure9876 etc.
+之前我在不同平台有很多昵称 比如 Pleasurecruise Pleasure1234 Pleasure9876 yiming1234 etc.
 
-都是因为要求英文id具有唯一性而被迫衍生出来的... 所以称呼我为Pleasure1234 就可以
+都是因为要求id唯一而被迫衍生出来的... 所以称呼我为一明(yiming) 就可以
 
 这个名字的由来还有一段有意思的小插曲：
 
-小的时候注册第一个qq号 取的昵称叫做 逆光飞翔
+小的时候注册第一个qq号 取的昵称叫做 逆光飞翔🪽
 
-于是找了个机器翻译 不知道为什么 就给翻译成了 pleasure cruise
+于是随便找了个机器翻译 不知道为什么 就给翻译成了 pleasure cruise
 
-快乐游轮 然后我就草率的将这两个单词连在了一起
+快乐游轮🚢 然后我就草率的将这两个单词连在了一起
 
 哪知道这个昵称在将来会变成一个唯一的id 甚至要跟随一辈子...
 
@@ -42,7 +28,7 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 <img src="http://ghchart.rshah.org/Pleasurecruise" />
 
-### 选择这个方向的原因
+### 人生经历
 
 典型的江浙沪地区的家庭 土生土长的宁波人
 
@@ -54,23 +40,17 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 家里的电脑一直停留在小学时候的Windows7
 
-于是高考填志愿的时候就选择了计算机的方向 以弥补我童年没玩够电脑的遗憾
+于是高考填志愿的时候就选择了计算机的方向 以弥补我童年没玩够电脑的遗憾、
 
-### 人生经历
+因为自从初中住校之后就再也没有踏出过长沙三角
 
-从大一入行 到大二暑假加入 CherryHQ
-
-本科就读于宁波诺丁汉大学 因为交换有两年呆在英国 qs100守门员 也算半个985了
-
-在英期间去了挺多地方 也算是见了市面
-
-目前正在找工作
+于是在大学期间 游览了了世界的很多地方 也算是半个背包客🎒了吧
 
 ### 性格与爱好
 
 半个宅男 喜欢独处
 
-爱好骑公路车, vibe coding, 听歌 , 看电影
+爱好公路车🚴, vibe coding💻, 听歌🎧 , 看电影🎬
 
 打游戏 minecraft 开放世界二游偏多 pvp pve都玩 不玩fps
 
@@ -80,7 +60,7 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 与人交往中一直小心翼翼 深怕因为能力不足而被否定
 
-所以我选择了这句话作为我的 slogan
+所以我选择了这句话来作为我的 slogan
 
 **Any shortcomings are kindly overlooked**
 
@@ -99,9 +79,9 @@ ISTJ（内向·感知·思考·判断）被称为"物流师"或"检查者"。形
 
 初级前端开发工程师，AI 指挥家，Node 全栈开发
 
-正在尝试平衡生活与工作 以及和父母之间的代沟
+正在尝试平衡生活学业与工作 以及和父母之间的代沟
 
-梦想是能有一个属于自己的开源项目 或者是能够加入库/框架级的开源组织 当数字游牧人
+梦想是能有一个有名的开源项目 或者是能写出一个很多人用的轮子 当数字游牧人
 
 ### 我的工具箱
 

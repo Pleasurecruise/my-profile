@@ -143,20 +143,6 @@ export function TravelGlobe({ locations, className, mapboxToken }: TravelGlobePr
       el.style.boxShadow = "0 0 10px rgba(251,100,21,0.6)";
       el.style.border = "2px solid rgba(255,255,255,0.8)";
 
-      const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnMove: false,
-        offset: 10,
-      }).setText(loc.name);
-
-      el.addEventListener("mouseenter", () => {
-        popup.setLngLat(toLngLat(loc.location)).addTo(map);
-      });
-
-      el.addEventListener("mouseleave", () => {
-        popup.remove();
-      });
-
       el.addEventListener("click", () => {
         map.flyTo({
           center: toLngLat(loc.location),
