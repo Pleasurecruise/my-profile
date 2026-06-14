@@ -125,7 +125,7 @@ Claude Pro · Twitter Plus · QQ Music 绿钻
 
 > 曾经尝试订阅 GLM Coding Plan 没成功，也订阅过各大二游月卡。
 
-## 我的 oc
+## 我的 original character
 
 <div><img src="/oc/design.png" alt="picture" width="420" /></div>
 

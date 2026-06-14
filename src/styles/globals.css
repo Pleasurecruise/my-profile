@@ -7,7 +7,7 @@
 @plugin "@tailwindcss/typography";
 
 :root {
-  --font-sans: "JetBrains Mono", monospace;
+  --font-sans: "Inter", sans-serif;
   --font-mono: "Fira Code", monospace;
   --font-cjk: "Noto Sans SC", sans-serif;
   --font-newsreader: "Newsreader", serif;
