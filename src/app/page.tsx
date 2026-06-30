@@ -8,7 +8,7 @@ import { HelloSignature, PresenceCount, SiteAge } from "@my-profile/ui";
 import { Icons } from "@/components/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { Highlighter } from "@/components/magicui/highlighter";
-import { FRIENDS } from "@/data/links";
+import { FRIENDS, MY_SERIES } from "@/data/links";
 import { DATA } from "@/data/resume";
 
 const newsreader = Newsreader({
@@ -22,7 +22,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
 	return (
-		<main className="flex flex-col min-h-dvh">
+		<main className={`flex flex-col min-h-dvh ${newsreader.variable}`}>
 			<section id="hero">
 				<div className="mx-auto w-full max-w-2xl">
 					<BlurFade delay={BLUR_FADE_DELAY}>
@@ -58,9 +58,7 @@ export default function Page() {
 			</section>
 			<section id="about" className="mt-6">
 				<BlurFade delay={BLUR_FADE_DELAY * 2}>
-					<div
-						className={`mx-auto w-full max-w-2xl space-y-4 ${newsreader.variable}`}
-					>
+					<div className="mx-auto w-full max-w-2xl space-y-4">
 						<p className="text-[15px] leading-relaxed text-foreground">
 							Any shortcomings are kindly overlooked. 🙏
 						</p>
@@ -79,14 +77,14 @@ export default function Page() {
 							</Highlighter>{" "}
 							with hands-on experience in{" "}
 							<span
-								className="italic text-foreground"
+								className="italic"
 								style={{ fontFamily: "var(--font-newsreader)" }}
 							>
 								full-stack
 							</span>{" "}
 							development and{" "}
 							<span
-								className="italic text-foreground"
+								className="italic"
 								style={{ fontFamily: "var(--font-newsreader)" }}
 							>
 								AI
@@ -109,7 +107,7 @@ export default function Page() {
 							Off the keyboard, I ride road bikes, get lost in music, and sink
 							hours into open-world games. A{" "}
 							<span
-								className="italic text-foreground"
+								className="italic"
 								style={{ fontFamily: "var(--font-newsreader)" }}
 							>
 								hackathon
@@ -119,7 +117,7 @@ export default function Page() {
 							the road takes me.
 						</p>
 						<p className="text-[15px] leading-relaxed text-foreground">
-							Currently I am seeking a job opportunity. Click{" "}
+							Currently I&apos;m seeking a job opportunity. Click{" "}
 							<Highlighter action="underline">
 								<Link
 									href="/cv"
@@ -129,52 +127,217 @@ export default function Page() {
 									<ArrowUpRight className="w-3 h-3" />
 								</Link>
 							</Highlighter>{" "}
-							to see my cv :3
+							to know me better :3
 						</p>
 					</div>
 				</BlurFade>
 			</section>
-			<section id="links" className="mt-16">
+			<section id="my-series" className="mt-10">
 				<BlurFade delay={BLUR_FADE_DELAY * 3}>
-					<div className="mx-auto w-full max-w-2xl mb-6">
-						<ImagesBadge
-							text="Friends"
-							images={FRIENDS.slice(0, 3).map((f) => f.avatar)}
-						/>
+					<div className="mx-auto w-full max-w-2xl mb-5">
+						<h2
+							className="text-lg font-semibold text-foreground italic"
+							style={{ fontFamily: "var(--font-newsreader)" }}
+						>
+							My Series
+						</h2>
 					</div>
 				</BlurFade>
 				<BlurFade delay={BLUR_FADE_DELAY * 4}>
 					<div className="mx-auto w-full max-w-2xl">
-						<ul className="grid grid-flow-col grid-rows-4 gap-x-8 gap-y-3">
-							{FRIENDS.map((friend) => (
-								<li key={friend.url}>
-									<Link
-										href={friend.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-									>
-										<Image
-											src={friend.avatar}
-											alt={friend.name}
-											width={20}
-											height={20}
-											className="rounded-full"
-										/>
-										<span>{friend.name}</span>
-										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-									</Link>
-								</li>
+						<div className="grid gap-x-8 gap-y-0 border-t border-border pt-5 lg:grid-cols-2">
+							{(() => {
+								const mid = Math.ceil(MY_SERIES.length / 2);
+								return [MY_SERIES.slice(0, mid), MY_SERIES.slice(mid)];
+							})().map((group, gi) => (
+								<div
+									key={gi}
+									className={gi > 0 ? "border-t border-border lg:border-0" : ""}
+								>
+									<ul className="divide-y divide-border">
+										{group.map((series) => (
+											<li
+												key={series.url}
+												className="py-3 text-sm leading-relaxed"
+											>
+												<div className="flex flex-wrap items-baseline gap-2">
+													<span className="inline-flex text-sm leading-none">
+														{series.emoji}
+													</span>
+													{series.name === "my-memos" ||
+													series.name === "my-moment" ? (
+														<Highlighter action="highlight">
+															<Link
+																href={series.url}
+																target="_blank"
+																rel="noopener noreferrer"
+																className="font-medium text-foreground hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
+															>
+																{series.name}
+																<ArrowUpRight className="w-3 h-3" />
+															</Link>
+														</Highlighter>
+													) : (
+														<Link
+															href={series.url}
+															target="_blank"
+															rel="noopener noreferrer"
+															className="font-medium text-foreground hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
+														>
+															{series.name}
+															<ArrowUpRight className="w-3 h-3" />
+														</Link>
+													)}
+												</div>
+												{series.description && (
+													<p className="mt-1 text-xs text-muted-foreground/60">
+														{series.description}
+													</p>
+												)}
+											</li>
+										))}
+									</ul>
+								</div>
 							))}
-						</ul>
+						</div>
+					</div>
+				</BlurFade>
+			</section>
+			<section id="friends-connect" className="mt-10">
+				<BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+					<div className="mx-auto w-full max-w-2xl mb-5">
+						<ImagesBadge
+							text="Friends & Connect"
+							images={FRIENDS.slice(0, 3).map((f) => f.avatar)}
+						/>
+					</div>
+				</BlurFade>
+				<BlurFade delay={BLUR_FADE_DELAY * 5}>
+					<div className="mx-auto w-full max-w-2xl">
+						<div className="grid grid-cols-1 lg:grid-cols-4 gap-6 border-t border-border pt-5">
+							{/* Friends — left 2 columns */}
+							<div className="lg:col-span-2">
+								<h3 className="text-sm font-medium text-muted-foreground/60 mb-3">
+									Friends
+								</h3>
+								<ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+									{FRIENDS.map((friend) => (
+										<li key={friend.url}>
+											<Link
+												href={friend.url}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+											>
+												<Image
+													src={friend.avatar}
+													alt={friend.name}
+													width={18}
+													height={18}
+													className="rounded-full shrink-0"
+												/>
+												<span className="truncate">{friend.name}</span>
+												<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+											</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+
+							{/* Connect — right 2 columns */}
+							<div className="lg:col-span-2">
+								<h3 className="text-sm font-medium text-muted-foreground/60 mb-3">
+									Connect
+								</h3>
+								<ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+									<li>
+										<Link
+											href={`mailto:${DATA.contact.email}`}
+											className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+										>
+											<Icons.email className="size-4 shrink-0" />
+											<span>Email</span>
+											<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+										</Link>
+									</li>
+									<li>
+										<Tooltip
+											content={
+												<div className="flex items-center justify-center">
+													<div className="h-50 w-50 overflow-hidden rounded-lg">
+														<Image
+															src="/profile/wechat.png"
+															alt="WeChat QR Code"
+															width={200}
+															height={200}
+															className="h-full w-full object-cover object-center"
+														/>
+													</div>
+												</div>
+											}
+										>
+											<Link
+												href="#"
+												className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+											>
+												<Icons.wechat className="size-4 shrink-0" />
+												<span>WeChat</span>
+												<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+											</Link>
+										</Tooltip>
+									</li>
+									<li>
+										<Link
+											href={DATA.contact.social.Instagram.url}
+											className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+										>
+											<Icons.instagram className="size-4 shrink-0" />
+											<span>Instagram</span>
+											<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+										</Link>
+									</li>
+									<li>
+										<Tooltip
+											containerClassName="[&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
+											content="Add me on Discord: pleasure9876"
+										>
+											<Link
+												href="#"
+												className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+											>
+												<Icons.discord className="size-4 shrink-0" />
+												<span>Discord</span>
+												<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+											</Link>
+										</Tooltip>
+									</li>
+									{Object.entries(DATA.contact.social)
+										.filter(([, social]) => social.navbar)
+										.map(([name, social]) => (
+											<li key={name}>
+												<Link
+													href={social.url}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
+												>
+													<social.icon className="size-4 shrink-0" />
+													<span className="truncate">{name}</span>
+													<ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+												</Link>
+											</li>
+										))}
+								</ul>
+							</div>
+						</div>
 					</div>
 				</BlurFade>
 			</section>
 			<section id="friend-link" className="mt-10">
-				<BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+				<BlurFade delay={BLUR_FADE_DELAY * 7}>
 					<div className="space-y-4 mx-auto w-full max-w-2xl">
 						<span
-							className="italic block"
+							className="italic block font-semibold text-lg"
 							style={{ fontFamily: "var(--font-newsreader)" }}
 						>
 							Add my link
@@ -211,104 +374,9 @@ export default function Page() {
 					</div>
 				</BlurFade>
 			</section>
-			<section id="contact" className="mt-16">
-				<BlurFade delay={BLUR_FADE_DELAY * 5}>
-					<div className="space-y-4 mx-auto w-full max-w-2xl">
-						<span
-							className="italic block"
-							style={{ fontFamily: "var(--font-newsreader)" }}
-						>
-							Connect
-						</span>
-						<div className="flex gap-8">
-							<ul className="space-y-3 flex-1">
-								<li>
-									<Link
-										href={`mailto:${DATA.contact.email}`}
-										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-									>
-										<Icons.email className="w-5 h-5" />
-										<span>Email</span>
-										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-									</Link>
-								</li>
-								<li>
-									<Tooltip
-										content={
-											<div className="flex items-center justify-center">
-												<div className="h-50 w-50 overflow-hidden rounded-lg">
-													<Image
-														src="/profile/wechat.png"
-														alt="WeChat QR Code"
-														width={200}
-														height={200}
-														className="h-full w-full object-cover object-center"
-													/>
-												</div>
-											</div>
-										}
-									>
-										<Link
-											href="#"
-											className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-										>
-											<Icons.wechat className="w-5 h-5" />
-											<span>WeChat</span>
-											<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-										</Link>
-									</Tooltip>
-								</li>
-								<li>
-									<Link
-										href={DATA.contact.social.Instagram.url}
-										className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-									>
-										<Icons.instagram className="w-5 h-5" />
-										<span>Instagram</span>
-										<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-									</Link>
-								</li>
-								<li>
-									<Tooltip
-										containerClassName="[&>div.pointer-events-none]:min-w-[10rem] [&>div.pointer-events-none>div]:p-2 [&>div.pointer-events-none>div]:text-xs"
-										content="Add me on Discord: pleasure9876"
-									>
-										<Link
-											href="#"
-											className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-										>
-											<Icons.discord className="w-5 h-5" />
-											<span>Discord</span>
-											<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-										</Link>
-									</Tooltip>
-								</li>
-							</ul>
-							<ul className="space-y-3 flex-1">
-								{Object.entries(DATA.contact.social)
-									.filter(([, social]) => social.navbar)
-									.map(([name, social]) => (
-										<li key={name}>
-											<Link
-												href={social.url}
-												target="_blank"
-												rel="noopener noreferrer"
-												className="flex items-center gap-3 text-[15px] text-muted-foreground hover:text-foreground transition-colors group"
-											>
-												<social.icon className="w-5 h-5" />
-												<span>{name}</span>
-												<ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-											</Link>
-										</li>
-									))}
-							</ul>
-						</div>
-					</div>
-				</BlurFade>
-			</section>
 			<footer className="mt-4 pt-4">
-				<BlurFade delay={BLUR_FADE_DELAY * 8}>
-					<div className={`mx-auto w-full max-w-2xl ${newsreader.variable}`}>
+				<BlurFade delay={BLUR_FADE_DELAY * 9}>
+					<div className="mx-auto w-full max-w-2xl">
 						<div className="flex items-center justify-between mb-4">
 							<p className="text-lg text-muted-foreground/30">
 								Inspired by{" "}
@@ -333,8 +401,7 @@ export default function Page() {
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
 							>
-								Source Code
-								<ArrowUpRight className="w-3 h-3" />
+								Source Code <ArrowUpRight className="w-3 h-3" />
 							</Link>
 							<Link
 								href="https://beian.miit.gov.cn"
@@ -342,8 +409,7 @@ export default function Page() {
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
 							>
-								ICP No.2023040885-2
-								<ArrowUpRight className="w-3 h-3" />
+								ICP No.2023040885-2 <ArrowUpRight className="w-3 h-3" />
 							</Link>
 							<Link
 								href="https://icp.gov.moe/?keyword=20240608"
@@ -351,8 +417,7 @@ export default function Page() {
 								rel="noopener noreferrer"
 								className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
 							>
-								萌 ICP No.20240608
-								<ArrowUpRight className="w-3 h-3" />
+								萌 ICP No.20240608 <ArrowUpRight className="w-3 h-3" />
 							</Link>
 						</div>
 					</div>

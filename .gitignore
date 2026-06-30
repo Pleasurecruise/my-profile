@@ -22,6 +22,9 @@ packages/ui/node_modules
 # production
 /build
 
+# build output
+dist/
+
 # misc
 .DS_Store
 *.pem
@@ -34,6 +37,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+.env*.local
+.dev.vars
 
 # vercel
 .vercel
@@ -44,7 +49,10 @@ next-env.d.ts
 
 .idea
 .vscode
-.env*.local
 src/generated/prisma
 
 .claude
+
+# tools
+.tanstack
+.wrangler

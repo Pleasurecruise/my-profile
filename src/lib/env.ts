@@ -4,13 +4,15 @@ const nonEmptyString = z.string().trim().min(1);
 const optionalNonEmptyString = z
 	.string()
 	.trim()
-	.transform((v) => (v === "" ? undefined : v))
+	.optional()
+	.transform((v) => (v === "" || v === undefined ? undefined : v))
 	.pipe(z.string().optional());
 
 const optionalUrl = z
 	.string()
 	.trim()
-	.transform((v) => (v === "" ? undefined : v))
+	.optional()
+	.transform((v) => (v === "" || v === undefined ? undefined : v))
 	.pipe(z.url().optional());
 
 const serverEnvSchema = z.object({

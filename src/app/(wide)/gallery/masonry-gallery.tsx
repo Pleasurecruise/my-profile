@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PixelImage } from "@/components/magicui/pixel-image";
+import BlurFade from "@/components/magicui/blur-fade";
 
 export interface MasonryItem {
 	id: string;
@@ -28,8 +29,7 @@ function useColumnCount() {
 		const breakpoints = [
 			{ mq: matchMedia("(min-width: 1500px)"), cols: 5 },
 			{ mq: matchMedia("(min-width: 1000px)"), cols: 4 },
-			{ mq: matchMedia("(min-width: 600px)"), cols: 3 },
-			{ mq: matchMedia("(min-width: 400px)"), cols: 2 },
+			{ mq: matchMedia("(min-width: 640px)"), cols: 3 },
 		];
 
 		const get = () => breakpoints.find(({ mq }) => mq.matches)?.cols ?? 1;
@@ -133,44 +133,35 @@ export function MasonryGallery({ items }: { items: MasonryItem[] }) {
 				style={{ minHeight: containerHeight }}
 			>
 				{grid.map((item, index) => (
-					<motion.div
+					<div
 						key={item.id}
-						layout
-						className="absolute cursor-zoom-in overflow-hidden rounded-[10px] shadow-[0px_10px_50px_-10px_rgba(0,0,0,0.2)]"
+						className="absolute overflow-hidden rounded-lg"
 						style={{
 							left: item.x,
 							top: item.y,
 							width: item.w,
 							height: item.h,
-							willChange: "transform, opacity",
 						}}
-						initial={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
-						animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-						transition={{
-							layout: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-							opacity: { duration: 0.6, delay: index * 0.05 },
-							filter: { duration: 0.8, delay: index * 0.05 },
-							scale: {
-								duration: 0.6,
-								ease: [0.22, 1, 0.36, 1],
-								delay: index * 0.05,
-							},
-						}}
-						whileHover={{ scale: 0.97 }}
-						onClick={() => setSelectedIndex(index)}
 					>
-						<PixelImage
-							src={item.img}
-							alt={item.title}
+						<BlurFade
+							delay={index * 0.03}
 							className="w-full h-full"
-							grid="8x8"
-						/>
-						<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-3 pt-8 pb-3 pointer-events-none">
-							<p className="text-white text-xl font-medium truncate leading-tight">
-								{item.title}
-							</p>
-						</div>
-					</motion.div>
+							yOffset={0}
+						>
+							<button
+								type="button"
+								className="w-full h-full cursor-zoom-in focus:outline-none"
+								onClick={() => setSelectedIndex(index)}
+							>
+								<PixelImage
+									src={item.img}
+									alt={item.title}
+									className="w-full h-full"
+									grid="8x8"
+								/>
+							</button>
+						</BlurFade>
+					</div>
 				))}
 			</div>
 
