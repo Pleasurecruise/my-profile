@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Dock, DockIcon } from "@/components/magicui/dock";
 import { ModeToggle } from "@/components/layout/mode-toggle";
+import { LocaleToggle } from "@/components/layout/locale-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -77,6 +78,9 @@ export function Navbar() {
                 <p>Theme</p>
               </TooltipContent>
             </Tooltip>
+          </DockIcon>
+          <DockIcon>
+            <LocaleToggle />
           </DockIcon>
         </Dock>
 

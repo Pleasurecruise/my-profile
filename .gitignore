@@ -29,6 +29,13 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+src/generated/prisma
+
+# next.js
+.next
+.next-*
+out/
+next-env.d.ts
 
 # editor
 .idea

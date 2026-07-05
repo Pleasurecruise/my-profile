@@ -6,27 +6,38 @@ import { Tooltip } from "@/components/aceternityui/tooltip-card";
 import { HelloSignature, PresenceCount, SiteAge } from "@my-profile/ui";
 import { Icons } from "@/components/shared/icons";
 import BlurFade from "@/components/magicui/blur-fade";
+import { DiaTextReveal } from "@/components/magicui/dia-text-reveal";
 import { Highlighter } from "@/components/magicui/highlighter";
 import { FRIENDS, MY_SERIES } from "@/data/links";
 import { DATA } from "@/data/resume";
+import { useLocale, T } from "@/lib/i18n";
+import * as homeStrings from "@/data/i18n/home";
 
 const SITE_URL = "https://you-find.me";
 const SITE_TITLE = "Pleasure1234";
-const SITE_DESCRIPTION = "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: SITE_TITLE },
-      { name: "description", content: SITE_DESCRIPTION },
+      {
+        name: "description",
+        content: "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL },
       { property: "og:title", content: SITE_TITLE },
-      { property: "og:description", content: SITE_DESCRIPTION },
+      {
+        property: "og:description",
+        content: "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏",
+      },
       { property: "og:image", content: `${SITE_URL}/api/og/home` },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: SITE_TITLE },
-      { name: "twitter:description", content: SITE_DESCRIPTION },
+      {
+        name: "twitter:description",
+        content: "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏",
+      },
       { name: "twitter:image", content: `${SITE_URL}/api/og/home` },
     ],
   }),
@@ -36,7 +47,83 @@ export const Route = createFileRoute("/")({
 const BLUR_FADE_DELAY = 0.04;
 
 function HomePage() {
+  const { locale } = useLocale();
+  const t = homeStrings[locale];
   const siteUrl = window.location.origin.replace(/^https?:\/\//, "");
+
+  /* ---- shared inline nodes used in interpolated paragraphs ---- */
+  const universityLink = (
+    <Highlighter action="underline">
+      <a
+        href="https://www.nottingham.ac.uk"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+      >
+        UoN
+        <ArrowUpRight className="w-3 h-3" />
+      </a>
+    </Highlighter>
+  );
+  const italicFullstack = (
+    <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+      full-stack
+    </span>
+  );
+  const italicAI = (
+    <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+      AI
+    </span>
+  );
+  const cherryStudioLink = (
+    <Highlighter action="underline">
+      <a
+        href="https://github.com/CherryHQ/cherry-studio"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+      >
+        Cherry Studio
+        <ArrowUpRight className="w-3 h-3" />
+      </a>
+    </Highlighter>
+  );
+  const italicHackathon = (
+    <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
+      hackathon
+    </span>
+  );
+  const hereLink = (
+    <Highlighter action="underline">
+      <Link
+        to="/cv"
+        className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
+      >
+        {t.about.here}
+        <ArrowUpRight className="w-3 h-3" />
+      </Link>
+    </Highlighter>
+  );
+  const githubLink = (
+    <a
+      href="https://github.com/Pleasurecruise/my-profile/pulls"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-foreground hover:underline"
+    >
+      GitHub
+    </a>
+  );
+  const magicuiLink = (
+    <a
+      href="https://github.com/magicuidesign/portfolio"
+      target="_blank"
+      className="italic hover:underline"
+      style={{ fontFamily: "var(--font-newsreader)" }}
+    >
+      magicuidesign portfolio
+    </a>
+  );
 
   return (
     <main className="flex flex-col min-h-dvh">
@@ -57,11 +144,11 @@ function HomePage() {
                     href={DATA.contact.social.GitHub.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[20px] font-medium text-foreground hover:underline"
+                    className="text-[20px] font-medium text-foreground"
                   >
-                    @Pleasure1234
+                    <DiaTextReveal text="@Pleasure1234" duration={1.2} delay={0.3} />
                   </a>
-                  <p className="text-[14px] text-foreground">Full-stack Developer</p>
+                  <p className="text-[14px] text-foreground">{t.hero.role}</p>
                 </div>
               </div>
               <div className="text-muted-foreground/40">
@@ -75,65 +162,23 @@ function HomePage() {
       <section id="about" className="mt-6">
         <BlurFade delay={BLUR_FADE_DELAY * 2}>
           <div className="mx-auto w-full max-w-2xl space-y-4">
+            <p className="text-[15px] leading-relaxed text-foreground">{t.about.p1}</p>
             <p className="text-[15px] leading-relaxed text-foreground">
-              Any shortcomings are kindly overlooked. 🙏
+              <T
+                text={t.about.p2}
+                vars={{
+                  university: universityLink,
+                  fullstack: italicFullstack,
+                  ai: italicAI,
+                  CherryStudio: cherryStudioLink,
+                }}
+              />
             </p>
             <p className="text-[15px] leading-relaxed text-foreground">
-              Passionate computer science student at{" "}
-              <Highlighter action="underline">
-                <a
-                  href="https://www.nottingham.ac.uk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                >
-                  UoN
-                  <ArrowUpRight className="w-3 h-3" />
-                </a>
-              </Highlighter>{" "}
-              with hands-on experience in{" "}
-              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
-                full-stack
-              </span>{" "}
-              development and{" "}
-              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
-                AI
-              </span>{" "}
-              technologies. Active contributor to open source projects mainly on{" "}
-              <Highlighter action="underline">
-                <a
-                  href="https://github.com/CherryHQ/cherry-studio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                >
-                  Cherry Studio
-                  <ArrowUpRight className="w-3 h-3" />
-                </a>
-              </Highlighter>
-              . Building with React, Next.js, and TypeScript.
+              <T text={t.about.p3} vars={{ hackathon: italicHackathon }} />
             </p>
             <p className="text-[15px] leading-relaxed text-foreground">
-              Off the keyboard, I ride road bikes, get lost in music, and sink hours into open-world
-              games. A{" "}
-              <span className="italic" style={{ fontFamily: "var(--font-newsreader)" }}>
-                hackathon
-              </span>{" "}
-              enthusiast who has competed across universities in 🇬🇧 — someday I hope to go full
-              digital nomad, shipping open source from wherever the road takes me.
-            </p>
-            <p className="text-[15px] leading-relaxed text-foreground">
-              Currently I'm seeking a job opportunity. Click{" "}
-              <Highlighter action="underline">
-                <Link
-                  to="/cv"
-                  className="inline-flex items-center gap-0.5 text-foreground hover:text-muted-foreground transition-colors"
-                >
-                  here
-                  <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              </Highlighter>{" "}
-              to know me better :3
+              <T text={t.about.p4} vars={{ here: hereLink }} />
             </p>
           </div>
         </BlurFade>
@@ -146,7 +191,7 @@ function HomePage() {
               className="text-lg font-semibold text-foreground italic"
               style={{ fontFamily: "var(--font-newsreader)" }}
             >
-              My Series
+              {t.series.heading}
             </h2>
           </div>
         </BlurFade>
@@ -205,10 +250,7 @@ function HomePage() {
       <section id="friends-connect" className="mt-10">
         <BlurFade delay={BLUR_FADE_DELAY * 4.5}>
           <div className="mx-auto w-full max-w-2xl mb-5">
-            <ImagesBadge
-              text="Friends & Connect"
-              images={FRIENDS.slice(0, 3).map((f) => f.avatar)}
-            />
+            <ImagesBadge text={t.friends.badge} images={FRIENDS.slice(0, 3).map((f) => f.avatar)} />
           </div>
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 5}>
@@ -216,7 +258,9 @@ function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 border-t border-border pt-5">
               {/* Friends — left 2 columns */}
               <div className="lg:col-span-2">
-                <h3 className="text-sm font-medium text-muted-foreground/60 mb-3">Friends</h3>
+                <h3 className="text-sm font-medium text-muted-foreground/60 mb-3">
+                  {t.friends.heading}
+                </h3>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   {FRIENDS.map((friend) => (
                     <li key={friend.url}>
@@ -243,7 +287,9 @@ function HomePage() {
 
               {/* Connect — right 2 columns */}
               <div className="lg:col-span-2">
-                <h3 className="text-sm font-medium text-muted-foreground/60 mb-3">Connect</h3>
+                <h3 className="text-sm font-medium text-muted-foreground/60 mb-3">
+                  {t.connect.heading}
+                </h3>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   <li>
                     <a
@@ -251,7 +297,7 @@ function HomePage() {
                       className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
                     >
                       <Icons.email className="size-4 shrink-0" />
-                      <span>Email</span>
+                      <span>{t.connect.email}</span>
                       <ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                   </li>
@@ -276,7 +322,7 @@ function HomePage() {
                         className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
                       >
                         <Icons.wechat className="size-4 shrink-0" />
-                        <span>WeChat</span>
+                        <span>{t.connect.wechat}</span>
                         <ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </a>
                     </Tooltip>
@@ -287,7 +333,7 @@ function HomePage() {
                       className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
                     >
                       <Icons.instagram className="size-4 shrink-0" />
-                      <span>Instagram</span>
+                      <span>{t.connect.instagram}</span>
                       <ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </a>
                   </li>
@@ -301,7 +347,7 @@ function HomePage() {
                         className="flex items-center gap-2.5 text-[14px] text-muted-foreground hover:text-foreground transition-colors group py-0.5"
                       >
                         <Icons.discord className="size-4 shrink-0" />
-                        <span>Discord</span>
+                        <span>{t.connect.discord}</span>
                         <ArrowUpRight className="w-3 h-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </a>
                     </Tooltip>
@@ -336,34 +382,26 @@ function HomePage() {
               className="italic block font-semibold text-lg"
               style={{ fontFamily: "var(--font-newsreader)" }}
             >
-              Add my link
+              {t.addLink.heading}
             </span>
             <p className="text-[15px] text-muted-foreground">
-              Feel free to exchange links!👏🏻 <br />
-              Just add my link and submit yours via{" "}
-              <a
-                href="https://github.com/Pleasurecruise/my-profile/pulls"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground hover:underline"
-              >
-                GitHub
-              </a>
-              .
+              {t.addLink.p1} <br />
+              <T text={t.addLink.p2} vars={{ github: githubLink }} />
             </p>
             <ul className="space-y-1 text-[15px] text-muted-foreground ml-0.5">
               <li>
-                <span className="text-foreground">name</span>: Pleasure1234
+                <span className="text-foreground">{t.addLink.name}</span>: Pleasure1234
               </li>
               <li>
-                <span className="text-foreground">url</span>: {siteUrl}
+                <span className="text-foreground">{t.addLink.url}</span>: {siteUrl}
               </li>
               <li>
-                <span className="text-foreground">avatar</span>: {siteUrl}/profile/me.png
+                <span className="text-foreground">{t.addLink.avatar}</span>: {siteUrl}
+                /profile/me.png
               </li>
               <li>
-                <span className="text-foreground">description</span>: Any shortcomings are kindly
-                overlooked 🙏
+                <span className="text-foreground">{t.addLink.description}</span>:{" "}
+                {t.addLink.descValue}
               </li>
             </ul>
           </div>
@@ -375,15 +413,7 @@ function HomePage() {
           <div className="mx-auto w-full max-w-2xl">
             <div className="flex items-center justify-between mb-4">
               <p className="text-lg text-muted-foreground/30">
-                Inspired by{" "}
-                <a
-                  href="https://github.com/magicuidesign/portfolio"
-                  target="_blank"
-                  className="italic hover:underline"
-                  style={{ fontFamily: "var(--font-newsreader)" }}
-                >
-                  magicuidesign portfolio
-                </a>
+                <T text={t.footer.inspiredBy} vars={{ magicuidesign: magicuiLink }} />
               </p>
               <div className="flex flex-col items-end gap-1">
                 <SiteAge />
@@ -397,7 +427,7 @@ function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-0.5 text-[14px] text-muted-foreground/50 hover:text-muted-foreground/80 transition-colors"
               >
-                Source Code <ArrowUpRight className="w-3 h-3" />
+                {t.footer.sourceCode} <ArrowUpRight className="w-3 h-3" />
               </a>
               <a
                 href="https://beian.miit.gov.cn"

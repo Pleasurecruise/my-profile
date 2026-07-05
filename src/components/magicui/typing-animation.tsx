@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface TypingAnimationProps extends MotionProps {
-  children: string;
+  children: string | React.ReactNode;
   className?: string;
   duration?: number;
   delay?: number;
@@ -54,7 +54,7 @@ export function TypingAnimation({
   useEffect(() => {
     if (!started) return;
 
-    const graphemes = Array.from(children);
+    const graphemes = Array.from(String(children));
     let i = 0;
     const typingEffect = setInterval(() => {
       if (i < graphemes.length) {
