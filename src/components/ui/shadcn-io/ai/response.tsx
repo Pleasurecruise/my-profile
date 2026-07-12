@@ -310,9 +310,12 @@ const components: Options["components"] = {
   },
   pre: ({ node, className, children }) => {
     let language: BundledLanguage = "javascript";
+    const languageClass = node?.properties?.className?.find((value) =>
+      value.startsWith("language-"),
+    );
 
-    if (typeof node?.properties?.className === "string") {
-      const candidate = node.properties.className.replace("language-", "");
+    if (languageClass) {
+      const candidate = languageClass.slice("language-".length);
       if (candidate in bundledLanguages) {
         language = candidate as BundledLanguage;
       }

@@ -52,14 +52,14 @@ function StoryPage() {
             >
               {headingText}
             </TypingAnimation>
-            <BlogContent className="article">
+            <BlogContent className="article story-article">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                 {beforeMarkdown}
               </ReactMarkdown>
             </BlogContent>
             <TravelGlobe locations={TRAVEL_LOCATIONS} mapboxToken={MAPBOX_TOKEN} />
             {afterMarkdown && (
-              <BlogContent className="article">
+              <BlogContent className="article story-article">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {afterMarkdown}
                 </ReactMarkdown>

@@ -26,7 +26,7 @@ At runtime it combines:
 | `@tanstack/react-router`  | `1.168.25` | File-based client routing                 |
 | `hono`                    | `4.12.15`  | API server (Workers-compatible)           |
 | `typescript`              | `6.0.3`    | Main language across app and workspace    |
-| `pnpm`                    | `10.33.2`  | Workspace package manager                 |
+| `pnpm`                    | `11.12.0`  | Workspace package manager                 |
 
 Implementation details:
 
