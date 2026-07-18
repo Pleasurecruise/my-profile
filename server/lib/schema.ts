@@ -1,5 +1,4 @@
-import { boolean, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
+import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -45,14 +44,4 @@ export const verification = pgTable("verification", {
   expiresAt: timestamp("expiresAt", { mode: "date" }).notNull(),
   createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
-});
-
-export const amIOkStatus = pgTable("am_i_ok_status", {
-  id: integer("id").primaryKey(),
-  apps: text("apps")
-    .array()
-    .notNull()
-    .default(sql`'{}'::text[]`),
-  deviceName: text("deviceName").notNull().default("MacBook"),
-  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
 });

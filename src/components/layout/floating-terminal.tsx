@@ -50,7 +50,6 @@ const config: TerminalConfig = {
     story: "/story",
     cv: "/cv",
   },
-  amIOkUrl: "/api/am-i-ok",
   profile: {
     displayName: "Pleasure1234",
     username: "@Pleasurecruise",

@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "my-profile",
+  "account_id": "fb71c4eceaf623ae1b19b8b37d7a38cf",
+  "vars": {
+    "OPENAI_API_URL": "https://api.siliconflow.cn/v1",
+    "OPENAI_MODEL": "deepseek-ai/DeepSeek-V4-Flash",
+    "RESEND_FROM": "pleasure@yiming1234.cn",
+  },
+  "placement": {
+    "mode": "smart",
+  },
+  "r2_buckets": [
+    {
+      "binding": "BLOG_BUCKET",
+      "bucket_name": "cherry-studio",
+      "remote": true,
+    },
+  ],
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "806b06d49b6541caaf7c1a703eedd77b",
+    },
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "KV_NAMESPACE",
+      "id": "181e49e1558c47efb58170a55395d973",
+    },
+  ],
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+    },
+  },
+}

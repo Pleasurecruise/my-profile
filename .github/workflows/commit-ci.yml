@@ -27,3 +27,6 @@ jobs:
 
       - name: Type check
         run: pnpm check
+
+      - name: Production build
+        run: pnpm build

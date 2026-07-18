@@ -19,7 +19,6 @@ export const TOP_COMMANDS: SelectorItem[] = [
   { label: "/contact", value: "/contact", desc: "Contact info" },
   { label: "/projects", value: "/projects", desc: "List projects" },
   { label: "/links", value: "/links", desc: "Friend links" },
-  { label: "/am-i-ok", value: "/am-i-ok", desc: "What am I doing right now" },
   { label: "/dino", value: "/dino", desc: "Play Chrome Dino" },
   { label: "/go", value: "/go ", desc: "Navigate to a page →" },
   { label: "/reload", value: "/reload", desc: "Reload the page" },
@@ -54,7 +53,6 @@ function buildHelpText(config: TerminalConfig): string {
   /contact     - Contact info (email)
   /projects    - List projects
   /links       - Friend links
-  /am-i-ok     - What am I doing right now
   /dino        - Play Chrome Dino
   /go <page>   - Navigate  (${routeNames || "..."})
   /reload      - Reload the page`;
@@ -648,40 +646,6 @@ export function resolveCommand(
         ],
       };
     }
-
-    case "am-i-ok":
-      return {
-        kind: "fetch",
-        url: config.amIOkUrl ?? "/api/am-i-ok",
-        format: (data) => {
-          if (!data || typeof data !== "object") return "No status available.";
-          const d = data as {
-            apps?: string[];
-            appName?: string;
-            deviceName?: string;
-            updatedAt?: string;
-          };
-          const apps = d.apps ?? (d.appName ? [d.appName] : []);
-          const device = d.deviceName ?? "unknown";
-          const updatedAt = d.updatedAt ? new Date(d.updatedAt) : null;
-          const diffSec = updatedAt ? Math.floor((Date.now() - updatedAt.getTime()) / 1000) : null;
-          const online = diffSec !== null && diffSec < 300;
-          const ago =
-            diffSec === null
-              ? "unknown"
-              : diffSec < 60
-                ? `${diffSec}s ago`
-                : diffSec < 3600
-                  ? `${Math.floor(diffSec / 60)}m ago`
-                  : `${Math.floor(diffSec / 3600)}h ago`;
-          const statusDot = online ? "● online" : "○ offline";
-          const appsLine =
-            apps.length === 0 ? "—" : apps.length === 1 ? apps[0] : `${apps[0]}  |  ${apps[1]}`;
-          return [statusDot, `apps   : ${appsLine}`, `device : ${device}`, `updated: ${ago}`].join(
-            "\n",
-          );
-        },
-      };
 
     case "fortune":
       return {

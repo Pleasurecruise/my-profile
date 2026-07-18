@@ -4,16 +4,15 @@ Personal website — [you-find.me](https://you-find.me)
 
 ## Stack
 
-Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Drizzle ORM · PostgreSQL · Better Auth · Cloudflare Workers
+Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · PostgreSQL · Better Auth · Cloudflare Workers
 
 ## Features
 
 - **Home** — landing page with animated background
 - **Blog** — Markdown stored in Cloudflare R2, compiled server-side with Shiki syntax highlighting and TOC generation
-- **Chat** — AI assistant powered by OpenAI via Vercel AI SDK (streaming)
-- **Gallery** — photo gallery sourced from Notion, masonry layout
+- **Chat** — authenticated AI assistant with OpenAI-compatible streaming
+- **Gallery** — photo gallery sourced from Cloudflare R2, masonry layout
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
-- **Am I OK** — real-time activity status pushed from macOS every 30s
 - **CV** — resume page with work, projects, and hackathons
 - **Story** — personal story page with interactive map
 - **Auth** — sign up, login, email verification, password reset (Better Auth + GitHub/Google OAuth)
@@ -22,47 +21,47 @@ Vite · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · D
 
 ```bash
 pnpm install
-cp .dev.vars.example .dev.vars   # fill in Cloudflare secrets for local dev
+cp .env.example .env.local
 pnpm dev
 ```
 
-> Local dev runs via `wrangler dev` (powered by `@cloudflare/vite-plugin`).  
-> `pnpm dev` runs `vp dev`; `pnpm dev:wrangler` runs `wrangler dev --remote`. Both read `wrangler.toml`, and `.dev.vars` is injected as `c.env` bindings automatically.
+`pnpm dev` runs Vite+ with `voidPlugin()`. Void uses Cloudflare's Vite runtime internally, so application development does not invoke `wrangler dev` directly.
 
 ## Environment
 
 This project splits runtime values by source.
 
-- Non-sensitive runtime defaults live in `wrangler.toml` under `[vars]`: `BETTER_AUTH_URL`, `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`, `VITE_MAPBOX_TOKEN`
-- Local secrets and local overrides live in `.dev.vars`: `BETTER_AUTH_URL`, `AM_I_OK_SECRET`, `BETTER_AUTH_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `RESEND_API_KEY`, `NOTION_TOKEN`, `OPENAI_API_KEY`
-- Cloudflare binding types are declared in `server/types/cloudflare-env.d.ts`
+- `env.ts` declares and validates application environment variables.
+- `.env.local` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
+- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
+- Non-sensitive production defaults and Cloudflare resource bindings live in `wrangler.jsonc`.
+- Production secrets are uploaded to Cloudflare with `wrangler secret put`.
+- Production builds do not load `.env.local`; runtime secrets stay in Cloudflare encrypted bindings.
 
-Remote/prod bindings are declared in `wrangler.toml`:
+Remote/prod bindings are declared in `wrangler.jsonc`:
 
-| Binding       | Type       | Purpose                     |
-| ------------- | ---------- | --------------------------- |
-| `ASSETS`      | Static     | Serves the SPA              |
-| `BLOG_BUCKET` | R2         | Blog Markdown files         |
-| `HYPERDRIVE`  | Hyperdrive | PostgreSQL connection proxy |
+| Binding        | Type       | Purpose                       |
+| -------------- | ---------- | ----------------------------- |
+| `ASSETS`       | Static     | Serves the SPA                |
+| `BLOG_BUCKET`  | R2         | Blog Markdown files           |
+| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy   |
+| `KV_NAMESPACE` | KV         | Blog, feed, and sitemap cache |
 
 Runtime env values:
 
-| Variable            | Purpose                      |
-| ------------------- | ---------------------------- |
-| `BETTER_AUTH_URL`   | Auth base URL                |
-| `OPENAI_API_URL`    | Custom OpenAI-compatible URL |
-| `OPENAI_MODEL`      | Default chat model           |
-| `RESEND_FROM`       | Sender address               |
-| `VITE_MAPBOX_TOKEN` | Map token returned to client |
+| Variable         | Purpose                      |
+| ---------------- | ---------------------------- |
+| `OPENAI_API_URL` | Custom OpenAI-compatible URL |
+| `OPENAI_MODEL`   | Default chat model           |
+| `RESEND_FROM`    | Sender address               |
 
 Worker secrets:
 
-| Variable             | Purpose               |
-| -------------------- | --------------------- |
-| `AM_I_OK_SECRET`     | Status push API token |
-| `BETTER_AUTH_SECRET` | Auth secret key       |
+| Variable             | Purpose         |
+| -------------------- | --------------- |
+| `BETTER_AUTH_SECRET` | Auth secret key |
 
-Local `.dev.vars` / production secret bindings:
+Local `.env.local` / production secret bindings:
 
 | Variable               | Purpose                      |
 | ---------------------- | ---------------------------- |
@@ -72,27 +71,24 @@ Local `.dev.vars` / production secret bindings:
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret   |
 | `RESEND_API_KEY`       | Transactional email (Resend) |
 | `OPENAI_API_KEY`       | AI chat                      |
-| `NOTION_TOKEN`         | Gallery photos from Notion   |
 
-Required secrets declared in `wrangler.toml`:
+Required production secrets:
 
-- `AM_I_OK_SECRET`
 - `BETTER_AUTH_SECRET`
 - `GITHUB_CLIENT_ID`
 - `GITHUB_CLIENT_SECRET`
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
 - `RESEND_API_KEY`
-- `NOTION_TOKEN`
 - `OPENAI_API_KEY`
 
 ## Commands
 
 ```bash
-pnpm dev          # Local dev via vite-plus + Cloudflare plugin
-pnpm dev:wrangler # Remote Workers dev
+pnpm dev          # Local dev via Vite+ and Void
 pnpm build        # Client build + wrangler dry-run deploy
-pnpm check        # Type check (vp check && tsgo --noEmit)
+pnpm deploy       # Build and deploy with Wrangler
+pnpm check        # Format, lint, and type checks
 pnpm lint         # Lint (vite-plus)
 pnpm format       # Format (vite-plus)
 ```
@@ -100,27 +96,15 @@ pnpm format       # Format (vite-plus)
 ## Deployment
 
 ```bash
-pnpm build
-wrangler deploy
+pnpm deploy
 ```
 
 Production runtime values are split by binding type:
 
 ```bash
-# Non-sensitive runtime values are declared in wrangler.toml [vars]
-# Resource bindings (ASSETS / BLOG_BUCKET / HYPERDRIVE) are declared in wrangler.toml
-# Local secret values live in .dev.vars
+# Non-sensitive runtime values and resource bindings are declared in wrangler.jsonc
+# Local values live in .env.local
 # Production secrets can be added with `wrangler secret put <NAME>`
-```
-
-## Am I OK Agent
-
-`scripts/am-i-ok-agent.sh` runs as a macOS LaunchAgent, POSTing current app activity every 30s:
-
-```bash
-cp scripts/cn.yiming1234.am-i-ok.plist ~/Library/LaunchAgents/
-# Edit the plist: set script path, AM_I_OK_SECRET, BETTER_AUTH_URL
-launchctl load ~/Library/LaunchAgents/cn.yiming1234.am-i-ok.plist
 ```
 
 ## Workspace

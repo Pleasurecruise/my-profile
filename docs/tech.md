@@ -1,225 +1,191 @@
 # Tech Stack
 
-This document reflects the stack and architecture currently used in the repository.
+This document describes the architecture currently used by the repository.
 
 ## Overview
 
-This project is a `pnpm` workspace built around a Vite SPA + Hono API server deployed on **Cloudflare Workers**, plus a shared local package `@my-profile/ui`.
+The project is a pnpm workspace containing:
 
-At runtime it combines:
+- a React 19 SPA built with Vite+
+- TanStack Router file-based client routes
+- Void file-based Hono routes running on Cloudflare Workers
+- Better Auth backed by PostgreSQL
+- Cloudflare R2, KV, Hyperdrive, and static assets
+- a shared local package, `@my-profile/ui`
 
-- a React 19 frontend with Tailwind CSS v4
-- a Hono API server running in the Cloudflare Workers runtime
-- Better Auth + Drizzle ORM + PostgreSQL (via Cloudflare Hyperdrive) for authentication and persistence
-- Cloudflare R2 as the blog content store
-- Notion API as the gallery data source
-- Resend for transactional email
-- OpenAI + Vercel AI SDK for the chat page
+## Current versions
 
-## Core Runtime
+| Package                  | Version    | Role                                                                            |
+| ------------------------ | ---------- | ------------------------------------------------------------------------------- |
+| `vite-plus`              | `0.2.5`    | Development, build, lint, format, and checks                                    |
+| `void`                   | `0.10.10`  | Server routing, auth, env validation, database wiring, and Cloudflare packaging |
+| `react` / `react-dom`    | `19.2.7`   | Client SPA                                                                      |
+| `@tanstack/react-router` | `1.170.18` | Client file-based routing                                                       |
+| `hono`                   | `4.12.30`  | Server handlers and middleware                                                  |
+| `better-auth`            | `1.6.23`   | Authentication                                                                  |
+| `typescript`             | `7.0.2`    | Type checking                                                                   |
+| `tailwindcss`            | `4.3.3`    | Styling                                                                         |
+| `openai`                 | `6.48.0`   | Chat completion client                                                          |
+| `ai`                     | `7.0.31`   | AI UI types                                                                     |
+| `wrangler`               | `4.112.0`  | Cloudflare dry-run and deployment                                               |
+| `pnpm`                   | `11.14.0`  | Workspace package manager                                                       |
 
-| Package                   | Version    | Notes                                     |
-| ------------------------- | ---------- | ----------------------------------------- |
-| `vite-plus`               | `0.1.20`   | Vite-based dev/build/lint/format workflow |
-| `@cloudflare/vite-plugin` | `1.34.0`   | Runs Workers runtime locally during dev   |
-| `react` / `react-dom`     | `19.2.5`   | React 19 SPA                              |
-| `@tanstack/react-router`  | `1.168.25` | File-based client routing                 |
-| `hono`                    | `4.12.15`  | API server (Workers-compatible)           |
-| `typescript`              | `6.0.3`    | Main language across app and workspace    |
-| `pnpm`                    | `11.12.0`  | Workspace package manager                 |
+Vite is resolved through Vite+ Core using the `vite` package alias. Void supplies the Cloudflare Vite integration internally, so the project does not directly configure `@cloudflare/vite-plugin`.
 
-Implementation details:
+## Build and runtime flow
 
-- `vite.config.ts` wires React, Tailwind, TanStack Router codegen, and the Cloudflare plugin
-- `pnpm dev` runs `vp dev`; `pnpm dev:wrangler` runs `wrangler dev --remote`; `pnpm build` runs `vp build && wrangler deploy --dry-run`
-- `server/app.ts` uses `export default app` — the Cloudflare Workers entry format
-- `@my-profile/ui` is consumed as a local workspace package
+`vite.config.ts` installs:
 
-## Frontend & UI
+1. `voidPlugin()`
+2. TanStack Router code generation
+3. React
+4. Tailwind CSS
 
-### Styling system
+The production build creates:
 
-- **Tailwind CSS v4** via `@import "tailwindcss"` in `src/styles/globals.css`
-- **`@tailwindcss/vite`** for Vite integration
-- **`@tailwindcss/typography`** enabled through the CSS plugin syntax
-- **CSS variables design tokens** for colors, radius, theming, and utility mapping
-- **`tw-animate-css`** for animation utilities
-- No `tailwind.config.ts`; the project uses the Tailwind v4 CSS-first configuration style
+- `dist/client/` — static SPA assets
+- `dist/ssr/` — generated Cloudflare Worker and route modules
 
-### Component stack
+Production builds use an isolated `envDir`, so `.env.local` values are not written into the generated Wrangler configuration. Wrangler receives resource bindings and non-sensitive values from `wrangler.jsonc`; encrypted values are managed with `wrangler secret put`.
 
-- **Radix UI** primitives for accessible low-level components
-- **shadcn/ui** (`components.json`, New York style, CSS variables enabled)
-- **Magic UI** and **Aceternity UI** registry-based visual components
-- **Lucide React** and **Tabler Icons** for iconography
-- **Framer Motion** and **Motion** for animation
-- **next-themes** for dark/light theme switching in plain React
-- **Sonner** for toast notifications
+## Frontend
 
-### Typography and global UX
+### Routing
 
-- Fonts are loaded from Google Fonts in `index.html`; current setup: `JetBrains Mono`, `Noto Sans SC`, `Fira Code`
-- Global layout includes: themed background overlays, scroll progress indicator, floating terminal, cherry blossom visual effect
+TanStack Router scans `src/routes/` and generates `src/routeTree.gen.ts`. The generated route tree must not be edited manually.
 
-## Authentication
+Main pages:
 
-Authentication is implemented with **Better Auth 1.6** and stored in PostgreSQL via Drizzle ORM.
+- `/` — home
+- `/blog` and `/blog/$` — blog index and posts
+- `/chat` — authenticated chat
+- `/gallery` — R2 image gallery
+- `/story` — story and travel map
+- `/cv` — CV
+- `/_auth/*` and `/password/*` — authentication flows
 
-Enabled capabilities (`server/auth.ts`):
+### UI and styling
 
-- email + password sign-up / login
-- required email verification (via Resend)
-- password reset by email (via Resend)
-- GitHub OAuth
-- Google OAuth
-- session cookies with cookie cache (30 min)
+- Tailwind CSS 4 uses CSS-first configuration through `src/styles/globals.css`.
+- `@tailwindcss/vite` and `@tailwindcss/typography` provide build integration and prose styling.
+- Radix UI and shadcn-style components provide UI primitives.
+- Framer Motion and Motion provide animation.
+- `next-themes` manages color themes.
+- `mapbox-gl` renders the story travel map using its public client token.
 
-`server/auth.ts` resolves runtime config from Workers bindings and reuses the shared Drizzle connection created from `HYPERDRIVE.connectionString`.
+The shared `@my-profile/ui` workspace package contains the Markdown pipeline, terminal, footer, and reusable visual components.
 
-Related packages: `better-auth`, `drizzle-orm`, `postgres`, `resend`
+## Server routing
 
-## Database & Persistence
+Void scans the root `routes/` directory. Route filenames describe URL paths; exported names describe HTTP methods:
 
-### Stack
+```ts
+export const GET = defineHandler(...)
+export const POST = defineHandler(...)
+```
 
-- **PostgreSQL**
-- **Drizzle ORM** for SQL access
-- **`postgres`** connection pooling for PostgreSQL
-- **Cloudflare Hyperdrive** — proxies the Postgres connection inside the Workers runtime
+`.get.ts` and `.post.ts` filename suffixes are not used. Catch-all path segments use `[...name].ts`.
 
-Current persisted models: `User`, `Session`, `Account`, `Verification`, `AmIOkStatus`
+| URL                       | Method    | Handler                                   |
+| ------------------------- | --------- | ----------------------------------------- |
+| `/api/auth/*`             | all       | Generated by Void from `auth.ts`          |
+| `/api/blog/tree`          | GET       | `routes/api/blog/tree.ts`                 |
+| `/api/blog/post/*`        | GET       | `routes/api/blog/post/[...slug].ts`       |
+| `/api/blog/cache/rebuild` | POST      | `routes/api/blog/cache/rebuild.ts`        |
+| `/api/chat/stream`        | POST      | `routes/api/chat/stream.ts`               |
+| `/api/gallery`            | GET       | `routes/api/gallery.ts`                   |
+| `/api/gallery/img/*`      | GET       | `routes/api/gallery/img/[...filename].ts` |
+| `/api/og/home`            | GET       | `routes/api/og/home.ts`                   |
+| `/api/og/blog/*`          | GET       | `routes/api/og/blog/[...slug].ts`         |
+| `/api/presence`           | GET, POST | `routes/api/presence.ts`                  |
+| `/blog/*`                 | GET       | `routes/blog/[...slug].ts`                |
+| `/feed.xml`               | GET       | `routes/feed.xml.ts`                      |
+| `/sitemap.xml`            | GET       | `routes/sitemap.xml.ts`                   |
 
-### Hyperdrive
+Request logging and API CORS are installed from `middleware/`.
 
-`HYPERDRIVE` is a Workers binding declared in `wrangler.toml`. Better Auth uses `env.HYPERDRIVE.connectionString` through the shared `postgres` + Drizzle helper. Locally, `localConnectionString` points to `postgresql://pleasure1234:123456@localhost:5432/mydb`.
+## Authentication and email
 
-## API Layer
+`auth.ts` uses Void's `defineAuth` to extend Better Auth defaults. Enabled behavior:
 
-The API is plain **Hono** routes — no tRPC. All routes are registered in `server/app.ts` under `/api/*`.
+- email/password registration and login
+- required email verification
+- password reset through Resend
+- GitHub and Google OAuth
+- encrypted OAuth tokens
+- seven-day sessions refreshed daily
+- five-minute cookie cache
 
-| Route prefix    | Handler file                | Purpose                    |
-| --------------- | --------------------------- | -------------------------- |
-| `/api/auth/*`   | `server/auth.ts`            | Better Auth handler        |
-| `/api/blog`     | `server/routes/blog.ts`     | Blog content from R2       |
-| `/api/chat`     | `server/routes/chat.ts`     | OpenAI streaming chat      |
-| `/api/am-i-ok`  | `server/routes/am-i-ok.ts`  | Activity status push/fetch |
-| `/api/presence` | `server/routes/presence.ts` | Real-time presence count   |
-| `/api/gallery`  | `server/routes/gallery.ts`  | Gallery photos from Notion |
-| `/api/story`    | `server/routes/story.ts`    | Story markdown content     |
+Void generates the `/api/auth/*` handler and connects Better Auth to PostgreSQL. Verification and reset emails are sent directly from `auth.ts` using the Resend SDK.
 
-## AI Integration
+The frontend client comes from `void/client/react` in `src/lib/auth-client.ts`.
 
-The chat feature is built with:
+## Database
 
-- **OpenAI SDK** `6.35.0`
-- **Vercel AI SDK** `6.0.170` (`ai`)
+`void.json` selects the PostgreSQL dialect with `"database": "pg"`.
 
-Implementation: responses are streamed; base URL and model are configurable via `OPENAI_API_URL` / `OPENAI_MODEL` secrets.
+- Local development connects through `DATABASE_URL` in `.env.local`.
+- Production connects through the `HYPERDRIVE` binding.
+- Better Auth owns the active `user`, `session`, `account`, and `verification` models.
+- Void-generated database and auth artifacts live in `.void/`.
 
-## Content System
+`server/lib/db.ts` and `server/lib/schema.ts` are retained legacy helpers and currently have no runtime imports.
+
+## Content and storage
 
 ### Blog
 
-Blog content is stored in **Cloudflare R2** (`BLOG_BUCKET` binding). The flow:
+Markdown files are stored in `BLOG_BUCKET`. `server/lib/blog.ts` lists and reads R2 objects, then compiles them through `@my-profile/ui/markdown`.
 
-1. `server/lib/blog.ts` calls `bucket.list()` to enumerate Markdown files
-2. `bucket.get(key)` fetches file content
-3. Content is compiled through `@my-profile/ui/markdown` compiler
-4. Result (`{ code, frontmatter, toc, excerpt }`) is returned as JSON
+The compiler uses Unified, Remark, Rehype, MDX, and Shiki to return compiled code, frontmatter, a table of contents, and an excerpt.
 
-### Markdown pipeline
-
-The compiler lives in `packages/ui/src/markdown/compiler` and uses:
-
-- `unified` + `remark-parse`
-- `remark-gfm` — GitHub Flavored Markdown
-- `remark-frontmatter` — YAML frontmatter extraction
-- `@shikijs/rehype/core` — syntax highlighting with dual light/dark themes
-- custom `rehypeToc` plugin — TOC extraction + heading anchor links
-- `@mdx-js/mdx` — MDX compilation for client hydration
+Blog trees, compiled post data, feed XML, and sitemap data are cached in `KV_NAMESPACE`.
 
 ### Gallery
 
-Gallery photos are sourced from a **Notion** database (`server/lib/notion-gallery.ts`). The Notion integration uses `@notionhq/client` and caches results for 50 minutes.
+Gallery images are R2 objects under the `img/` prefix. `/api/gallery` lists image keys and `/api/gallery/img/*` streams each object with immutable cache headers.
 
-## Email
+### OG, feed, and sitemap
 
-Transactional email (verification, password reset) is sent via **Resend** (`resend` package). `server/lib/email.ts` wraps the Resend SDK and reads `RESEND_API_KEY` / `RESEND_FROM` from Workers env.
+- `server/lib/og.tsx` generates home and blog OG images.
+- `routes/blog/[...slug].ts` injects per-post metadata into the SPA HTML response.
+- `server/lib/feed.ts` produces the Atom feed.
+- `server/lib/sitemap.ts` produces the sitemap.
 
-## Maps and External Services
+## AI chat
 
-- **`mapbox-gl` `3.22.0`** — map on the story page (patched via `patches/mapbox-gl@3.22.0.patch`)
-- **`react-chrome-dino-ts`** — terminal mini-game
-- **`rough-notation`** — annotation effects
+The browser posts validated messages to `/api/chat/stream`. The handler requires an authenticated user, calls the OpenAI-compatible endpoint configured by `OPENAI_API_URL` and `OPENAI_MODEL`, and streams text through Hono.
 
-## Workspace Layout
+The `ai` package is used for UI message and attachment types; server streaming is implemented with the OpenAI SDK and Hono.
 
-```text
-.
-├── docs/                   # Project documentation
-├── packages/
-│   └── ui/                 # Shared UI package (@my-profile/ui)
-│       ├── src/components/ # CherryBlossom, HelloSignature
-│       ├── src/footer/     # PresenceCount, SiteAge
-│       ├── src/markdown/   # Markdown compiler + BlogContent component
-│       └── src/terminal/   # Interactive terminal UI and command system
-├── public/                 # Static assets
-├── scripts/                # macOS am-i-ok agent
-├── server/                 # Hono app (Cloudflare Workers entry)
-│   ├── app.ts              # Route registration, default export
-│   ├── auth.ts             # Better Auth instance
-│   ├── lib/                # Blog, email, gallery, database helpers
-│   ├── routes/             # Route handlers
-│   └── types/              # Bindings, Cloudflare, Notion types
-├── src/                    # Vite SPA (TanStack Router)
-│   ├── routes/             # Page components
-│   ├── components/         # UI components
-│   ├── data/               # Personal data, links, story, travel
-│   ├── lib/                # Auth client, query client, utils
-│   └── styles/             # globals.css
-├── types/                  # Shared types (@shared/* alias)
-├── wrangler.toml           # Cloudflare Workers config
-└── .dev.vars.example       # Local dev secrets template
-```
+## Environment strategy
 
-## Tooling
+`env.ts` declares validated variables.
 
-- **vite-plus** `0.1.20` — unified dev/build/lint/format workflow
-- **tsx** — runs TypeScript scripts directly
-- **wrangler** `4.86.0` — Cloudflare Workers CLI (deploy, secret management, local dev)
-- **vitest** `4.1.5` — test runner
-- **tsgo** (`@typescript/native-preview`) — TypeScript Go native type-check preview
+| Source                             | Purpose                                                |
+| ---------------------------------- | ------------------------------------------------------ |
+| `.env.local`                       | Local database URL, local values, and local secrets    |
+| `wrangler.jsonc`                   | Cloudflare resources and non-sensitive production vars |
+| Cloudflare secrets                 | Production credentials                                 |
+| `server/types/cloudflare-env.d.ts` | Binding type augmentation                              |
 
-Key scripts:
+Application code accesses values through `void/env` or `c.env`, not `process.env`.
+
+Current environment keys:
+
+- runtime config: `OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`
+- secrets: `BETTER_AUTH_SECRET`, GitHub and Google OAuth credentials, `RESEND_API_KEY`, and `OPENAI_API_KEY`
+- local database: `DATABASE_URL` and `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE`
+
+The Mapbox token is public client configuration and is not part of `env.ts`. Declared environment variables remain server-only.
+
+## Commands
 
 ```bash
-pnpm dev          # local dev via vite-plus + Cloudflare plugin
-pnpm dev:wrangler # remote Workers dev
-pnpm build        # client build + wrangler dry-run deploy
-pnpm check        # vp check && tsgo --noEmit
-pnpm lint         # vp lint
-pnpm format       # vp fmt
+pnpm dev          # Vite+ development server with Void
+pnpm build        # Production build and Wrangler dry-run
+pnpm deploy       # Production build and Cloudflare deployment
+pnpm check        # Void codegen, format check, lint, and TypeScript
+pnpm lint         # Void codegen and Vite+ lint
+pnpm format       # Vite+ formatting
 ```
-
-## Environment Strategy
-
-All environment values are **Cloudflare Workers bindings** — no `process.env`.
-
-- **Non-sensitive runtime defaults** live in `wrangler.toml` under `[vars]`
-- **Resource bindings** (`ASSETS`, `BLOG_BUCKET`, `HYPERDRIVE`) live in `wrangler.toml`
-- **Required secrets** are declared in `wrangler.toml` under `[secrets]`
-- **Local secret values and local overrides** live in `.dev.vars`
-- Server code reads env via `c.env` in Hono handlers and passes bindings through helper functions where needed
-- All binding types are defined in `server/types/cloudflare-env.d.ts`
-
-Current required secrets:
-
-- `AM_I_OK_SECRET`
-- `BETTER_AUTH_SECRET`
-- `GITHUB_CLIENT_ID`
-- `GITHUB_CLIENT_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `RESEND_API_KEY`
-- `NOTION_TOKEN`
-- `OPENAI_API_KEY`

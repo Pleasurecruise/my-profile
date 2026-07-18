@@ -1,248 +1,178 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with this repository.
 
 ## Project Overview
 
-Personal website built with Vite, React 19, TypeScript, TailwindCSS v4, TanStack Router, and a Hono API server running on **Cloudflare Workers**. Features a blog, AI chat, photo gallery, interactive terminal, real-time activity status, and authentication.
+Personal website built as a React SPA with a Void/Hono backend on Cloudflare Workers. It includes a Markdown blog, AI chat, R2 photo gallery, interactive terminal, CV, story page, and Better Auth authentication.
 
 ## Package Manager
 
-This project uses **pnpm** with a workspace. Always use `pnpm` commands, never `npm` or `yarn`.
+This is a pnpm workspace. Use pnpm commands, not npm or yarn.
 
-## Development Commands
+## Commands
 
 ```bash
-pnpm dev       # Cloudflare Workers dev server (wrangler dev + @cloudflare/vite-plugin)
-pnpm build     # Production build
-pnpm check     # Type check (vp check && tsgo --noEmit)
-pnpm lint      # Lint (vite-plus)
-pnpm format    # Format (vite-plus)
+pnpm dev       # Vite+ dev server with Void and the Cloudflare runtime
+pnpm build     # Production build plus Wrangler dry-run
+pnpm deploy    # Production build and Cloudflare deployment
+pnpm check     # Void codegen, formatting, lint, and TypeScript checks
+pnpm lint      # Void codegen plus Vite+ lint
+pnpm format    # Vite+ formatting
 ```
 
 ## Architecture
 
-### Core Stack
+### Core stack
 
-- **vite-plus** — unified toolchain: dev server, build, lint, format, type-check
-- **@cloudflare/vite-plugin** — runs the Hono server in a local Workers runtime during dev
-- **Vite** — SPA build (`dist/client/`), output served by the Workers `ASSETS` binding
-- **TanStack Router** — file-based client-side routing, auto-generates `src/routeTree.gen.ts`
-- **React 19** — SPA (no Server Components)
-- **TypeScript 6** + tsgo (TypeScript Go native preview, used in `pnpm check`)
-- **TailwindCSS v4** — no `tailwind.config.ts`, configured via CSS variables in `globals.css`
-- **Hono** — API server, entry point `server/app.ts` exported as `export default app` (Workers format)
-- **Cloudflare Workers** — deployment target; wrangler.toml defines all platform bindings
-- **Drizzle ORM + postgres-js** — SQL access to PostgreSQL via Hyperdrive; schema defined in `server/lib/schema.ts`
-- **Better Auth 1.6** — authentication (OAuth + email/password); initialized per-request via `getAuth(env)`
+- **Vite+ 0.2** — dev server, build, lint, format, and checks
+- **Void 0.10** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
+- **React 19** — client-side SPA
+- **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
+- **TypeScript 7**
+- **Tailwind CSS 4** — CSS-first configuration
+- **Hono** — request handlers and middleware
+- **Better Auth 1.6** — email/password and OAuth authentication
+- **PostgreSQL + Cloudflare Hyperdrive**
+- **Cloudflare R2** — blog Markdown and gallery images
+- **Cloudflare KV** — blog, feed, and sitemap caching
 
-### Cloudflare Bindings
+`vite.config.ts` installs `voidPlugin()`, the TanStack Router plugin, React, and Tailwind. Void uses the Cloudflare Vite runtime internally; there is no hand-written Worker entry point.
 
-Declared in `wrangler.toml`, typed in `server/types/bindings.ts`:
+### Project layout
 
-| Binding        | Type       | Purpose                     |
-| -------------- | ---------- | --------------------------- |
-| `ASSETS`       | Static     | Serves the built SPA        |
-| `BLOG_BUCKET`  | R2         | Blog Markdown files storage |
-| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy |
-| `KV_NAMESPACE` | KV         | Runtime config values       |
-
-Local dev uses `wrangler.dev.toml` + `.dev.vars`. Remote/prod uses `wrangler.toml`, `KV_NAMESPACE`, and `[[secrets_store_secrets]]` bindings.
-
-All env values are accessed via Workers bindings — **never** `process.env`.
-
-### Workspace Structure
-
-```
+```text
 .
-├── src/                    # Vite SPA (TanStack Router)
-├── server/                 # Hono app (Cloudflare Workers entry)
-├── types/                  # Shared types (@shared/* alias)
-└── packages/
-    └── ui/                 # Shared UI package (@my-profile/ui)
-        └── src/
-            ├── components/ # CherryBlossom, HelloSignature
-            ├── footer/     # PresenceCount, SiteAge
-            ├── terminal/   # Interactive terminal
-            └── markdown/   # Blog compiler + BlogContent component
+├── auth.ts                 # Void/Better Auth configuration and Resend email callbacks
+├── env.ts                  # Validated public and secret environment variables
+├── middleware/             # Ordered Hono middleware
+├── routes/                 # Void file-based server routes
+│   ├── api/                # JSON and streaming API handlers
+│   ├── blog/               # Server-side blog metadata injection
+│   ├── feed.xml.ts
+│   └── sitemap.xml.ts
+├── server/
+│   ├── lib/                # Blog, feed, OG, sitemap, presence, and legacy DB helpers
+│   └── types/              # Cloudflare and Void binding augmentation
+├── src/                    # React SPA and TanStack Router pages
+├── types/                  # Shared application types (@shared/*)
+├── packages/ui/            # Shared UI, Markdown compiler, footer, and terminal
+├── void.json               # Void target, database, binding inference, Worker flags
+├── wrangler.jsonc          # Cloudflare resources and non-sensitive production vars
+└── .env.example            # Local environment template
 ```
 
-### Key Directories (`src/`)
+Generated files:
 
-```
-src/
-├── routes/
-│   ├── __root.tsx       # Root layout (Navbar, FloatingTerminal, CherryBlossom)
-│   ├── index.tsx        # Home
-│   ├── blog/            # Blog listing + post pages
-│   ├── chat.tsx         # AI chat (OpenAI via Vercel AI SDK)
-│   ├── cv.tsx           # CV / Resume
-│   ├── gallery.tsx      # Photo gallery
-│   ├── story.tsx        # Personal story page
-│   ├── am-i-ok.tsx      # Real-time activity status
-│   ├── _auth/           # Auth pages (login, signup)
-│   └── password/        # Password reset
-├── components/
-│   ├── ui/              # shadcn/ui components
-│   ├── magicui/         # Magic UI components
-│   ├── aceternityui/    # Aceternity UI components
-│   ├── layout/          # Navbar, FloatingTerminal, ThemeProvider
-│   ├── blog/            # Blog-specific components (FileTree, Toc, etc.)
-│   ├── chat/            # AI chat components
-│   └── cv/              # CV section components
-├── data/
-│   ├── resume.tsx       # All personal data — edit here
-│   ├── links.tsx        # External links
-│   ├── story.tsx        # Story page data
-│   └── travel.tsx       # Travel data
-├── lib/                 # Auth client, query client, utils
-├── types/               # Frontend-only types (use types/ root for shared types)
-└── styles/              # globals.css — design tokens, article/code block CSS
+- `src/routeTree.gen.ts` is generated by TanStack Router.
+- `.void/` is generated by Void and ignored by Git.
+- `dist/` and `.wrangler/` are build artifacts.
+
+Do not edit generated files manually.
+
+### Server routing
+
+Void derives the URL from the path under `routes/` and the HTTP method from named exports:
+
+```ts
+export const GET = defineHandler(...)
+export const POST = defineHandler(...)
 ```
 
-### Key Directories (`server/`)
+Do not add `.get` or `.post` to route filenames. Catch-all segments use `[...name].ts`.
 
-```
-server/
-├── app.ts               # Hono app — CORS, auth middleware, route registration; default export
-├── auth.ts              # Better Auth instance (initialized via getAuth(env))
-├── routes/              # API route handlers
-│   ├── am-i-ok.ts       # Status push/fetch
-│   ├── blog.ts          # Blog content from R2
-│   ├── chat.ts          # OpenAI streaming chat
-│   ├── gallery.ts       # Photo gallery (Notion)
-│   ├── presence.ts      # Real-time presence count
-│   └── story.ts         # Story markdown
-├── lib/                 # Server-side helpers
-│   ├── auth-middleware.ts
-│   ├── blog.ts          # R2 fetch + compile
-│   ├── db.ts            # Drizzle ORM client (postgres-js + Hyperdrive)
-│   ├── email.ts         # Resend email client
-│   ├── notion-gallery.ts # Notion API for gallery photos
-│   ├── runtime-config.ts # Secret Store + Workers env + .dev.vars config resolution
-│   ├── schema.ts        # Drizzle table definitions (auth tables + am_i_ok_status)
-│   └── story.ts         # Story content helper
-└── types/               # Server-side type definitions
-    ├── auth.ts          # AuthBindings for Hono
-    ├── bindings.ts      # Cloudflare Workers bindings interface
-    ├── cloudflare.ts    # R2Bucket, Hyperdrive, Assets, KVNamespace, SecretStoreSecret types
-    ├── cloudflare-env.d.ts      # Cloudflare.Env augmentation from Bindings
-    ├── config.ts        # ResolvedAuthConfig, EnvVarKey, SecretBackedValue types
-    └── notion.ts        # Notion API response types
-```
+Current routes:
 
-### Shared Types (`types/`)
+| URL                                 | Handler                                   |
+| ----------------------------------- | ----------------------------------------- |
+| `/api/auth/*`                       | Generated by Void from `auth.ts`          |
+| `/api/blog/tree`                    | `routes/api/blog/tree.ts`                 |
+| `/api/blog/post/*`                  | `routes/api/blog/post/[...slug].ts`       |
+| `/api/blog/cache/rebuild`           | `routes/api/blog/cache/rebuild.ts`        |
+| `/api/chat/stream`                  | `routes/api/chat/stream.ts`               |
+| `/api/gallery`                      | `routes/api/gallery.ts`                   |
+| `/api/gallery/img/*`                | `routes/api/gallery/img/[...filename].ts` |
+| `/api/og/home` and `/api/og/blog/*` | `routes/api/og/`                          |
+| `/api/presence`                     | `routes/api/presence.ts`                  |
+| `/blog/*`                           | `routes/blog/[...slug].ts`                |
+| `/feed.xml`                         | `routes/feed.xml.ts`                      |
+| `/sitemap.xml`                      | `routes/sitemap.xml.ts`                   |
 
-Root-level `types/` directory aliased as `@shared/` in both `vite.config.ts` and `tsconfig.json`. Use for types consumed by both `src/` and `server/`.
+Global request logging and API CORS live in `middleware/`.
 
-```
-types/
-├── blog.ts      # BlogTreeNode, BlogFileTreeData, BlogPostData
-├── gallery.ts   # GalleryPhoto
-└── story.ts     # Story types
-```
+### Frontend
 
-### Data & Content
+`src/routes/` contains TanStack Router pages:
 
-- **Site data**: `src/data/resume.tsx` — navbar items, skills, projects, social links
-- **Blog posts**: Markdown files stored in **Cloudflare R2** (`BLOG_BUCKET`), fetched via `server/lib/blog.ts`
-- **Gallery**: Photos sourced from **Notion** database via `server/lib/notion-gallery.ts`
-- **Database**: PostgreSQL via **Drizzle ORM** + **Cloudflare Hyperdrive** — auth sessions and Am I OK status
+- `index.tsx` — home
+- `blog/` — blog index and posts
+- `chat.tsx` — authenticated streaming chat
+- `gallery.tsx` — R2 gallery
+- `story.tsx` — story and Mapbox travel map
+- `cv.tsx` — CV
+- `_auth/` and `password/` — authentication flows
 
-### Special Features
+The frontend authentication client is exported from `src/lib/auth-client.ts` using `void/client/react`.
 
-**Interactive Terminal** (`packages/ui/src/terminal/`)
+## Authentication
 
-- Slash command system with autocomplete selector
-- Supports `/help`, `/skills`, `/social`, `/contact`, `/projects`, `/links`, `/am-i-ok`, `/dino`, `/go`, `/reload`, and easter-egg commands
-- Adding a new command: add to `TOP_COMMANDS` + `HELP_TEXT` + `resolveCommand()` in `packages/ui/src/terminal/core/commands.ts`
-- For async commands, use `kind: "fetch"` — handled in `terminal.tsx`
-- Configured via `TerminalConfig` (routes, personal data injected from the app)
+`auth.ts` extends Void's Better Auth defaults:
 
-**Blog** (`src/routes/blog/`, `server/lib/blog.ts`, `packages/ui/src/markdown/`)
+- email/password login and registration
+- mandatory email verification
+- password reset through Resend
+- GitHub and Google OAuth when all provider credentials are present
+- encrypted OAuth tokens
+- seven-day sessions, refreshed daily
+- five-minute cookie cache
 
-- Markdown stored in Cloudflare R2, accessed via `c.env.BLOG_BUCKET` (R2Bucket binding)
-- `server/lib/blog.ts` uses R2 `list()` and `get()` — no Ali OSS dependency
-- Compiled by `packages/ui/src/markdown/compiler/` using a unified/MDX pipeline:
-  - `remark-gfm` — GitHub Flavored Markdown
-  - `remark-frontmatter` — YAML frontmatter extraction
-  - `@shikijs/rehype/core` — syntax highlighting with dual light/dark themes (lazy language loading)
-  - `rehypeToc` — heading anchor links + TOC extraction
-- `defaultLanguage: "text"` and `fallbackLanguage: "text"` ensure code blocks with no/unknown language render as plain text
-- Returns `CompileRawResult`: `{ code, frontmatter, toc, excerpt }`
-- `BlogContent` component hydrates the compiled MDX code client-side
+The request origin plus local Vite origins are trusted. `BETTER_AUTH_URL` is not used.
 
-**Am I OK** (`src/routes/am-i-ok.tsx`, `server/routes/am-i-ok.ts`, `scripts/`)
+## Data and content
 
-- Displays real-time activity: current apps and device
-- `scripts/am-i-ok-agent.sh` runs via macOS LaunchAgent, POSTs every 30s
-- API stores up to 2 foreground apps; page auto-refreshes every 30s
-- App icons from `cdn.simpleicons.org`; dark-mode inversion handled per-icon
+- Blog Markdown is stored in `BLOG_BUCKET` and compiled by `packages/ui/src/markdown/`.
+- Gallery images are read from the `img/` prefix in `BLOG_BUCKET`.
+- Blog metadata, feed XML, and sitemap data are cached in `KV_NAMESPACE`.
+- PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; local development uses `DATABASE_URL`.
+- `server/lib/db.ts` and `server/lib/schema.ts` are legacy helpers with no current runtime imports.
 
-**AI Chat** (`src/routes/chat.tsx`, `server/routes/chat.ts`)
+## Environment and deployment
 
-- OpenAI SDK + Vercel AI SDK streaming; model/URL configurable via `OPENAI_MODEL` / `OPENAI_API_URL`
+`env.ts` is the source of truth for validated variables.
 
-**Email** (`server/lib/email.ts`)
+- Local development values live in `.env.local`, created from `.env.example`.
+- Resource bindings and non-sensitive production values live in `wrangler.jsonc`.
+- Production secrets are uploaded with `wrangler secret put <NAME>`.
+- Application code reads environment values through `void/env` or `c.env`, never `process.env`.
+- The public Mapbox token is a client-side constant; it is not part of the environment schema.
 
-- Transactional email via **Resend** SDK — used for verification and password reset
-- `RESEND_API_KEY` and `RESEND_FROM` are Workers secrets
+## Linting and formatting
 
-### Linting & Formatting
+Vite+ configuration lives in `vite.config.ts`:
 
-Uses **vite-plus** built-in lint and format (`pnpm lint` / `pnpm format`). Config lives in `vite.config.ts` under the `lint` and `fmt` keys:
+- type-aware linting and type checking are enabled
+- `dist/**`, `src/generated/**`, and `src/routeTree.gen.ts` are ignored
+- formatting uses tabs
 
-- `lint.ignorePatterns` — excludes `dist/`, `src/generated/`, `src/routeTree.gen.ts`
-- `fmt.indent` — tabs
-- `fmt.ignorePatterns` — same as lint
+Use `void` for intentionally ignored promises when required by the linter. Avoid `any`.
 
-Avoid `any` in TypeScript; for unified plugin chains use `Plugin` type cast instead.
+## Important files
 
-### Environment Variables
-
-No `process.env` — all env is accessed via Cloudflare Workers bindings.
-
-- **Local dev**: put secrets in `.dev.vars` (see `.dev.vars.example`); wrangler injects them as `c.env`
-- **Production**: platform bindings live in `wrangler.toml`; config comes from `KV_NAMESPACE` and Secret Store bindings
-- `server/auth.ts` receives `env: Bindings` per-request via `getAuth(env)`; secrets resolved through `runtime-config.ts` (KV → Secret Store → `.dev.vars`)
-
-Key variables:
-
-- `BETTER_AUTH_SECRET` / `BETTER_AUTH_URL` — auth config
-- `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth
-- `RESEND_API_KEY` / `RESEND_FROM` — email via Resend
-- `OPENAI_API_KEY` / `OPENAI_API_URL` / `OPENAI_MODEL` — AI chat
-- `AM_I_OK_SECRET` — bearer token for status push API
-- `NOTION_TOKEN` — Notion API for gallery
-- `HYPERDRIVE` (binding) — PostgreSQL proxy connection string
-- `BLOG_BUCKET` (R2 binding) — blog Markdown files
-
-## Important Files
-
-| File                                              | Purpose                                               |
-| ------------------------------------------------- | ----------------------------------------------------- |
-| `src/data/resume.tsx`                             | All personal data, navbar items, projects             |
-| `server/app.ts`                                   | Hono app entry — route registration, default export   |
-| `server/auth.ts`                                  | Better Auth instance (initialized via `getAuth(env)`) |
-| `server/lib/blog.ts`                              | Blog fetch from R2 + compile                          |
-| `server/lib/email.ts`                             | Resend transactional email                            |
-| `server/lib/notion-gallery.ts`                    | Gallery photos from Notion API                        |
-| `server/lib/db.ts`                                | Drizzle ORM client (postgres-js + Hyperdrive)         |
-| `server/lib/schema.ts`                            | Drizzle table definitions (auth + am_i_ok_status)     |
-| `server/lib/runtime-config.ts`                    | Config resolution: KV → Secret Store → `.dev.vars`    |
-| `server/types/bindings.ts`                        | Cloudflare Workers bindings interface                 |
-| `types/blog.ts`                                   | Shared blog types (@shared/blog)                      |
-| `wrangler.toml`                                   | Cloudflare Workers config (bindings, R2, Hyperdrive)  |
-| `.dev.vars.example`                               | Local dev secrets template                            |
-| `packages/ui/src/terminal/core/commands.ts`       | Terminal slash commands                               |
-| `packages/ui/src/markdown/compiler/index.ts`      | Markdown → MDX compiler (unified pipeline)            |
-| `packages/ui/src/markdown/compiler/shiki.ts`      | Shiki highlighter singleton (bundled langs, lazy)     |
-| `packages/ui/src/markdown/compiler/rehype-toc.ts` | TOC extraction + heading anchor injection             |
-| `server/routes/am-i-ok.ts`                        | Status push/fetch API                                 |
-| `scripts/am-i-ok-agent.sh`                        | macOS agent script                                    |
-| `src/routes/__root.tsx`                           | Root layout, providers, global UI                     |
-| `src/styles/globals.css`                          | Global styles, design tokens, article/code block CSS  |
+| File                        | Purpose                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| `vite.config.ts`            | Vite+, Void, React, Tailwind, and TanStack Router configuration |
+| `void.json`                 | Void application and Worker configuration                       |
+| `wrangler.jsonc`            | Cloudflare bindings and non-sensitive production vars           |
+| `auth.ts`                   | Better Auth and transactional email configuration               |
+| `env.ts`                    | Environment schema                                              |
+| `routes/`                   | Server route handlers                                           |
+| `server/lib/blog.ts`        | R2 blog loading and compilation                                 |
+| `server/lib/blog-kv.ts`     | KV cache helpers                                                |
+| `server/lib/og.tsx`         | OG image generation                                             |
+| `server/lib/sitemap.ts`     | Sitemap generation                                              |
+| `src/routeTree.gen.ts`      | Generated client route tree                                     |
+| `packages/ui/src/markdown/` | Markdown/MDX compiler and renderer                              |
+| `packages/ui/src/terminal/` | Interactive terminal                                            |
 
 ## License
 

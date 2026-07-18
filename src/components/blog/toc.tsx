@@ -123,7 +123,7 @@ export function Toc({ entries }: { entries: TocEntry[] }) {
     };
 
     measure();
-    if (document.fonts) document.fonts.ready.then(measure);
+    if (document.fonts) void document.fonts.ready.then(measure);
     window.addEventListener("resize", measure);
     return () => {
       cancelled = true;

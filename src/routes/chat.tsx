@@ -139,7 +139,7 @@ function ChatPage() {
   const handleSubmit = (message: PromptInputMessage) => {
     const trimmed = message.text.trim();
     if (!trimmed) return;
-    sendMessage(trimmed);
+    void sendMessage(trimmed);
     setText("");
   };
 

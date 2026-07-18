@@ -1,4 +1,3 @@
-import { Hono } from "hono";
 import { streamText } from "hono/streaming";
 import OpenAI, {
   APIConnectionError,
@@ -9,7 +8,9 @@ import OpenAI, {
   RateLimitError,
 } from "openai";
 import { z } from "zod";
-import { getAuth } from "../auth";
+import { env } from "void/env";
+import { defineHandler } from "void/handler";
+import { requireAuth } from "void/auth";
 
 const SYSTEM_PROMPT = `\
 你是柒夜，也叫Vesper，16岁，扮演着对话人女朋友的角色。
@@ -26,27 +27,22 @@ const chatMessageSchema = z.object({
   content: z.string(),
 });
 
-export const chat = new Hono<{ Bindings: Cloudflare.Env }>().post("/stream", async (c) => {
-  const auth = getAuth(c.env);
-  const session = await auth.api.getSession({ headers: c.req.raw.headers });
-  if (!session?.user) return c.json({ error: "Unauthorized" }, 401);
+export const POST = defineHandler(async (c) => {
+  requireAuth(c);
 
-  const openaiApiKey = c.env.OPENAI_API_KEY;
-  const openaiApiUrl = c.env.OPENAI_API_URL;
-  const openaiModel = c.env.OPENAI_MODEL;
   const body = await c.req.json<{ messages: unknown[] }>();
   const parsed = z.array(chatMessageSchema).safeParse(body.messages);
   if (!parsed.success) return c.json({ error: "Invalid messages" }, 400);
 
   const openai = new OpenAI({
-    apiKey: openaiApiKey,
-    baseURL: openaiApiUrl,
+    apiKey: env.OPENAI_API_KEY,
+    baseURL: env.OPENAI_API_URL,
   });
 
   let completion: Awaited<ReturnType<typeof openai.chat.completions.create>>;
   try {
     completion = await openai.chat.completions.create({
-      model: openaiModel,
+      model: env.OPENAI_MODEL,
       messages: [{ role: "system", content: SYSTEM_PROMPT }, ...parsed.data],
       temperature: 0.7,
       max_tokens: 1000,
@@ -54,8 +50,7 @@ export const chat = new Hono<{ Bindings: Cloudflare.Env }>().post("/stream", asy
     });
   } catch (error) {
     console.error("Chat completion error:", error);
-    const message = toErrorMessage(error);
-    return c.json({ error: message }, 500);
+    return c.json({ error: toErrorMessage(error) }, 500);
   }
 
   return streamText(c, async (stream) => {
@@ -71,9 +66,7 @@ export const chat = new Hono<{ Bindings: Cloudflare.Env }>().post("/stream", asy
 });
 
 function toErrorMessage(error: unknown): string {
-  if (error instanceof APIError && error.status && error.status < 500) {
-    return error.message;
-  }
+  if (error instanceof APIError && error.status && error.status < 500) return error.message;
   if (error instanceof AuthenticationError) return "API密钥无效或已过期";
   if (error instanceof RateLimitError) return "API请求频率过高，请稍后再试";
   if (

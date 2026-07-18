@@ -30,7 +30,7 @@ function StoryPage() {
 
   // Extract the first `## heading` from markdown to render as TypingAnimation
   const headingMatch = markdown.match(/^##\s+(.+?)\n/);
-  const headingText = headingMatch ? headingMatch[1] : "";
+  const headingText = headingMatch?.[1] ?? "";
   const markdownWithoutHeading = headingMatch
     ? markdown.slice(headingMatch[0].length).replace(/^\n+/, "")
     : markdown;
@@ -49,9 +49,8 @@ function StoryPage() {
               delay={BLUR_FADE_DELAY * 1000 + 200}
               duration={50}
               className="text-2xl font-bold tracking-tight mb-6"
-            >
-              {headingText}
-            </TypingAnimation>
+              text={headingText}
+            />
             <BlogContent className="article story-article">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                 {beforeMarkdown}

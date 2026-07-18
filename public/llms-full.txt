@@ -12,7 +12,6 @@
 - Story: https://you-find.me/story
 - Gallery: https://you-find.me/gallery
 - Chat: https://you-find.me/chat
-- Activity status: https://you-find.me/am-i-ok
 - Atom feed: https://you-find.me/feed.xml
 
 ## Identity

@@ -24,9 +24,6 @@ export interface TerminalConfig {
   /** /go destinations — key is the route name, value is the path */
   routes: Record<string, string>;
 
-  /** /am-i-ok fetch URL, defaults to "/api/am-i-ok" */
-  amIOkUrl?: string;
-
   /** MOTD profile section */
   profile: {
     displayName: string;

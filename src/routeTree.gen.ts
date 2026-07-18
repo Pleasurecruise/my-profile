@@ -13,7 +13,6 @@ import { Route as StoryRouteImport } from './routes/story'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as CvRouteImport } from './routes/cv'
 import { Route as ChatRouteImport } from './routes/chat'
-import { Route as AmIOkRouteImport } from './routes/am-i-ok'
 import { Route as PasswordRouteRouteImport } from './routes/password/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -42,11 +41,6 @@ const CvRoute = CvRouteImport.update({
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AmIOkRoute = AmIOkRouteImport.update({
-  id: '/am-i-ok',
-  path: '/am-i-ok',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PasswordRouteRoute = PasswordRouteRouteImport.update({
@@ -97,7 +91,6 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/password': typeof PasswordRouteRouteWithChildren
-  '/am-i-ok': typeof AmIOkRoute
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
   '/gallery': typeof GalleryRoute
@@ -112,7 +105,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/password': typeof PasswordRouteRouteWithChildren
-  '/am-i-ok': typeof AmIOkRoute
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
   '/gallery': typeof GalleryRoute
@@ -129,7 +121,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
   '/password': typeof PasswordRouteRouteWithChildren
-  '/am-i-ok': typeof AmIOkRoute
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
   '/gallery': typeof GalleryRoute
@@ -146,7 +137,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/password'
-    | '/am-i-ok'
     | '/chat'
     | '/cv'
     | '/gallery'
@@ -161,7 +151,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/password'
-    | '/am-i-ok'
     | '/chat'
     | '/cv'
     | '/gallery'
@@ -177,7 +166,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/password'
-    | '/am-i-ok'
     | '/chat'
     | '/cv'
     | '/gallery'
@@ -194,7 +182,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   PasswordRouteRoute: typeof PasswordRouteRouteWithChildren
-  AmIOkRoute: typeof AmIOkRoute
   ChatRoute: typeof ChatRoute
   CvRoute: typeof CvRoute
   GalleryRoute: typeof GalleryRoute
@@ -231,13 +218,6 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/am-i-ok': {
-      id: '/am-i-ok'
-      path: '/am-i-ok'
-      fullPath: '/am-i-ok'
-      preLoaderRoute: typeof AmIOkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/password': {
@@ -338,7 +318,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   PasswordRouteRoute: PasswordRouteRouteWithChildren,
-  AmIOkRoute: AmIOkRoute,
   ChatRoute: ChatRoute,
   CvRoute: CvRoute,
   GalleryRoute: GalleryRoute,

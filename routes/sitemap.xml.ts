@@ -1,7 +1,7 @@
-import { Hono } from "hono";
-import { generateSitemapXml } from "../lib/sitemap";
+import { defineHandler } from "void/handler";
+import { generateSitemapXml } from "@server/lib/sitemap";
 
-export const sitemap = new Hono<{ Bindings: Cloudflare.Env }>().get("/", async (c) => {
+export const GET = defineHandler(async (c) => {
   const xml = await generateSitemapXml(c.env.BLOG_BUCKET, c.env.KV_NAMESPACE);
   return c.body(xml, 200, {
     "Content-Type": "application/xml; charset=utf-8",

@@ -11,7 +11,6 @@
 - [Story](https://you-find.me/story)
 - [Gallery](https://you-find.me/gallery)
 - [Chat](https://you-find.me/chat)
-- [Activity Status](https://you-find.me/am-i-ok)
 - [Atom Feed](https://you-find.me/feed.xml)
 - [GitHub](https://github.com/Pleasurecruise)
 - [LinkedIn](https://www.linkedin.com/in/pleasure1234)

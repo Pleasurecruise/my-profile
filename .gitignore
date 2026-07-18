@@ -22,7 +22,6 @@ yarn-error.log*
 # env files
 .env
 .env*.local
-.dev.vars
 
 # vercel
 .vercel
@@ -45,3 +44,4 @@ next-env.d.ts
 .claude
 .tanstack
 .wrangler
+.void

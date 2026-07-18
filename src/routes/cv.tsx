@@ -29,18 +29,16 @@ function CvPage() {
                   delay={BLUR_FADE_DELAY * 1000 + 200}
                   duration={50}
                   className="text-3xl font-bold tracking-tighter sm:text-3xl xl:text-5xl/none"
-                >
-                  {`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
-                </TypingAnimation>
+                  text={`Hi, I'm ${DATA.name.split(" ")[0]} 👋`}
+                />
               </BlurFade>
               <BlurFade delay={BLUR_FADE_DELAY * 2}>
                 <TypingAnimation
                   delay={BLUR_FADE_DELAY * 2000 + 400}
                   duration={30}
                   className="max-w-[600px] text-md md:text-xl leading-snug"
-                >
-                  {DATA.description}
-                </TypingAnimation>
+                  text={DATA.description}
+                />
               </BlurFade>
             </div>
             <BlurFade delay={BLUR_FADE_DELAY}>

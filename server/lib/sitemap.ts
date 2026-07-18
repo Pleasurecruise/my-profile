@@ -11,7 +11,6 @@ const STATIC_ROUTES = [
   "/story",
   "/gallery",
   "/chat",
-  "/am-i-ok",
   "/feed.xml",
   "/llms.txt",
   "/llms-full.txt",
