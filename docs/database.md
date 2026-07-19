@@ -38,5 +38,3 @@ Better Auth currently owns the active authentication models:
 - `verification`
 
 Void generates its Better Auth integration under `.void/`; that directory is ignored and must not be edited manually.
-
-`server/lib/db.ts` and `server/lib/schema.ts` are retained legacy helpers and are not referenced by the current runtime. Removing the TypeScript definition for `am_i_ok_status` does not drop an existing production table; an explicit database migration is required if that table should be deleted.

@@ -52,7 +52,7 @@ pnpm format    # Vite+ formatting
 │   ├── feed.xml.ts
 │   └── sitemap.xml.ts
 ├── server/
-│   ├── lib/                # Blog, feed, OG, sitemap, presence, and legacy DB helpers
+│   ├── lib/                # Blog, feed, OG, sitemap, and presence helpers
 │   └── types/              # Cloudflare and Void binding augmentation
 ├── src/                    # React SPA and TanStack Router pages
 ├── types/                  # Shared application types (@shared/*)
@@ -134,7 +134,6 @@ The request origin plus local Vite origins are trusted. `BETTER_AUTH_URL` is not
 - Gallery images are read from the `img/` prefix in `BLOG_BUCKET`.
 - Blog metadata, feed XML, and sitemap data are cached in `KV_NAMESPACE`.
 - PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; local development uses `DATABASE_URL`.
-- `server/lib/db.ts` and `server/lib/schema.ts` are legacy helpers with no current runtime imports.
 
 ## Environment and deployment
 

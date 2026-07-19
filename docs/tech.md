@@ -129,8 +129,6 @@ The frontend client comes from `void/client/react` in `src/lib/auth-client.ts`.
 - Better Auth owns the active `user`, `session`, `account`, and `verification` models.
 - Void-generated database and auth artifacts live in `.void/`.
 
-`server/lib/db.ts` and `server/lib/schema.ts` are retained legacy helpers and currently have no runtime imports.
-
 ## Content and storage
 
 ### Blog
