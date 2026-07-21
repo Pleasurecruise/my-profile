@@ -9,33 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StoryRouteImport } from './routes/story'
-import { Route as GalleryRouteImport } from './routes/gallery'
-import { Route as CvRouteImport } from './routes/cv'
-import { Route as ChatRouteImport } from './routes/chat'
-import { Route as PasswordRouteRouteImport } from './routes/password/route'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as PasswordResetRouteImport } from './routes/password/reset'
-import { Route as PasswordForgetRouteImport } from './routes/password/forget'
-import { Route as BlogSplatRouteImport } from './routes/blog/$'
-import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as CvRouteImport } from './routes/cv'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as PasswordRouteRouteImport } from './routes/password/route'
+import { Route as StoryRouteImport } from './routes/story'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as BlogSplatRouteImport } from './routes/blog/$'
+import { Route as PasswordForgetRouteImport } from './routes/password/forget'
+import { Route as PasswordResetRouteImport } from './routes/password/reset'
 
-const StoryRoute = StoryRouteImport.update({
-  id: '/story',
-  path: '/story',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CvRoute = CvRouteImport.update({
-  id: '/cv',
-  path: '/cv',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -43,49 +37,55 @@ const ChatRoute = ChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CvRoute = CvRouteImport.update({
+  id: '/cv',
+  path: '/cv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PasswordRouteRoute = PasswordRouteRouteImport.update({
   id: '/password',
   path: '/password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const StoryRoute = StoryRouteImport.update({
+  id: '/story',
+  path: '/story',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PasswordResetRoute = PasswordResetRouteImport.update({
-  id: '/reset',
-  path: '/reset',
-  getParentRoute: () => PasswordRouteRoute,
-} as any)
-const PasswordForgetRoute = PasswordForgetRouteImport.update({
-  id: '/forget',
-  path: '/forget',
-  getParentRoute: () => PasswordRouteRoute,
-} as any)
-const BlogSplatRoute = BlogSplatRouteImport.update({
-  id: '/blog/$',
-  path: '/blog/$',
-  getParentRoute: () => rootRouteImport,
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const AuthLoginRoute = AuthLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => AuthRouteRoute,
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSplatRoute = BlogSplatRouteImport.update({
+  id: '/blog/$',
+  path: '/blog/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PasswordForgetRoute = PasswordForgetRouteImport.update({
+  id: '/forget',
+  path: '/forget',
+  getParentRoute: () => PasswordRouteRoute,
+} as any)
+const PasswordResetRoute = PasswordResetRouteImport.update({
+  id: '/reset',
+  path: '/reset',
+  getParentRoute: () => PasswordRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -192,39 +192,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/story': {
-      id: '/story'
-      path: '/story'
-      fullPath: '/story'
-      preLoaderRoute: typeof StoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cv': {
-      id: '/cv'
-      path: '/cv'
-      fullPath: '/cv'
-      preLoaderRoute: typeof CvRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat': {
-      id: '/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/password': {
-      id: '/password'
-      path: '/password'
-      fullPath: '/password'
-      preLoaderRoute: typeof PasswordRouteRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -234,40 +206,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
+    '/cv': {
+      id: '/cv'
+      path: '/cv'
+      fullPath: '/cv'
+      preLoaderRoute: typeof CvRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/password/reset': {
-      id: '/password/reset'
-      path: '/reset'
-      fullPath: '/password/reset'
-      preLoaderRoute: typeof PasswordResetRouteImport
-      parentRoute: typeof PasswordRouteRoute
-    }
-    '/password/forget': {
-      id: '/password/forget'
-      path: '/forget'
-      fullPath: '/password/forget'
-      preLoaderRoute: typeof PasswordForgetRouteImport
-      parentRoute: typeof PasswordRouteRoute
-    }
-    '/blog/$': {
-      id: '/blog/$'
-      path: '/blog/$'
-      fullPath: '/blog/$'
-      preLoaderRoute: typeof BlogSplatRouteImport
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/password': {
+      id: '/password'
+      path: '/password'
+      fullPath: '/password'
+      preLoaderRoute: typeof PasswordRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/story': {
+      id: '/story'
+      path: '/story'
+      fullPath: '/story'
+      preLoaderRoute: typeof StoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/_auth/signup': {
       id: '/_auth/signup'
@@ -276,12 +255,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupRouteImport
       parentRoute: typeof AuthRouteRoute
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRouteRoute
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$': {
+      id: '/blog/$'
+      path: '/blog/$'
+      fullPath: '/blog/$'
+      preLoaderRoute: typeof BlogSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/password/forget': {
+      id: '/password/forget'
+      path: '/forget'
+      fullPath: '/password/forget'
+      preLoaderRoute: typeof PasswordForgetRouteImport
+      parentRoute: typeof PasswordRouteRoute
+    }
+    '/password/reset': {
+      id: '/password/reset'
+      path: '/reset'
+      fullPath: '/password/reset'
+      preLoaderRoute: typeof PasswordResetRouteImport
+      parentRoute: typeof PasswordRouteRoute
     }
   }
 }

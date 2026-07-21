@@ -1,164 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { PixelImage } from "@/components/magicui/pixel-image";
-import BlurFade from "@/components/magicui/blur-fade";
-
-type GalleryPhoto = {
-  key: string;
-  url: string;
-};
+import { InfiniteGallery, type GalleryImage } from "@/components/reactbits/infinite-gallery";
 
 export const Route = createFileRoute("/gallery")({
-  loader: async (): Promise<GalleryPhoto[]> => {
-    const res = await fetch("/api/gallery");
-    if (!res.ok) throw new Error("Failed to load gallery");
-    const keys = (await res.json()) as string[];
-    return keys.map((key) => ({ key, url: `/api/gallery/img/${key}` }));
+  loader: async (): Promise<GalleryImage[]> => {
+    const response = await fetch("/api/gallery");
+    if (!response.ok) throw new Error(`Failed to load R2 gallery (${response.status})`);
+    const keys = (await response.json()) as string[];
+
+    return keys.map((key) => ({
+      url: `/api/gallery/img/${key}`,
+      alt: photoLabel(key),
+    }));
   },
   component: GalleryPage,
 });
 
+function photoLabel(key: string) {
+  const filename = key.split("/").at(-1) ?? key;
+  return filename.replace(/\.[^.]+$/, "").replaceAll(/[-_]+/g, " ");
+}
+
 function GalleryPage() {
   const photos = Route.useLoaderData();
-  return (
-    <div className="w-[100vw] ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-24 pt-6 sm:pt-8">
-      <section>
-        <MasonryGallery items={photos} />
-      </section>
-    </div>
-  );
-}
-
-interface GridItem extends GalleryPhoto {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-const GAP = 16;
-
-function useColumnCount() {
-  const [columns, setColumns] = useState(2);
-  useEffect(() => {
-    const breakpoints = [
-      { mq: matchMedia("(min-width: 1500px)"), cols: 5 },
-      { mq: matchMedia("(min-width: 1000px)"), cols: 4 },
-      { mq: matchMedia("(min-width: 640px)"), cols: 3 },
-    ];
-    const update = () => {
-      for (const { mq, cols } of breakpoints) {
-        if (mq.matches) {
-          setColumns(cols);
-          return;
-        }
-      }
-      setColumns(2);
-    };
-    update();
-    breakpoints.forEach(({ mq }) => mq.addEventListener("change", update));
-    return () => breakpoints.forEach(({ mq }) => mq.removeEventListener("change", update));
-  }, []);
-  return columns;
-}
-
-function MasonryGallery({ items }: { items: GalleryPhoto[] }) {
-  const columns = useColumnCount();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [colW, setColW] = useState(0);
-  const [selected, setSelected] = useState<GalleryPhoto | null>(null);
-  const [ratios, setRatios] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      if (!entry) return;
-      const w = entry.contentRect.width;
-      setColW((w - GAP * (columns - 1)) / columns);
-    });
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [columns]);
-
-  const grid = useMemo<GridItem[]>(() => {
-    if (!colW) return [];
-    const colHeights = Array<number>(columns).fill(0);
-    return items.map((item) => {
-      const col = colHeights.indexOf(Math.min(...colHeights));
-      const x = col * (colW + GAP);
-      const y = colHeights[col] ?? 0;
-      const ratio = ratios[item.key] ?? 1;
-      const h = colW * ratio;
-      colHeights[col] = (colHeights[col] ?? 0) + h + GAP;
-      return { ...item, x, y, w: colW, h };
-    });
-  }, [items, colW, columns, ratios]);
-
-  const totalH = useMemo(() => Math.max(...grid.map((i) => i.y + i.h), 0), [grid]);
 
   return (
-    <>
-      <div ref={containerRef} className="relative w-full" style={{ height: totalH }}>
-        {grid.map((item, i) => (
-          <div
-            key={item.key}
-            className="absolute overflow-hidden rounded-lg"
-            style={{ left: item.x, top: item.y, width: item.w, height: item.h }}
-          >
-            <BlurFade delay={i * 0.03} className="w-full h-full" yOffset={0}>
-              <button
-                type="button"
-                className="w-full h-full cursor-pointer focus:outline-none"
-                onClick={() => setSelected(item)}
-              >
-                <PixelImage
-                  src={item.url}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  onLoad={(e) => {
-                    const { naturalWidth, naturalHeight } = e.currentTarget;
-                    if (naturalWidth && naturalHeight) {
-                      setRatios((prev) => ({
-                        ...prev,
-                        [item.key]: naturalHeight / naturalWidth,
-                      }));
-                    }
-                  }}
-                />
-              </button>
-            </BlurFade>
+    <main className="fixed inset-0 z-20 overflow-hidden bg-black text-white">
+      {photos.length > 0 ? (
+        <InfiniteGallery images={photos} />
+      ) : (
+        <div className="flex size-full items-center justify-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+            The archive is quiet
+          </p>
+        </div>
+      )}
+
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_38%,rgba(0,0,0,0.18)_68%,rgba(0,0,0,0.62)_100%)]"
+        aria-hidden="true"
+      />
+
+      {photos.length > 0 && (
+        <>
+          <div className="pointer-events-none absolute right-5 top-5 flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-2 font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 backdrop-blur-md sm:right-7 sm:top-7">
+            <span className="size-1 rounded-full bg-white/70" />
+            {photos.length} frames
           </div>
-        ))}
-      </div>
 
-      {typeof document !== "undefined" &&
-        createPortal(
-          <AnimatePresence>
-            {selected && (
-              <motion.div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSelected(null)}
-              >
-                <motion.img
-                  src={selected.url}
-                  alt=""
-                  className="max-w-[90vw] max-h-[90vh] rounded-xl object-contain shadow-2xl"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.8, opacity: 0 }}
-                  onClick={(e) => e.stopPropagation()}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>,
-          document.body,
-        )}
-    </>
+          <p className="pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[8px] uppercase tracking-[0.22em] text-white/35">
+            Drag · Scroll · Select
+          </p>
+        </>
+      )}
+    </main>
   );
 }
