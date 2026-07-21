@@ -253,9 +253,10 @@ export function InfiniteGallery({
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       viewportWidth = Math.max(1, bounds.width);
       viewportHeight = Math.max(1, bounds.height);
+      const dprLimit = viewportWidth < 640 ? 1.25 : 1.5;
+      const dpr = Math.min(window.devicePixelRatio || 1, dprLimit);
       canvas.width = Math.round(viewportWidth * dpr);
       canvas.height = Math.round(viewportHeight * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -433,7 +434,13 @@ export function InfiniteGallery({
       const currentCellX = Math.floor(camera.position.x / cellSize);
       const currentCellY = Math.floor(camera.position.y / cellSize);
       const currentCellZ = Math.floor(camera.position.z / cellSize);
-      const range = Math.max(1, Math.round(viewRange)) + 1;
+      const compactViewport = viewportWidth < 640;
+      const range =
+        Math.max(1, Math.round(compactViewport ? Math.min(viewRange, 1) : viewRange)) + 1;
+      const visibleDensity = Math.max(
+        1,
+        Math.round(compactViewport ? Math.min(density, 4) : density),
+      );
       const visible: ScreenImage[] = [];
       const readyImageIndexes: number[] = [];
       for (let index = 0; index < loadedImages.length; index++) {
@@ -449,7 +456,7 @@ export function InfiniteGallery({
               currentCellY + offsetY,
               currentCellZ + offsetZ,
               cellSize,
-              Math.max(1, Math.round(density)),
+              visibleDensity,
               imageSize,
               images,
             );
@@ -559,11 +566,20 @@ export function InfiniteGallery({
       frame = requestAnimationFrame(render);
     };
 
-    frame = requestAnimationFrame(render);
+    const onVisibilityChange = () => {
+      cancelAnimationFrame(frame);
+      if (document.hidden) return;
+      lastTime = performance.now();
+      frame = requestAnimationFrame(render);
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    if (!document.hidden) frame = requestAnimationFrame(render);
 
     return () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       resizeObserver.disconnect();
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       canvas.removeEventListener("pointerdown", onPointerDown);

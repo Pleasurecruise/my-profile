@@ -7,7 +7,6 @@ export type SlashCommandResult =
   | { kind: "stream"; items: StreamItem[] }
   | { kind: "links"; items: { label: string; url: string }[] }
   | { kind: "navigate"; path: string }
-  | { kind: "dino" }
   | { kind: "clear" }
   | { kind: "sudo"; command: string }
   | { kind: "fetch"; url: string; format: (data: unknown) => string };
@@ -17,5 +16,4 @@ export type Line =
   | { id: number; type: "input"; text: string }
   | { id: number; type: "output"; text: string }
   | { id: number; type: "links"; items: { label: string; url: string }[] }
-  | { id: number; type: "dino"; session: number }
   | { id: number; type: "error"; text: string };

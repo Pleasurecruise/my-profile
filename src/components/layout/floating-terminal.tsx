@@ -1,6 +1,6 @@
 "use client";
 
-import { Terminal, type TerminalConfig } from "@my-profile/ui";
+import { Terminal, type TerminalConfig } from "@my-profile/ui/terminal";
 import { FRIENDS } from "@/data/links";
 import { DATA } from "@/data/resume";
 import { ShimmerButton } from "@/components/magicui/shimmer-button";

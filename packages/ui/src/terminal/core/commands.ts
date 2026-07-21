@@ -19,7 +19,6 @@ export const TOP_COMMANDS: SelectorItem[] = [
   { label: "/contact", value: "/contact", desc: "Contact info" },
   { label: "/projects", value: "/projects", desc: "List projects" },
   { label: "/links", value: "/links", desc: "Friend links" },
-  { label: "/dino", value: "/dino", desc: "Play Chrome Dino" },
   { label: "/go", value: "/go ", desc: "Navigate to a page →" },
   { label: "/reload", value: "/reload", desc: "Reload the page" },
 ];
@@ -53,7 +52,6 @@ function buildHelpText(config: TerminalConfig): string {
   /contact     - Contact info (email)
   /projects    - List projects
   /links       - Friend links
-  /dino        - Play Chrome Dino
   /go <page>   - Navigate  (${routeNames || "..."})
   /reload      - Reload the page`;
 }
@@ -121,9 +119,6 @@ export function resolveCommand(
           url: f.url,
         })),
       };
-
-    case "dino":
-      return { kind: "dino" };
 
     case "go": {
       const dest = rest.trim().toLowerCase();
@@ -267,7 +262,7 @@ export function resolveCommand(
           { text: `ACCESS GRANTED`, delay: 3800 },
           { text: ``, delay: 4200 },
           {
-            text: `jk — there's nothing to hack here. Try /dino instead.`,
+            text: `jk — there's nothing to hack here.`,
             delay: 4800,
           },
         ],

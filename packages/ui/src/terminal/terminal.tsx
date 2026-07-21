@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { TerminalConfig } from "./core/config";
 import { getSelectorItems, resolveCommand } from "./core/commands";
-import { DinoGame } from "./components/dino-game";
 import { MOTD } from "./components/motd";
 import type { Line, SelectorItem } from "./core/types";
 
@@ -40,8 +39,6 @@ export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
     streamTimersRef.current.forEach(clearTimeout);
     streamTimersRef.current = [];
   };
-  const hasActiveDino = lines.some((line) => line.type === "dino");
-
   useEffect(() => {
     return () => cancelStreamTimers();
   }, []);
@@ -62,13 +59,6 @@ export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
     setSelectorItems(items);
     setSelectorIdx(0);
   };
-
-  const closeDino = useCallback((session: number) => {
-    setLines((prev) => prev.filter((line) => line.type !== "dino" || line.session !== session));
-    requestAnimationFrame(() => {
-      inputRef.current?.focus();
-    });
-  }, []);
 
   const executeInput = useCallback(
     (cmd: string) => {
@@ -180,30 +170,9 @@ export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
           { id: nextId(), type: "input", text: cmd },
           { id: nextId(), type: "links", items: result.items },
         ]);
-      } else if (result.kind === "dino") {
-        if (hasActiveDino) {
-          setLines((prev) => [
-            ...prev,
-            { id: nextId(), type: "input", text: cmd },
-            {
-              id: nextId(),
-              type: "output",
-              text: "Dino is already running. Use the Exit button in the game panel, or /clear to reset the terminal.",
-            },
-          ]);
-          return;
-        }
-        setLines((prev) => [
-          ...prev,
-          { id: nextId(), type: "input", text: cmd },
-          { id: nextId(), type: "dino", session: Date.now() },
-        ]);
-        requestAnimationFrame(() => {
-          inputRef.current?.blur();
-        });
       }
     },
-    [hasActiveDino, config, onClose],
+    [config, onClose],
   );
 
   const handleSudoSubmit = useCallback(
@@ -395,8 +364,6 @@ export function Terminal({ config, onClose, onDragStart }: TerminalProps) {
                   ))}
                 </div>
               );
-            if (line.type === "dino")
-              return <DinoGame key={line.session} onExit={() => closeDino(line.session)} />;
             if (line.type === "error")
               return (
                 <p key={line.id} className="text-red-400 whitespace-pre-wrap leading-5">
