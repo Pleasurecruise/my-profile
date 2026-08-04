@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { TerminalConfig } from "./core/config";
-import { getSelectorItems, resolveCommand } from "./core/commands";
 import { DinoGame } from "./components/dino-game";
 import { MOTD } from "./components/motd";
+import { getSelectorItems, resolveCommand } from "./core/commands";
+import type { TerminalConfig } from "./core/config";
 import type { Line, SelectorItem } from "./core/types";
 
 interface TerminalProps {

@@ -333,9 +333,12 @@ const components: Options["components"] = {
 	},
 	pre: ({ node, className, children }) => {
 		let language = "javascript";
+		const languageClass = node?.properties?.className?.find((value) =>
+			value.startsWith("language-"),
+		);
 
-		if (typeof node?.properties?.className === "string") {
-			language = node.properties.className.replace("language-", "");
+		if (languageClass) {
+			language = languageClass.slice("language-".length);
 		}
 
 		// Extract code content from children safely

@@ -1,14 +1,14 @@
 "use client";
 
 import { Terminal, type TerminalConfig } from "@my-profile/ui";
-import { FRIENDS } from "@/data/links";
-import { DATA } from "@/data/resume";
-import { ShimmerButton } from "@/components/magicui/shimmer-button";
-import { useIsMobile } from "@/lib/use-mobile";
-import { cn } from "@/lib/utils";
 import { SquareTerminal } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ShimmerButton } from "@/components/magicui/shimmer-button";
+import { FRIENDS } from "@/data/links";
+import { DATA } from "@/data/resume";
+import { useIsMobile } from "@/lib/use-mobile";
+import { cn } from "@/lib/utils";
 
 const MIN_W = 320;
 const MIN_H = 213;

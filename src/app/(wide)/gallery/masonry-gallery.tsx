@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { PixelImage } from "@/components/magicui/pixel-image";
 import BlurFade from "@/components/magicui/blur-fade";
+import { PixelImage } from "@/components/magicui/pixel-image";
 
 export interface MasonryItem {
 	id: string;

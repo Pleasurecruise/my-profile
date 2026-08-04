@@ -56,3 +56,4 @@ src/generated/prisma
 # tools
 .tanstack
 .wrangler
+.void

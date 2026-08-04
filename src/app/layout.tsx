@@ -1,6 +1,6 @@
+import { CherryBlossom } from "@my-profile/ui";
 import type { Metadata } from "next";
 import { Fira_Code, Inter as FontSans, Noto_Sans_SC } from "next/font/google";
-import { CherryBlossom } from "@my-profile/ui";
 import { FloatingTerminal } from "@/components/floating-terminal";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import NavbarWrapper from "@/components/navbar-wrapper";

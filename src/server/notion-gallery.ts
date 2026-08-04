@@ -1,7 +1,7 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { NotionAPI } from "notion-client";
 import type { Block, NotionMapBox } from "notion-types";
-import { unstable_cache } from "next/cache";
 
 const notion = new NotionAPI();
 

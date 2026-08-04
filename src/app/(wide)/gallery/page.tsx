@@ -1,6 +1,6 @@
 import BlurFade from "@/components/magicui/blur-fade";
-import { MasonryGallery } from "./masonry-gallery";
 import { getGalleryPhotos } from "@/server/notion-gallery";
+import { MasonryGallery } from "./masonry-gallery";
 
 export default async function GalleryPage() {
 	const photos = await getGalleryPhotos();
