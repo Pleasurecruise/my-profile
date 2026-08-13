@@ -10,7 +10,7 @@ Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Ro
 
 - **Home** — landing page with animated background
 - **Blog** — Markdown stored in Cloudflare R2, compiled server-side with Shiki syntax highlighting and TOC generation
-- **Chat** — authenticated AI assistant with OpenAI-compatible streaming
+- **Chat** — authenticated Pi Agent chat with typed NDJSON streaming
 - **Gallery** — photo gallery sourced from Cloudflare R2, masonry layout
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **CV** — resume page with work, projects, and hackathons
@@ -34,11 +34,11 @@ This project splits runtime values by source.
 - `env.ts` declares and validates application environment variables.
 - `.env.local` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
 - `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
-- Non-sensitive production defaults and Cloudflare resource bindings live in `wrangler.jsonc`.
+- Non-sensitive production defaults and Cloudflare resource bindings live in `wrangler.json`.
 - Production secrets are uploaded to Cloudflare with `wrangler secret put`.
 - Production builds do not load `.env.local`; runtime secrets stay in Cloudflare encrypted bindings.
 
-Remote/prod bindings are declared in `wrangler.jsonc`:
+Remote/prod bindings are declared in `wrangler.json`:
 
 | Binding        | Type       | Purpose                       |
 | -------------- | ---------- | ----------------------------- |
@@ -86,6 +86,7 @@ Required production secrets:
 
 ```bash
 pnpm dev          # Local dev via Vite+ and Void
+pnpm test         # Isolated Vitest unit tests
 pnpm build        # Client build + wrangler dry-run deploy
 pnpm deploy       # Build and deploy with Wrangler
 pnpm check        # Format, lint, and type checks
@@ -102,14 +103,14 @@ pnpm deploy
 Production runtime values are split by binding type:
 
 ```bash
-# Non-sensitive runtime values and resource bindings are declared in wrangler.jsonc
+# Non-sensitive runtime values and resource bindings are declared in wrangler.json
 # Local values live in .env.local
 # Production secrets can be added with `wrangler secret put <NAME>`
 ```
 
 ## Workspace
 
-The repo is a pnpm workspace. Shared UI components live in `packages/ui`:
+The repo is a pnpm workspace. Pi Agent runtime code lives in `packages/ai-core`; shared UI components live in `packages/ui`:
 
 ```
 packages/ui/src/
@@ -120,6 +121,10 @@ packages/ui/src/
 ```
 
 Shared TypeScript types (consumed by both `src/` and `server/`) live in `types/`, aliased as `@shared/`.
+
+The platform-neutral Pi runtime lives in `packages/ai-core`. Maintainer documentation is collected in
+`docs/ARCHITECTURE.md`, `docs/DEPLOYMENT.md`, `docs/DESIGN.md`, `docs/STYLEGUIDE.md`,
+`docs/TECH.md`, and `docs/DATABASE.md`.
 
 ## License
 

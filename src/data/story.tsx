@@ -93,9 +93,9 @@ ISTJ（内向·感知·思考·判断）被称为"物流师"或"检查者"。形
 - 联想小新 —— 外出携带
 - Mac Mini M4 —— 居家办公
 - iPhone 17 —— 手机
-- AirPods 4 —— 蓝牙耳机 
-~~ - OPPO Reno 9 Pro+ —— 手机 ~~
-~~ - OPPO Enco R3 Pro —— 蓝牙耳机 ~~
+- AirPods 4 —— 蓝牙耳机
+- ~~OPPO Reno 9 Pro+ —— 手机~~
+- ~~OPPO Enco R3 Pro —— 蓝牙耳机~~
 
 **IDE**
 

@@ -1,10 +1,12 @@
-export type MessageStatus = "streaming" | "done" | "error";
-
-export type ChatMessage = {
-  id: string;
-  content: string;
-  role: "user" | "assistant";
-  timestamp?: Date;
-  user?: { name: string; image?: string | null };
-  status?: MessageStatus;
-};
+export type {
+  AssistantChatMessage,
+  AssistantStep,
+  ChatEvent,
+  ChatMessage,
+  ChatPart,
+  ChatStatus,
+  MessageStatus,
+  TextPart,
+  ToolPart,
+  UserChatMessage,
+} from "@shared/chat";

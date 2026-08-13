@@ -97,8 +97,8 @@ export const STORY_MARKDOWN = String.raw`## 👋 こんにちは！Pleasure1234 
 - Mac Mini M4 — 在宅勤務用
 - iPhone 17 — スマホ
 - AirPods 4 — ワイヤレスイヤホン
-~~ - OPPO Reno 9 Pro+ — スマホ ~~
-~~ - OPPO Enco R3 Pro — ワイヤレスイヤホン ~~
+- ~~OPPO Reno 9 Pro+ — スマホ~~
+- ~~OPPO Enco R3 Pro — ワイヤレスイヤホン~~
 
 **IDE**
 

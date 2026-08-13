@@ -1,8 +1,9 @@
-## Database
+# Database
 
-The application uses PostgreSQL. Void is configured with `"database": "pg"` in `void.json` and wires Better Auth to the database automatically.
+The application uses PostgreSQL. Void is configured with `"database": "pg"` in `void.json` and
+wires Better Auth to the database automatically.
 
-### Local development
+## Local development
 
 Copy `.env.example` to `.env.local` and set a direct PostgreSQL connection:
 
@@ -24,11 +25,12 @@ docker run -d \
   postgres:latest
 ```
 
-### Production
+## Production
 
-Production uses the `HYPERDRIVE` binding declared in `wrangler.jsonc`. Local connection strings and database credentials must not be added to that file.
+Production uses the `HYPERDRIVE` binding declared in `wrangler.json`. Local connection strings and
+database credentials must not be added to that file.
 
-### Schema ownership
+## Schema ownership
 
 Better Auth currently owns the active authentication models:
 
@@ -37,4 +39,5 @@ Better Auth currently owns the active authentication models:
 - `account`
 - `verification`
 
-Void generates its Better Auth integration under `.void/`; that directory is ignored and must not be edited manually.
+Void generates its Better Auth integration under `.void/`; that directory is ignored and must not
+be edited manually.

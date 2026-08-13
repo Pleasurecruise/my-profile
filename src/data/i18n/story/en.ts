@@ -97,8 +97,8 @@ My dream is to have a well-known open source project, or to build a tool that lo
 - Mac Mini M4 — for home office
 - iPhone 17 — phone
 - AirPods 4 — wireless earbuds
-~~ - OPPO Reno 9 Pro+ — phone ~~
-~~ - OPPO Enco R3 Pro — wireless earbuds ~~
+- ~~OPPO Reno 9 Pro+ — phone~~
+- ~~OPPO Enco R3 Pro — wireless earbuds~~
 
 **IDE**
 

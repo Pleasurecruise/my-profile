@@ -1,1 +1,12 @@
-export type { ChatMessage, MessageStatus } from "./chat";
+export type {
+  AssistantChatMessage,
+  AssistantStep,
+  ChatEvent,
+  ChatMessage,
+  ChatPart,
+  ChatStatus,
+  MessageStatus,
+  TextPart,
+  ToolPart,
+  UserChatMessage,
+} from "./chat";
