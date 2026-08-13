@@ -15,7 +15,8 @@ Over the years I've had many usernames across different platforms — Pleasurecr
 
 Most were forced by the need for a unique ID... so just calling me Yiming will do just fine.
 
-There's a fun little story behind this nickname:
+<details>
+<summary>There's a fun little story behind this nickname</summary>
 
 When I was a kid registering my first QQ account, I chose the handle 逆光飞翔🪽 (Flying Against the Light).
 
@@ -26,6 +27,8 @@ I randomly fed it into a machine translator and, for reasons unknown, it spat ou
 Little did I know this nickname would one day become a unique ID, one that might stick with me for life...
 
 At this point I've stopped agonizing over it — the switching cost is too high, so I won't bother changing it.
+
+</details>
 
 **Pleasure — be happy. As long as you're happy every day, that's enough :-D**
 
@@ -45,7 +48,7 @@ The family computer stayed on Windows 7 since my elementary school days.
 
 So when filling out college applications, I chose computer science — to make up for all the computer time I missed as a kid.
 
-Since boarding at school from middle school onward, I'd never really stepped out of the Changsha Triangle,
+Since boarding at school from middle school onward, I'd never really stepped out of the Yangtze River Delta,
 
 so during university I've travelled to many corners of the world — I guess that makes me half a backpacker 🎒 now.
 
@@ -92,12 +95,16 @@ My dream is to have a well-known open source project, or to build a tool that lo
 
 - Lenovo Xiaoxin — for on the go
 - Mac Mini M4 — for home office
-- OPPO Reno 9 Pro+ — phone
-- OPPO Enco R3 Pro — wireless earbuds
+- iPhone 17 — phone
+- AirPods 4 — wireless earbuds
+~~ - OPPO Reno 9 Pro+ — phone ~~
+~~ - OPPO Enco R3 Pro — wireless earbuds ~~
 
 **IDE**
 
 A loyal fan of the JetBrains suite — my go-to for repo-scale projects.
+
+ADE mobile remote development — I've tried conductor, lody, t3code…
 
 For quick edits on smaller projects I use VS Code. I've also dabbled with Sublime Text, Vim, Notepad++, Trae, Cursor, Zed...
 
@@ -125,8 +132,6 @@ For quick edits on smaller projects I use VS Code. I've also dabbled with Sublim
 **Monthly Subscriptions**
 
 Claude Pro · Twitter Plus · QQ Music VIP
-
-> Once tried to subscribe to GLM Coding Plan but failed. Also subscribed to various gacha game monthly passes.
 
 ## My Original Character
 

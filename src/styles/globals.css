@@ -31,6 +31,10 @@
     "Noto Color Emoji";
 }
 
+.travel-globe .mapboxgl-ctrl-logo {
+  display: none;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {

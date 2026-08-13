@@ -32,6 +32,10 @@ export const Route = createFileRoute("/")({
         content: "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏",
       },
       { property: "og:image", content: `${SITE_URL}/api/og/home` },
+      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: `${SITE_TITLE} — personal website` },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: SITE_TITLE },
       {
@@ -39,6 +43,7 @@ export const Route = createFileRoute("/")({
         content: "Full-stack Developer · Any shortcomings are kindly overlooked. 🙏",
       },
       { name: "twitter:image", content: `${SITE_URL}/api/og/home` },
+      { name: "twitter:image:alt", content: `${SITE_TITLE} — personal website` },
     ],
   }),
   component: HomePage,

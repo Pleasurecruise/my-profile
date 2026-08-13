@@ -162,7 +162,7 @@ export function TravelGlobe({ locations, className, mapboxToken }: TravelGlobePr
   }, [locations]);
 
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("travel-globe w-full", className)}>
       <div className="relative mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-2xl shadow-sm">
         {mapboxToken ? (
           <div ref={mapContainerRef} className="h-full w-full" />

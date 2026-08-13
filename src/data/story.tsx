@@ -12,7 +12,8 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 都是因为要求id唯一而被迫衍生出来的... 所以称呼我为一明(yiming) 就可以
 
-这个名字的由来还有一段有意思的小插曲：
+<details>
+<summary>这个名字的由来还有一段有意思的小插曲：</summary>
 
 小的时候注册第一个qq号 取的昵称叫做 逆光飞翔🪽
 
@@ -23,6 +24,8 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 哪知道这个昵称在将来会变成一个唯一的id 甚至要跟随一辈子...
 
 事到如今也就不再纠结了 迁移成本太大也就不打算改了
+
+</details>
 
 **Pleasure 开心 人活着每天开开心心的就好了 :-D**
 
@@ -38,21 +41,21 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 初高中的时候父母不让玩电脑 除了很小的时候玩过4399
 
-家里的电脑一直停留在小学时候的Windows7
+家里的电脑一直停留在小学时候的 Windows7
 
 于是高考填志愿的时候就选择了计算机的方向 以弥补我童年没玩够电脑的遗憾、
 
-因为自从初中住校之后就再也没有踏出过长沙三角
+因为自从初中住校之后就再也没有踏出过长三角
 
 于是在大学期间 游览了了世界的很多地方 也算是半个背包客🎒了吧
 
 ### 性格与爱好
 
-半个宅男 喜欢独处
+半个宅男 享受孤独
 
 爱好公路车🚴, vibe coding💻, 听歌🎧 , 看电影🎬
 
-打游戏 minecraft 开放世界二游偏多 pvp pve都玩 不玩fps
+打游戏 minecraft 开放世界二游偏多 pvp pve 都玩 不玩fps
 
 初一就离家住校 成绩一直中上 有着强烈的自尊心 却又无法更进一步
 
@@ -60,7 +63,7 @@ export const STORY_MARKDOWN = String.raw`## 👋 嘿！我是Pleasure1234
 
 与人交往中一直小心翼翼 深怕因为能力不足而被否定
 
-所以我选择了这句话来作为我的 slogan
+所以我选了这句话来作为我的 slogan
 
 **Any shortcomings are kindly overlooked**
 
@@ -89,12 +92,16 @@ ISTJ（内向·感知·思考·判断）被称为"物流师"或"检查者"。形
 
 - 联想小新 —— 外出携带
 - Mac Mini M4 —— 居家办公
-- OPPO Reno 9 Pro+ —— 手机
-- OPPO Enco R3 Pro —— 蓝牙耳机
+- iPhone 17 —— 手机
+- AirPods 4 —— 蓝牙耳机 
+~~ - OPPO Reno 9 Pro+ —— 手机 ~~
+~~ - OPPO Enco R3 Pro —— 蓝牙耳机 ~~
 
 **IDE**
 
 JetBrains 全家桶忠实爱好者，仓库级项目首选
+
+ADE 手机 remote 远程开发，体验过 conductor、lody、t3code……
 
 小项目临时编辑用 VS Code，体验过 Sublime Text、Vim、Notepad++、Trae、Cursor、Zed……
 
@@ -122,8 +129,6 @@ JetBrains 全家桶忠实爱好者，仓库级项目首选
 **每月订阅**
 
 Claude Pro · Twitter Plus · QQ Music 绿钻
-
-> 曾经尝试订阅 GLM Coding Plan 没成功，也订阅过各大二游月卡。
 
 ## 我的 original character
 

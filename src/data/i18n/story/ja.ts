@@ -15,7 +15,8 @@ export const STORY_MARKDOWN = String.raw`## 👋 こんにちは！Pleasure1234 
 
 ほとんどが一意のIDを要求されて仕方なく生まれたもの… なので「一明（イーミン）」と呼んでもらえれば十分です。
 
-この名前の由来にはちょっと面白いエピソードがあります：
+<details>
+<summary>この名前の由来にはちょっと面白いエピソードがあります</summary>
 
 小さい頃、初めてQQアカウントを登録した時、「逆光飞翔🪽（逆光を飛ぶ）」というニックネームを付けました。
 
@@ -26,6 +27,8 @@ export const STORY_MARKDOWN = String.raw`## 👋 こんにちは！Pleasure1234 
 まさかこのニックネームが将来唯一のIDになって、一生付きまとうことになるとは…
 
 今となってはもう悩むのもやめました。移行コストが高すぎるので、変えるつもりはありません。
+
+</details>
 
 **Pleasure（喜び）— 人は毎日楽しく生きていればそれでいい :-D**
 
@@ -45,13 +48,13 @@ export const STORY_MARKDOWN = String.raw`## 👋 こんにちは！Pleasure1234 
 
 だから大学の志望校を決める時、コンピュータサイエンスを選びました — 子供の頃に遊べなかった分を取り戻すために。
 
-中学から寮生活だったので、長沙三角からは一度も出たことがなく、
+中学から寮生活だったので、長江デルタからは一度も出たことがなく、
 
 大学時代に世界のいろんな場所を旅しました — 半分バックパッカー🎒と言えるかもしれません。
 
 ### 性格と趣味
 
-半分インドア派、一人の時間が好きです。
+半分インドア派、孤独を楽しんでいます。
 
 趣味：ロードバイク🚴、Vibeコーディング💻、音楽鑑賞🎧、映画鑑賞🎬
 
@@ -92,12 +95,16 @@ export const STORY_MARKDOWN = String.raw`## 👋 こんにちは！Pleasure1234 
 
 - Lenovo Xiaoxin — 外出用
 - Mac Mini M4 — 在宅勤務用
-- OPPO Reno 9 Pro+ — スマホ
-- OPPO Enco R3 Pro — ワイヤレスイヤホン
+- iPhone 17 — スマホ
+- AirPods 4 — ワイヤレスイヤホン
+~~ - OPPO Reno 9 Pro+ — スマホ ~~
+~~ - OPPO Enco R3 Pro — ワイヤレスイヤホン ~~
 
 **IDE**
 
 JetBrainsスイートの忠実なファン — リポジトリ規模のプロジェクトの第一選択。
+
+ADEでスマホからリモート開発 — conductor、lody、t3code を試しました…
 
 小さなプロジェクトの一時的な編集にはVS Code。Sublime Text、Vim、Notepad++、Trae、Cursor、Zed も試しました…
 
@@ -125,8 +132,6 @@ JetBrainsスイートの忠実なファン — リポジトリ規模のプロジ
 **月額サブスク**
 
 Claude Pro · Twitter Plus · QQ Music VIP
-
-> 以前GLM Coding Planに登録しようとして失敗したことも。各種ソシャゲの月額パスにも登録していました。
 
 ## 私のオリジナルキャラクター
 
