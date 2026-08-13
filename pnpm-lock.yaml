@@ -11,6 +11,9 @@ overrides:
   uuid: '>=14.0.0'
   postcss: '>=8.5.10'
 
+patchedDependencies:
+  void@0.10.12: b0a53d1cbc817ff67e250f1d97cc2391df8a2132afb1351b46d6e8723e12b3f0
+
 importers:
 
   .:
@@ -186,7 +189,7 @@ importers:
         version: 0.2.9(@opentelemetry/api@1.9.0)(@types/node@26.2.0)(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0)
       void:
         specifier: 0.10.12
-        version: 0.10.12(@opentelemetry/api@1.9.0)(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(arktype@2.2.3)(kysely@0.29.5)(postgres@3.4.9)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(valibot@1.4.2(typescript@7.0.2))(vitest@4.1.10)(zod@4.4.3)
+        version: 0.10.12(patch_hash=b0a53d1cbc817ff67e250f1d97cc2391df8a2132afb1351b46d6e8723e12b3f0)(@opentelemetry/api@1.9.0)(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(arktype@2.2.3)(kysely@0.29.5)(postgres@3.4.9)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(valibot@1.4.2(typescript@7.0.2))(vitest@4.1.10)(zod@4.4.3)
       wrangler:
         specifier: 4.121.0
         version: 4.121.0(@cloudflare/workers-types@4.20260702.1)
@@ -11256,7 +11259,7 @@ snapshots:
     transitivePeerDependencies:
       - msw
 
-  void@0.10.12(@opentelemetry/api@1.9.0)(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(arktype@2.2.3)(kysely@0.29.5)(postgres@3.4.9)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(valibot@1.4.2(typescript@7.0.2))(vitest@4.1.10)(zod@4.4.3):
+  void@0.10.12(patch_hash=b0a53d1cbc817ff67e250f1d97cc2391df8a2132afb1351b46d6e8723e12b3f0)(@opentelemetry/api@1.9.0)(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(arktype@2.2.3)(kysely@0.29.5)(postgres@3.4.9)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(valibot@1.4.2(typescript@7.0.2))(vitest@4.1.10)(zod@4.4.3):
     dependencies:
       '@cloudflare/sandbox': 0.12.5
       '@cloudflare/vite-plugin': 1.51.3(@voidzero-dev/vite-plus-core@0.2.9(@types/node@26.2.0)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.12)(typescript@7.0.2)(yaml@2.9.0))(wrangler@4.121.0(@cloudflare/workers-types@4.20260702.1))

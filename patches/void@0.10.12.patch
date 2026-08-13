@@ -1,0 +1,28 @@
+diff --git a/dist/better-auth-shared-BQooDxbw.mjs b/dist/better-auth-shared-BQooDxbw.mjs
+--- a/dist/better-auth-shared-BQooDxbw.mjs
++++ b/dist/better-auth-shared-BQooDxbw.mjs
+@@ -181,7 +181,9 @@ function createVoidAuthRuntime(dialect, resolveDatabase, runAuthMigrations) {
+ 			}, async () => {
+ 				await next();
+ 			});
+-			appendAuthHeaders(c.res.headers, result.headers);
++			const response = new Response(c.res.body, c.res);
++			appendAuthHeaders(response.headers, result.headers);
++			c.res = response;
+ 		} finally {
+ 			await dispose();
+ 		}
+diff --git a/dist/index.mjs b/dist/index.mjs
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -4389,7 +4389,9 @@ function voidPlugin({
+ 			drizzleAdapterPath
+ 		}));
+ 		compileOptions.auth.authSchemaPath = schemaPath;
+-		compileOptions.auth.authDatabasePath = databasePath;
++		compileOptions.auth.authDatabasePath = compileOptions.auth.dialect === "postgresql"
++			? null
++			: databasePath;
+ 	}
+ 	let resolvedConfig = null;
+ 	let isrRevalidate;
