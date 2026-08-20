@@ -43,6 +43,8 @@ catalog. Syntax-highlighting languages also remain explicitly allow-listed.
 ## Operational Notes
 
 - Production builds use the isolated `.void/build-env`; `.env.local` is not bundled.
+- Static assets, the SPA shell, sitemap, and LLM profile files are served directly by Cloudflare
+  Assets. Worker-first routing is limited to `/api/*` and Void's internal routes.
 - The chat route is stateless and has no storage migration.
 - Aborted browser requests propagate to Pi and the upstream provider.
 - `nodejs_compat` is enabled in `void.json` for Worker dependencies that require Node compatibility.

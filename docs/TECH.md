@@ -37,6 +37,9 @@ creates `dist/client/` for static assets and `dist/ssr/` for the Cloudflare Work
 root `routes/` directory; exported handler names supply HTTP methods, and catch-all segments use
 `[...name].ts`.
 
+All application Worker handlers live under `/api`. This lets Cloudflare serve matching static assets
+and the SPA fallback without invoking the Worker. The sitemap is a static file under `public/`.
+
 Generated files in `.void/`, `dist/`, and `src/routeTree.gen.ts` are not edited manually.
 
 ## AI chat

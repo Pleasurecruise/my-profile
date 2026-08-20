@@ -33,7 +33,7 @@ pnpm format    # Vite+ formatting
 - **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
 - **TypeScript 7**
 - **Tailwind CSS 4** — CSS-first configuration
-- **Hono** — request handlers and middleware
+- **Hono** — Worker request handlers
 - **Better Auth 1.6** — email/password and OAuth authentication
 - **PostgreSQL + Cloudflare Hyperdrive**
 - **Pi Agent 0.84.2** — stateless authenticated chat runtime with typed NDJSON events
@@ -46,12 +46,11 @@ pnpm format    # Vite+ formatting
 .
 ├── auth.ts                 # Void/Better Auth configuration and Resend email callbacks
 ├── env.ts                  # Validated public and secret environment variables
-├── middleware/             # Ordered Hono middleware
 ├── routes/                 # Void file-based server routes
-│   ├── api/                # JSON and streaming API handlers
-│   └── sitemap.xml.ts
+│   └── api/                # JSON, image, auth, and streaming API handlers
+├── public/                 # Static assets, sitemap, and machine-readable profile files
 ├── server/
-│   ├── lib/                # Chat, OG, site, and presence helpers
+│   ├── lib/                # Chat, OG, and presence helpers
 │   └── types/              # Cloudflare and Void binding augmentation
 ├── src/                    # React SPA and TanStack Router pages
 ├── types/                  # Shared application types (@shared/*)
@@ -88,9 +87,9 @@ Current routes:
 | `/api/chat/stream` | `routes/api/chat/stream.ts`      |
 | `/api/og/home`     | `routes/api/og/home.ts`          |
 | `/api/presence`    | `routes/api/presence.ts`         |
-| `/sitemap.xml`     | `routes/sitemap.xml.ts`          |
 
-Global request logging and API CORS live in `middleware/`.
+`/sitemap.xml`, `/llms.txt`, and `/llms-full.txt` are static files under `public/` and bypass the
+Worker in production.
 
 ### Frontend
 

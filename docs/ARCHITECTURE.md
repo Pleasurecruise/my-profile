@@ -28,7 +28,8 @@ Browser (React chat state, current page only)
 ```
 
 The app otherwise uses PostgreSQL through Hyperdrive for Better Auth and Cloudflare static assets
-for the React client.
+for the React client. Production asset requests bypass Worker execution; only `/api/*` and Void's
+internal routes run Worker code before asset resolution.
 
 ## Package Boundaries
 
