@@ -13,13 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as CvRouteImport } from './routes/cv'
-import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as PasswordRouteRouteImport } from './routes/password/route'
+import { Route as SocialRouteImport } from './routes/social'
 import { Route as StoryRouteImport } from './routes/story'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthSignupRouteImport } from './routes/_auth/signup'
-import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as BlogSplatRouteImport } from './routes/blog/$'
 import { Route as PasswordForgetRouteImport } from './routes/password/forget'
 import { Route as PasswordResetRouteImport } from './routes/password/reset'
 
@@ -42,14 +40,14 @@ const CvRoute = CvRouteImport.update({
   path: '/cv',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PasswordRouteRoute = PasswordRouteRouteImport.update({
   id: '/password',
   path: '/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SocialRoute = SocialRouteImport.update({
+  id: '/social',
+  path: '/social',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StoryRoute = StoryRouteImport.update({
@@ -67,16 +65,6 @@ const AuthSignupRoute = AuthSignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogSplatRoute = BlogSplatRouteImport.update({
-  id: '/blog/$',
-  path: '/blog/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PasswordForgetRoute = PasswordForgetRouteImport.update({
   id: '/forget',
   path: '/forget',
@@ -93,28 +81,24 @@ export interface FileRoutesByFullPath {
   '/password': typeof PasswordRouteRouteWithChildren
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
-  '/gallery': typeof GalleryRoute
+  '/social': typeof SocialRoute
   '/story': typeof StoryRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
-  '/blog/$': typeof BlogSplatRoute
   '/password/forget': typeof PasswordForgetRoute
   '/password/reset': typeof PasswordResetRoute
-  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/password': typeof PasswordRouteRouteWithChildren
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
-  '/gallery': typeof GalleryRoute
+  '/social': typeof SocialRoute
   '/story': typeof StoryRoute
   '/login': typeof AuthLoginRoute
   '/signup': typeof AuthSignupRoute
-  '/blog/$': typeof BlogSplatRoute
   '/password/forget': typeof PasswordForgetRoute
   '/password/reset': typeof PasswordResetRoute
-  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,14 +107,12 @@ export interface FileRoutesById {
   '/password': typeof PasswordRouteRouteWithChildren
   '/chat': typeof ChatRoute
   '/cv': typeof CvRoute
-  '/gallery': typeof GalleryRoute
+  '/social': typeof SocialRoute
   '/story': typeof StoryRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/signup': typeof AuthSignupRoute
-  '/blog/$': typeof BlogSplatRoute
   '/password/forget': typeof PasswordForgetRoute
   '/password/reset': typeof PasswordResetRoute
-  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -139,28 +121,24 @@ export interface FileRouteTypes {
     | '/password'
     | '/chat'
     | '/cv'
-    | '/gallery'
+    | '/social'
     | '/story'
     | '/login'
     | '/signup'
-    | '/blog/$'
     | '/password/forget'
     | '/password/reset'
-    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/password'
     | '/chat'
     | '/cv'
-    | '/gallery'
+    | '/social'
     | '/story'
     | '/login'
     | '/signup'
-    | '/blog/$'
     | '/password/forget'
     | '/password/reset'
-    | '/blog'
   id:
     | '__root__'
     | '/'
@@ -168,14 +146,12 @@ export interface FileRouteTypes {
     | '/password'
     | '/chat'
     | '/cv'
-    | '/gallery'
+    | '/social'
     | '/story'
     | '/_auth/login'
     | '/_auth/signup'
-    | '/blog/$'
     | '/password/forget'
     | '/password/reset'
-    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,10 +160,8 @@ export interface RootRouteChildren {
   PasswordRouteRoute: typeof PasswordRouteRouteWithChildren
   ChatRoute: typeof ChatRoute
   CvRoute: typeof CvRoute
-  GalleryRoute: typeof GalleryRoute
+  SocialRoute: typeof SocialRoute
   StoryRoute: typeof StoryRoute
-  BlogSplatRoute: typeof BlogSplatRoute
-  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -220,18 +194,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CvRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/password': {
       id: '/password'
       path: '/password'
       fullPath: '/password'
       preLoaderRoute: typeof PasswordRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/social': {
+      id: '/social'
+      path: '/social'
+      fullPath: '/social'
+      preLoaderRoute: typeof SocialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/story': {
@@ -254,20 +228,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof AuthSignupRouteImport
       parentRoute: typeof AuthRouteRoute
-    }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$': {
-      id: '/blog/$'
-      path: '/blog/$'
-      fullPath: '/blog/$'
-      preLoaderRoute: typeof BlogSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/password/forget': {
       id: '/password/forget'
@@ -320,10 +280,8 @@ const rootRouteChildren: RootRouteChildren = {
   PasswordRouteRoute: PasswordRouteRouteWithChildren,
   ChatRoute: ChatRoute,
   CvRoute: CvRoute,
-  GalleryRoute: GalleryRoute,
+  SocialRoute: SocialRoute,
   StoryRoute: StoryRoute,
-  BlogSplatRoute: BlogSplatRoute,
-  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

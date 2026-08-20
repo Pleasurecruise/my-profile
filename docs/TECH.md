@@ -10,7 +10,7 @@ The project is a pnpm workspace containing:
 - TanStack Router file-based client routes
 - Void file-based Hono routes running on Cloudflare Workers
 - Better Auth backed by PostgreSQL
-- Cloudflare R2, KV, Hyperdrive, and static assets
+- Cloudflare Hyperdrive and static assets
 - `@my-profile/ui` and a platform-neutral `@my-profile/ai-core` package
 
 ## Core runtime
@@ -22,7 +22,7 @@ The project is a pnpm workspace containing:
 | React + TanStack Router          | Browser SPA and file-based routes                           |
 | Tailwind CSS                     | CSS-first styling with the existing project design tokens   |
 | Better Auth + PostgreSQL         | Authentication and persistence through Hyperdrive           |
-| Cloudflare R2 / KV / Assets      | Blog, gallery, derived caches, and static files             |
+| Cloudflare Assets                | Static client files                                         |
 | Pi Agent                         | Agent loop, tool execution, events, and cancellation        |
 | OpenAI-compatible model endpoint | Model transport selected by environment variables           |
 | Vitest                           | Isolated unit tests                                         |
@@ -45,11 +45,8 @@ The authenticated browser route posts a validated transcript to `/api/chat/strea
 creates a stateless Pi Agent and returns typed newline-delimited JSON events. Pi is the only owner of
 the model/tool loop and receives request cancellation through an abort signal.
 
-The Worker exposes only three read-only application tools:
-
-- read the published profile from the static asset binding
-- list public blog slugs from R2
-- read one selected public blog post from R2
+The Worker exposes one read-only application tool: reading the published profile from the static
+asset binding.
 
 The browser keeps conversation state in memory. Refreshing or leaving the route discards it. Neither
 the Worker nor the database persists chat transcripts.
@@ -60,7 +57,7 @@ the Worker nor the database persists chat transcripts.
 - `routes/` and `server/` contain Worker-only transport and application integrations.
 - `types/` contains only contracts consumed by both browser and Worker.
 - `packages/ai-core` contains Pi construction and provider adaptation without Cloudflare or UI code.
-- `packages/ui` contains reusable visual and Markdown components.
+- `packages/ui` contains reusable visual, footer, and terminal components.
 
 ## Environment strategy
 
@@ -68,8 +65,8 @@ the Worker nor the database persists chat transcripts.
 configuration and bindings belong in `wrangler.json`; secrets are stored as Cloudflare secrets.
 Application code reads environment values through Void or Hono context, not `process.env`.
 
-The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Cloudflare bindings used by
-the tools are `ASSETS` and `BLOG_BUCKET`.
+The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Its profile tool uses the
+`ASSETS` binding.
 
 ## Commands
 

@@ -3,11 +3,7 @@
   "target": "cloudflare",
   "database": "pg",
   "inference": {
-    "appType": "void",
-    "bindings": {
-      "kv": "KV_NAMESPACE",
-      "storage": "BLOG_BUCKET"
-    }
+    "appType": "void"
   },
   "worker": {
     "compatibility_date": "2026-07-18",

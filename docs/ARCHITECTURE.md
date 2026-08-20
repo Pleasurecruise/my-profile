@@ -10,7 +10,7 @@ This repository is a pnpm workspace with one deployable application and two loca
 | `routes/`          | Void/Hono Worker route handlers                                    |
 | `server/`          | Worker-only domain and infrastructure code                         |
 | `types/`           | Contracts used by both browser and Worker code                     |
-| `packages/ui`      | Reusable UI, Markdown compiler, footer, and terminal               |
+| `packages/ui`      | Reusable UI, footer, and terminal                                  |
 | `packages/ai-core` | Platform-neutral Pi Agent construction and model adaptation        |
 | `docs/`            | Maintainer-facing architecture, deployment, design, and style docs |
 
@@ -27,12 +27,8 @@ Browser (React chat state, current page only)
   -> provider configured by OPENAI_API_URL and OPENAI_MODEL
 ```
 
-The app otherwise uses:
-
-- PostgreSQL through Hyperdrive for Better Auth
-- R2 for blog Markdown and gallery images
-- KV for derived blog, feed, sitemap, and OG caches
-- Cloudflare static assets for the React client
+The app otherwise uses PostgreSQL through Hyperdrive for Better Auth and Cloudflare static assets
+for the React client.
 
 ## Package Boundaries
 
@@ -64,10 +60,9 @@ The chat application boundary is split by runtime:
 - `src/routes/chat.tsx` owns in-memory conversation state and rendering.
 
 One assistant UI message may contain multiple ordered steps around tool calls. The application gives
-Pi two sequential, read-only tools: public profile lookup and blog lookup. Blog lookup lists posts
-when no slug is supplied and reads one post when given an exact listed slug. Their Cloudflare bindings
-stay in the Worker application layer; the shared protocol carries tool input/output events without
-giving the HTTP layer ownership of the agent loop.
+Pi one sequential, read-only public profile lookup tool. Its Cloudflare assets binding stays in the
+Worker application layer; the shared protocol carries tool input/output events without giving the
+HTTP layer ownership of the agent loop.
 
 ## Chat Request Lifecycle
 

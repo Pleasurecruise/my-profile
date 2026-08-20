@@ -15,7 +15,7 @@ keep unrelated refactors out of feature changes.
 
 Create a helper only when it:
 
-- isolates an external boundary such as Pi, an HTTP provider, auth, R2, KV, or PostgreSQL
+- isolates an external boundary such as Pi, an HTTP provider, auth, or PostgreSQL
 - gives a real domain operation a useful name
 - removes repeated logic in multiple call sites
 - makes required cleanup or error translation consistent

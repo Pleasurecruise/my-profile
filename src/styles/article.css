@@ -18,33 +18,8 @@ pre code {
   @apply block px-4 !leading-normal;
 }
 
-pre.shiki code {
-  display: block;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-pre.shiki code .line {
-  display: inline-block;
-  width: 100%;
-  padding: 0 1rem;
-}
-
 h3 code {
   @apply !text-lg md:!text-xl;
-}
-
-pre.shiki {
-  background-color: hsl(0, 0%, 98%) !important;
-}
-
-.dark pre.shiki {
-  background-color: var(--shiki-dark-bg) !important;
-  color: var(--shiki-dark) !important;
-}
-
-.dark pre.shiki span {
-  color: var(--shiki-dark) !important;
 }
 
 code[data-line-numbers] {
@@ -66,7 +41,7 @@ code[data-line-numbers-max-digits="3"] > .line::before {
 }
 
 /* ===================================================
-   Article / Blog Content  (.article)
+   Article content  (.article)
    =================================================== */
 
 .article {
@@ -244,22 +219,4 @@ code[data-line-numbers-max-digits="3"] > .line::before {
   border-radius: 0.25rem;
   padding: 0.15em 0.4em;
   line-height: 1.5;
-}
-
-/* === TOC === */
-
-.toc__link {
-  transition:
-    color 150ms,
-    opacity 150ms;
-}
-
-.toc__link:not(.text-primary) {
-  opacity: 0.55;
-}
-
-.toc__link:hover,
-.toc__link.text-primary {
-  color: var(--color-primary);
-  opacity: 1;
 }

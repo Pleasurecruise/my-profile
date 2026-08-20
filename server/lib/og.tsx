@@ -68,18 +68,8 @@ async function loadFont(family: string, weight: FontWeight, text: string): Promi
   return request;
 }
 
-export type OgImageParams =
-  | { type: "home" }
-  | { type: "blog"; title: string; description?: string };
-
-export async function generateOgImageResponse(params: OgImageParams): Promise<Response> {
-  const isHome = params.type === "home";
-  const title = isHome ? SITE_TITLE : params.title;
-  const description = isHome ? SITE_DESCRIPTION : params.description;
-  const titleLength = Array.from(title).length;
-  const titleSize = isHome ? 84 : titleLength > 58 ? 43 : titleLength > 36 ? 50 : 62;
-  const eyebrow = isHome ? "PERSONAL WORKSPACE" : "FIELD NOTES";
-  const fontText = `${SITE_TITLE}${SITE_DESCRIPTION}${SITE_URL}${title}${description ?? ""}${eyebrow}PRIVATE NOTES AVAILABLE Full-stack developer Making useful things with code, care, and a little curiosity. BUILDING FOR PEOPLE & THE WEB WORDS, CODE & SMALL DISCOVERIES`;
+export async function generateOgImageResponse(): Promise<Response> {
+  const fontText = `${SITE_TITLE}${SITE_DESCRIPTION}${SITE_URL}PERSONAL SITE PROFILE ONLINE Full-stack developer Making useful things with code, care, and a little curiosity. CODE OPEN SOURCE SOCIAL`;
   const fonts = await Promise.all([
     loadFont("Inter", 400, fontText),
     loadFont("Inter", 600, fontText),
@@ -157,7 +147,7 @@ export async function generateOgImageResponse(params: OgImageParams): Promise<Re
               letterSpacing: "0.04em",
             }}
           >
-            PRIVATE NOTES · {isHome ? "00" : "01"}
+            PERSONAL SITE · PROFILE
           </span>
         </div>
 
@@ -177,7 +167,7 @@ export async function generateOgImageResponse(params: OgImageParams): Promise<Re
             letterSpacing: "0.04em",
           }}
         >
-          {eyebrow}
+          FULL-STACK DEVELOPER
         </div>
 
         <div
@@ -188,32 +178,30 @@ export async function generateOgImageResponse(params: OgImageParams): Promise<Re
             alignItems: "center",
             marginTop: 25,
             overflow: "hidden",
-            fontSize: titleSize,
+            fontSize: 84,
             fontWeight: 600,
             lineHeight: 1.25,
             letterSpacing: "-0.02em",
           }}
         >
-          {title}
+          {SITE_TITLE}
         </div>
 
-        {description && (
-          <div
-            style={{
-              width: 675,
-              maxHeight: 64,
-              display: "flex",
-              marginTop: 17,
-              overflow: "hidden",
-              color: palette.mutedForeground,
-              fontSize: 19,
-              fontWeight: 400,
-              lineHeight: 1.5,
-            }}
-          >
-            {description}
-          </div>
-        )}
+        <div
+          style={{
+            width: 675,
+            maxHeight: 64,
+            display: "flex",
+            marginTop: 17,
+            overflow: "hidden",
+            color: palette.mutedForeground,
+            fontSize: 19,
+            fontWeight: 400,
+            lineHeight: 1.5,
+          }}
+        >
+          {SITE_DESCRIPTION}
+        </div>
 
         <div
           style={{
@@ -231,9 +219,7 @@ export async function generateOgImageResponse(params: OgImageParams): Promise<Re
           }}
         >
           <span>{SITE_URL}</span>
-          <span style={{ marginLeft: "auto" }}>
-            {isHome ? "BUILDING FOR PEOPLE & THE WEB" : "WORDS, CODE & SMALL DISCOVERIES"}
-          </span>
+          <span style={{ marginLeft: "auto" }}>CODE · OPEN SOURCE · SOCIAL</span>
         </div>
       </div>
 
@@ -286,7 +272,7 @@ export async function generateOgImageResponse(params: OgImageParams): Promise<Re
               letterSpacing: "0.04em",
             }}
           >
-            AVAILABLE
+            ONLINE
           </div>
         </div>
 

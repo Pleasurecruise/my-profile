@@ -1,5 +1,5 @@
 export const SITE_URL = "https://you-find.me";
-export const SITE_TITLE = "Pleasure1234's Blog";
+export const SITE_TITLE = "Pleasure1234";
 
 export function escapeXml(value: string): string {
   return (value ?? "")

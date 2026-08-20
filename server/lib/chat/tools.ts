@@ -1,20 +1,8 @@
 import { Type, type AgentTool } from "@my-profile/ai-core";
-import { getAllBlogSlugs } from "@server/lib/blog";
 
 const noParameters = Type.Object({});
-const getBlogParameters = Type.Object({
-  slug: Type.Optional(
-    Type.String({
-      description: "An exact Markdown slug returned by an earlier get_blog call.",
-    }),
-  ),
-});
 
-export function createChatTools(bindings: {
-  assets: Fetcher;
-  blogBucket: R2Bucket;
-  profileUrl: URL;
-}): AgentTool[] {
+export function createChatTools(bindings: { assets: Fetcher; profileUrl: URL }): AgentTool[] {
   const getProfile: AgentTool<typeof noParameters> = {
     name: "get_profile",
     label: "Read profile",
@@ -35,34 +23,5 @@ export function createChatTools(bindings: {
     },
   };
 
-  const getBlog: AgentTool<typeof getBlogParameters> = {
-    name: "get_blog",
-    label: "Read blog",
-    description:
-      "List public blog slugs when slug is omitted, or read one post when given an exact listed slug.",
-    parameters: getBlogParameters,
-    executionMode: "sequential",
-    async execute(_toolCallId, { slug }, signal) {
-      signal?.throwIfAborted();
-      if (!slug) {
-        const slugs = await getAllBlogSlugs(bindings.blogBucket);
-        signal?.throwIfAborted();
-        return {
-          content: [{ type: "text", text: JSON.stringify(slugs) }],
-          details: { count: slugs.length, slugs },
-        };
-      }
-
-      const object = await bindings.blogBucket.get(`blog/${decodeURIComponent(slug)}`);
-      signal?.throwIfAborted();
-      if (!object) throw new Error(`Blog post not found: ${slug}`);
-      const markdown = await object.text();
-      return {
-        content: [{ type: "text", text: markdown }],
-        details: { slug },
-      };
-    },
-  };
-
-  return [getProfile, getBlog];
+  return [getProfile];
 }

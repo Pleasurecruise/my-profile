@@ -35,7 +35,6 @@ export const POST = defineHandler(async (c) => {
             messages: uiMessagesToPi(validation.data.messages, model),
             tools: createChatTools({
               assets: c.env.ASSETS,
-              blogBucket: c.env.BLOG_BUCKET,
               profileUrl: new URL("/llms-full.txt", c.req.url),
             }),
             apiKey: env.OPENAI_API_KEY,

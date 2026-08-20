@@ -1,7 +1,9 @@
 import { CherryBlossom } from "@my-profile/ui";
 import { HeadContent, Outlet, createRootRoute } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { CircleDollarSign } from "lucide-react";
 import { FloatingTerminal } from "@/components/layout/floating-terminal";
+import { RainbowButton } from "@/components/magicui/rainbow-button";
 import { ScrollProgress } from "@/components/magicui/scroll-progress";
 import { Navbar } from "@/components/layout/navbar";
 import { ThemeProvider } from "@/components/layout/theme-provider";
@@ -48,6 +50,21 @@ function RootLayout() {
             <Outlet />
             <Navbar />
             <FloatingTerminal />
+            <RainbowButton
+              asChild
+              variant="outline"
+              className="fixed right-8 bottom-24 z-40 !size-12 !rounded-full !p-0 shadow-lg backdrop-blur-sm max-sm:right-4 max-sm:bottom-36 max-sm:!size-10"
+            >
+              <a
+                href="https://buy.stripe.com/28E00d8Wo6Xj17e3tq5J600"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Sponsor"
+                title="Sponsor"
+              >
+                <CircleDollarSign className="size-5 max-sm:size-4" />
+              </a>
+            </RainbowButton>
             <Toaster />
           </div>
 

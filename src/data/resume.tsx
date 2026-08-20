@@ -1,10 +1,4 @@
-import {
-  BotMessageSquareIcon,
-  CameraIcon,
-  FeatherIcon,
-  HourglassIcon,
-  SproutIcon,
-} from "lucide-react";
+import { BotMessageSquareIcon, FeatherIcon, HeartHandshakeIcon, SproutIcon } from "lucide-react";
 import { Icons } from "@/components/shared/icons";
 import { Docker } from "@/components/ui/svgs/docker";
 import { Golang } from "@/components/ui/svgs/golang";
@@ -47,9 +41,8 @@ export const DATA = {
   ],
   navbar: [
     { href: "/", icon: SproutIcon, label: "Home" },
-    { href: "/blog", icon: HourglassIcon, label: "Blog" },
+    { href: "/social", icon: HeartHandshakeIcon, label: "Social" },
     { href: "/story", icon: FeatherIcon, label: "Story" },
-    { href: "/gallery", icon: CameraIcon, label: "Gallery" },
     { href: "/chat", icon: BotMessageSquareIcon, label: "Chat" },
   ],
   contact: {

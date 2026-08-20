@@ -4,12 +4,10 @@ The application builds with Void/Vite+ and deploys as the `my-profile` Cloudflar
 
 ## Runtime Resources
 
-| Binding        | Type       | Purpose                                    |
-| -------------- | ---------- | ------------------------------------------ |
-| `ASSETS`       | Assets     | Built React SPA                            |
-| `BLOG_BUCKET`  | R2         | Blog Markdown and gallery images           |
-| `KV_NAMESPACE` | KV         | Derived blog, feed, sitemap, and OG caches |
-| `HYPERDRIVE`   | Hyperdrive | Production PostgreSQL connection           |
+| Binding      | Type       | Purpose                          |
+| ------------ | ---------- | -------------------------------- |
+| `ASSETS`     | Assets     | Built React SPA                  |
+| `HYPERDRIVE` | Hyperdrive | Production PostgreSQL connection |
 
 `wrangler.json` is the source of truth for resource bindings and non-sensitive production values.
 `env.ts` is the source of truth for application environment validation.

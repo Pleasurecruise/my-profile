@@ -9,9 +9,8 @@ Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Ro
 ## Features
 
 - **Home** — landing page with animated background
-- **Blog** — Markdown stored in Cloudflare R2, compiled server-side with Shiki syntax highlighting and TOC generation
+- **Social** — multilingual follow policy, social accounts, contact details, and sponsorship
 - **Chat** — authenticated Pi Agent chat with typed NDJSON streaming
-- **Gallery** — photo gallery sourced from Cloudflare R2, masonry layout
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **CV** — resume page with work, projects, and hackathons
 - **Story** — personal story page with interactive map
@@ -40,12 +39,10 @@ This project splits runtime values by source.
 
 Remote/prod bindings are declared in `wrangler.json`:
 
-| Binding        | Type       | Purpose                       |
-| -------------- | ---------- | ----------------------------- |
-| `ASSETS`       | Static     | Serves the SPA                |
-| `BLOG_BUCKET`  | R2         | Blog Markdown files           |
-| `HYPERDRIVE`   | Hyperdrive | PostgreSQL connection proxy   |
-| `KV_NAMESPACE` | KV         | Blog, feed, and sitemap cache |
+| Binding      | Type       | Purpose                     |
+| ------------ | ---------- | --------------------------- |
+| `ASSETS`     | Static     | Serves the SPA              |
+| `HYPERDRIVE` | Hyperdrive | PostgreSQL connection proxy |
 
 Runtime env values:
 
@@ -117,7 +114,6 @@ packages/ui/src/
 ├── components/      # CherryBlossom, HelloSignature
 ├── footer/          # PresenceCount, SiteAge
 ├── terminal/        # Interactive terminal (logic + components)
-└── markdown/        # Blog compiler (Shiki, TOC) + BlogContent component
 ```
 
 Shared TypeScript types (consumed by both `src/` and `server/`) live in `types/`, aliased as `@shared/`.

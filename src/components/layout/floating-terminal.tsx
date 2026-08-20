@@ -45,7 +45,7 @@ const config: TerminalConfig = {
   projects: DATA.projects.map((p) => ({ title: p.title, dates: p.dates })),
   friends: FRIENDS.map((f) => ({ name: f.name, url: f.url })),
   routes: {
-    blog: "/blog",
+    social: "/social",
     chat: "/chat",
     story: "/story",
     cv: "/cv",
@@ -195,12 +195,12 @@ export function FloatingTerminal() {
         background="rgba(0,0,0,0.5)"
         className={cn(
           "fixed z-40 shadow-lg backdrop-blur-sm",
-          "bottom-8 right-8 !w-16 !h-16 !p-0",
-          "max-sm:bottom-24 max-sm:right-4 max-sm:!w-12 max-sm:!h-12",
+          "bottom-8 right-8 !size-12 !p-0",
+          "max-sm:bottom-24 max-sm:right-4 max-sm:!size-10",
           open && "ring-2 ring-white/20",
         )}
       >
-        <SquareTerminal className="size-7 max-sm:size-5" />
+        <SquareTerminal className="size-5 max-sm:size-4" />
       </ShimmerButton>
 
       {open && isMobile && (

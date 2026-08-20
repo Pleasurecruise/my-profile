@@ -196,7 +196,7 @@ export function MOTD({ profile }: MOTDProps) {
       </p>
       {profile.founded?.[0] && (
         <p className="mt-3 text-zinc-400">
-          Recommend to visit <span className="text-yellow-400">/go blog</span>.
+          Recommend to visit <span className="text-yellow-400">/go social</span>.
         </p>
       )}
     </div>

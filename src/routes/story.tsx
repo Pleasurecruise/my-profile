@@ -1,4 +1,3 @@
-import { BlogContent } from "@my-profile/ui";
 import { createFileRoute } from "@tanstack/react-router";
 import BlurFade from "@/components/magicui/blur-fade";
 import { TypingAnimation } from "@/components/magicui/typing-animation";
@@ -51,18 +50,18 @@ function StoryPage() {
               className="text-2xl font-bold tracking-tight mb-6"
               text={headingText}
             />
-            <BlogContent className="article story-article">
+            <article className="article story-article">
               <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                 {beforeMarkdown}
               </ReactMarkdown>
-            </BlogContent>
+            </article>
             <TravelGlobe locations={TRAVEL_LOCATIONS} mapboxToken={MAPBOX_TOKEN} />
             {afterMarkdown && (
-              <BlogContent className="article story-article">
+              <article className="article story-article">
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {afterMarkdown}
                 </ReactMarkdown>
-              </BlogContent>
+              </article>
             )}
           </div>
         </BlurFade>
