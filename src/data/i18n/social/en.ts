@@ -23,21 +23,25 @@ Please forgive any misunderstandings or shortcomings in how I express myself. Fr
 - focus on everyday life and feel a bit like a personal feed shared among friends
 - are run by people with a similar level of emotional maturity, who may share some of the same struggles as me
 - often share things about technology, open source, AI, indie development, studying abroad, or everyday life
-- interact kindly and respect boundaries and differing views
+- interact actively and kindly, and respect boundaries and differing views
 - have a complete bio and link, so I can quickly get a sense of who they are
 
 **I generally will not follow accounts that:**
 
+- mostly post images or memes without substantive captions (pure emojis or one-line complaints)
+- frequently use clickbait, ride hot topics, or chase marketing hype (mostly for traffic—it gets tiring after a while)
 - frequently repost content from other accounts—it can feel like being force-fed things I did not choose to see
-- send a DM or leave a comment asking me to follow them; most of these requests are made for personal gain... unless you genuinely catch my interest
+- send a DM or leave a comment asking for a mutual follow (unless you genuinely catch my interest)
 - have become less active; I clean up my following list regularly, and if you have not left much of an impression on me, then...
-- post sexual content, political discourse, OD-related content, marketing, or anything else that my filters block
+- post sexual content, political discourse, OD-related content, advertising, or other radical speech—even content that my filters block
 
 I treat Twitter as another circle of friends.
 
 I hope everyone I follow is unique and has ideas of their own.
 
-I hope I can learn something from you and gain some positive energy along the way.
+I have seen many people lose their original style in pursuit of traffic, followers, and revenue.
+
+So I hope I can learn something from you and gain some positive energy along the way.
 
 If I do not follow you, please do not feel guilty or blame yourself too much. I may simply have forgotten.
 

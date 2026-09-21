@@ -27,8 +27,8 @@ pnpm format    # Vite+ formatting
 
 ### Core stack
 
-- **Vite+ 0.2** — dev server, build, lint, format, and checks
-- **Void 0.10** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
+- **Vite+ 0.3** — dev server, build, lint, format, and checks
+- **Void 0.20** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
 - **React 19** — client-side SPA
 - **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
 - **TypeScript 7**
@@ -36,7 +36,7 @@ pnpm format    # Vite+ formatting
 - **Hono** — Worker request handlers
 - **Better Auth 1.6** — email/password and OAuth authentication
 - **PostgreSQL + Cloudflare Hyperdrive**
-- **Pi Agent 0.84.2** — stateless authenticated chat runtime with typed NDJSON events
+- **Pi Agent 0.86.1** — stateless authenticated chat runtime with typed NDJSON events
 
 `vite.config.ts` installs `voidPlugin()`, the TanStack Router plugin, React, and Tailwind. Void uses the Cloudflare Vite runtime internally; there is no hand-written Worker entry point.
 
@@ -56,8 +56,8 @@ pnpm format    # Vite+ formatting
 ├── types/                  # Shared application types (@shared/*)
 ├── packages/ui/            # Shared UI, footer, and terminal
 ├── void.json               # Void target, database, binding inference, Worker flags
-├── wrangler.json           # Cloudflare resources and non-sensitive production vars
-└── .env.example            # Local environment template
+├── wrangler.json           # Cloudflare resource bindings
+└── .env                    # Local development values (gitignored)
 ```
 
 Generated files:
@@ -126,9 +126,11 @@ PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; loc
 
 `env.ts` is the source of truth for validated variables.
 
-- Local development values live in `.env.local`, created from `.env.example`.
-- Resource bindings and non-sensitive production values live in `wrangler.json`.
-- Production secrets are uploaded with `wrangler secret put <NAME>`.
+- Local development values live in the gitignored `.env` file.
+- Every server-side value in `env.ts` (including non-sensitive configuration such as the provider
+  URL, model, and sender address) is stored as a remote Cloudflare secret, uploaded with
+  `wrangler secret put <NAME>` or `void secret put <NAME>`.
+- `wrangler.json` declares only resource bindings; Void rejects schema-declared server keys in `vars`.
 - Application code reads environment values through `void/env` or `c.env`, never `process.env`.
 - The public Mapbox token is a client-side constant; it is not part of the environment schema.
 
@@ -161,7 +163,7 @@ Use `void` for intentionally ignored promises when required by the linter. Avoid
 | --------------------------- | --------------------------------------------------------------- |
 | `vite.config.ts`            | Vite+, Void, React, Tailwind, and TanStack Router configuration |
 | `void.json`                 | Void application and Worker configuration                       |
-| `wrangler.json`             | Cloudflare bindings and non-sensitive production vars           |
+| `wrangler.json`             | Cloudflare resource bindings (assets and Hyperdrive)            |
 | `auth.ts`                   | Better Auth and transactional email configuration               |
 | `env.ts`                    | Environment schema                                              |
 | `routes/`                   | Server route handlers                                           |

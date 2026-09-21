@@ -1,10 +1,8 @@
 packages:
   - "."
   - "packages/*"
-patchedDependencies:
-  void@0.10.12: patches/void@0.10.12.patch
 overrides:
-  vite: npm:@voidzero-dev/vite-plus-core@0.2.9
+  vite: npm:@voidzero-dev/vite-plus-core@0.3.3
   "@hono/node-server": "1.19.13"
   mermaid: "11.15.0"
   uuid: ">=14.0.0"

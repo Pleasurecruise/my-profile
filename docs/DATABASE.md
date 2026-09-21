@@ -5,7 +5,7 @@ wires Better Auth to the database automatically.
 
 ## Local development
 
-Copy `.env.example` to `.env.local` and set a direct PostgreSQL connection:
+Set the direct PostgreSQL connection in the gitignored `.env` file:
 
 ```dotenv
 DATABASE_URL=postgresql://app:password@localhost:5432/mydb

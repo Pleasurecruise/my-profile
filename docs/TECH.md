@@ -64,8 +64,8 @@ the Worker nor the database persists chat transcripts.
 
 ## Environment strategy
 
-`env.ts` validates runtime values. Local values belong in `.env.local`; non-sensitive production
-configuration and bindings belong in `wrangler.json`; secrets are stored as Cloudflare secrets.
+`env.ts` validates runtime values. Local values belong in the gitignored `.env`; resource
+bindings belong in `wrangler.json`; every server-side value is stored as a Cloudflare secret.
 Application code reads environment values through Void or Hono context, not `process.env`.
 
 The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Its profile tool uses the

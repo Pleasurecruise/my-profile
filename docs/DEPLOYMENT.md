@@ -9,19 +9,20 @@ The application builds with Void/Vite+ and deploys as the `my-profile` Cloudflar
 | `ASSETS`     | Assets     | Built React SPA                  |
 | `HYPERDRIVE` | Hyperdrive | Production PostgreSQL connection |
 
-`wrangler.json` is the source of truth for resource bindings and non-sensitive production values.
-`env.ts` is the source of truth for application environment validation.
+`wrangler.json` is the source of truth for resource bindings. `env.ts` is the source of truth
+for application environment validation; every server-side value is stored as a remote secret.
 
 ## Chat Configuration
 
 | Variable         | Storage           | Purpose                             |
 | ---------------- | ----------------- | ----------------------------------- |
-| `OPENAI_API_URL` | `wrangler.json`   | OpenAI-compatible provider base URL |
-| `OPENAI_MODEL`   | `wrangler.json`   | Provider model identifier           |
+| `OPENAI_API_URL` | Cloudflare secret | OpenAI-compatible provider base URL |
+| `OPENAI_MODEL`   | Cloudflare secret | Provider model identifier           |
 | `OPENAI_API_KEY` | Cloudflare secret | Provider credential used by Pi AI   |
 
-Pi Agent does not change the provider configuration contract. Local values belong in `.env.local`;
-production secrets are uploaded with `wrangler secret put`.
+Pi Agent does not change the provider configuration contract. Local values belong in the
+gitignored `.env`; production server values are uploaded with `wrangler secret put` (or
+`void secret put`).
 
 ## Commands
 
@@ -42,7 +43,7 @@ catalog. Syntax-highlighting languages also remain explicitly allow-listed.
 
 ## Operational Notes
 
-- Production builds use the isolated `.void/build-env`; `.env.local` is not bundled.
+- Production builds use the isolated `.void/build-env`; `.env` is not bundled.
 - Static assets, the SPA shell, sitemap, and LLM profile files are served directly by Cloudflare
   Assets. Worker-first routing is limited to `/api/*` and Void's internal routes.
 - The chat route is stateless and has no storage migration.

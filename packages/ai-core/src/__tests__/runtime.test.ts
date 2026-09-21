@@ -30,6 +30,7 @@ vi.mock("@earendil-works/pi-agent-core", () => ({
 vi.mock("@earendil-works/pi-ai/api/openai-completions", () => ({ streamSimple: vi.fn() }));
 
 import { streamSimple } from "@earendil-works/pi-ai/api/openai-completions";
+import { normalizeContext } from "@earendil-works/pi-ai";
 import { createOpenAICompatibleModel } from "../model";
 import { runAgent } from "../runtime";
 import type { RunAgentOptions } from "../types";
@@ -79,7 +80,11 @@ describe("Pi Agent runtime", () => {
     await runAgent({ ...options, apiKey: undefined, headers });
 
     const stream = agentMock.instances[0]?.options.streamFn as StreamFn;
-    void stream(options.model, { systemPrompt: "system", messages: [], tools: [] }, {});
+    void stream(
+      options.model,
+      normalizeContext({ systemPrompt: "system", messages: [], tools: [] }),
+      {},
+    );
     expect(streamSimple).toHaveBeenCalledWith(
       options.model,
       expect.any(Object),

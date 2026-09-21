@@ -20,9 +20,11 @@ Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Ro
 
 ```bash
 pnpm install
-cp .env.example .env.local
 pnpm dev
 ```
+
+Create a gitignored `.env` with the local values declared in `env.ts` (including `DATABASE_URL`
+for the local PostgreSQL instance) before running `pnpm dev`.
 
 `pnpm dev` runs Vite+ with `voidPlugin()`. Void uses Cloudflare's Vite runtime internally, so application development does not invoke `wrangler dev` directly.
 
@@ -31,11 +33,12 @@ pnpm dev
 This project splits runtime values by source.
 
 - `env.ts` declares and validates application environment variables.
-- `.env.local` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
+- `.env` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
 - `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
-- Non-sensitive production defaults and Cloudflare resource bindings live in `wrangler.json`.
-- Production secrets are uploaded to Cloudflare with `wrangler secret put`.
-- Production builds do not load `.env.local`; runtime secrets stay in Cloudflare encrypted bindings.
+- Cloudflare resource bindings live in `wrangler.json`.
+- Every server-side value (including non-sensitive configuration) is uploaded to Cloudflare with
+  `wrangler secret put` (or `void secret put`).
+- Production builds do not load `.env`; runtime secrets stay in Cloudflare encrypted bindings.
 
 Remote/prod bindings are declared in `wrangler.json`:
 
@@ -44,7 +47,7 @@ Remote/prod bindings are declared in `wrangler.json`:
 | `ASSETS`     | Static     | Serves the SPA              |
 | `HYPERDRIVE` | Hyperdrive | PostgreSQL connection proxy |
 
-Runtime env values:
+Runtime env values (all stored as Cloudflare secrets):
 
 | Variable         | Purpose                      |
 | ---------------- | ---------------------------- |
@@ -54,11 +57,14 @@ Runtime env values:
 
 Worker secrets:
 
-| Variable             | Purpose         |
-| -------------------- | --------------- |
-| `BETTER_AUTH_SECRET` | Auth secret key |
+| Variable             | Purpose                    |
+| -------------------- | -------------------------- |
+| `BETTER_AUTH_SECRET` | Auth secret key            |
+| `OPENAI_API_URL`     | OpenAI-compatible base URL |
+| `OPENAI_MODEL`       | Default chat model         |
+| `RESEND_FROM`        | Sender address             |
 
-Local `.env.local` / production secret bindings:
+Local `.env` / production secret bindings:
 
 | Variable               | Purpose                      |
 | ---------------------- | ---------------------------- |
@@ -72,6 +78,9 @@ Local `.env.local` / production secret bindings:
 Required production secrets:
 
 - `BETTER_AUTH_SECRET`
+- `OPENAI_API_URL`
+- `OPENAI_MODEL`
+- `RESEND_FROM`
 - `GITHUB_CLIENT_ID`
 - `GITHUB_CLIENT_SECRET`
 - `GOOGLE_CLIENT_ID`
@@ -100,9 +109,9 @@ pnpm deploy
 Production runtime values are split by binding type:
 
 ```bash
-# Non-sensitive runtime values and resource bindings are declared in wrangler.json
-# Local values live in .env.local
-# Production secrets can be added with `wrangler secret put <NAME>`
+# Resource bindings are declared in wrangler.json
+# Local values live in the gitignored .env file
+# Every server-side value is uploaded with `wrangler secret put <NAME>`
 ```
 
 ## Workspace

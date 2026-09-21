@@ -5,11 +5,11 @@ export default defineEnv({
   OPENAI_MODEL: string(),
   RESEND_FROM: email(),
 
-  BETTER_AUTH_SECRET: string().secret(),
-  GITHUB_CLIENT_ID: string().secret(),
-  GITHUB_CLIENT_SECRET: string().secret(),
-  GOOGLE_CLIENT_ID: string().secret(),
-  GOOGLE_CLIENT_SECRET: string().secret(),
-  OPENAI_API_KEY: string().secret(),
-  RESEND_API_KEY: string().secret(),
+  BETTER_AUTH_SECRET: string(),
+  GITHUB_CLIENT_ID: string(),
+  GITHUB_CLIENT_SECRET: string(),
+  GOOGLE_CLIENT_ID: string(),
+  GOOGLE_CLIENT_SECRET: string(),
+  OPENAI_API_KEY: string(),
+  RESEND_API_KEY: string(),
 });

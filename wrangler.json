@@ -5,11 +5,6 @@
   "compatibility_date": "2026-08-01",
   "upload_source_maps": true,
   "workers_dev": false,
-  "vars": {
-    "OPENAI_API_URL": "https://api.siliconflow.cn/v1",
-    "OPENAI_MODEL": "deepseek-ai/DeepSeek-V4-Flash",
-    "RESEND_FROM": "pleasure@yiming1234.cn"
-  },
   "placement": {
     "mode": "smart"
   },
