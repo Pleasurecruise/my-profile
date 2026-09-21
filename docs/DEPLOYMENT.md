@@ -21,8 +21,12 @@ for application environment validation; every server-side value is stored as a r
 | `OPENAI_API_KEY` | Cloudflare secret | Provider credential used by Pi AI   |
 
 Pi Agent does not change the provider configuration contract. Local values belong in the
-gitignored `.env`; production server values are uploaded with `wrangler secret put` (or
-`void secret put`).
+gitignored `.env`; production server values are uploaded with `wrangler secret put <NAME>`.
+
+To use Void CLI secret commands instead, first run `void connect --platform cloudflare` on each
+checkout. Void CLI selects the deployment platform from local `.void/project.json`, not the
+`target` in `void.json`. After connecting, use `void secret put <NAME>` and
+`void env check --remote` to verify required secret names.
 
 ## Commands
 

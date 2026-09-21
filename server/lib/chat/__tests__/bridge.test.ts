@@ -5,6 +5,53 @@ import { createChatModel } from "../model";
 import { AgentChatStreamBridge, uiMessagesToPi } from "../bridge";
 
 describe("chat bridge", () => {
+  it("preserves nested tool arguments and null output in the Pi transcript", () => {
+    const input = { nested: [null, false, 0, "", { key: "value" }] };
+    const model = createChatModel({ baseUrl: "https://example.test/v1", modelId: "model" });
+    const converted = uiMessagesToPi(
+      [
+        {
+          id: "assistant",
+          role: "assistant",
+          steps: [
+            {
+              parts: [
+                {
+                  type: "tool",
+                  toolCallId: "tool-1",
+                  toolName: "get_profile",
+                  state: "output-available",
+                  input,
+                  output: null,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      model,
+    );
+
+    expect(converted).toEqual([
+      expect.objectContaining({
+        content: [
+          {
+            type: "toolCall",
+            id: "tool-1",
+            name: "get_profile",
+            arguments: input,
+          },
+        ],
+      }),
+      expect.objectContaining({
+        role: "toolResult",
+        content: [{ type: "text", text: "null" }],
+        details: null,
+        isError: false,
+      }),
+    ]);
+  });
+
   it("converts the complete UI transcript to Pi messages", () => {
     const transcript: ChatMessage[] = [
       { id: "user", role: "user", parts: [{ type: "text", text: "hello" }] },

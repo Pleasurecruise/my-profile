@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const jsonValueSchema = z.json();
+const jsonObjectSchema = z.record(z.string(), jsonValueSchema);
+
 export type ChatStatus = "ready" | "submitted" | "streaming" | "error";
 export type MessageStatus = "streaming" | "done" | "error";
 
@@ -12,12 +15,12 @@ interface ToolPartBase {
   type: "tool";
   toolCallId: string;
   toolName: string;
-  input: unknown;
+  input: z.infer<typeof jsonObjectSchema>;
 }
 
 export type ToolPart =
   | (ToolPartBase & { state: "input-available" })
-  | (ToolPartBase & { state: "output-available"; output: unknown })
+  | (ToolPartBase & { state: "output-available"; output: z.infer<typeof jsonValueSchema> })
   | (ToolPartBase & { state: "output-error"; errorText: string });
 
 export type ChatPart = TextPart | ToolPart;
@@ -47,8 +50,13 @@ export type ChatMessage = UserChatMessage | AssistantChatMessage;
 export type ChatEvent =
   | { type: "assistant-step" }
   | { type: "text-delta"; delta: string }
-  | { type: "tool-input"; toolCallId: string; toolName: string; input: unknown }
-  | { type: "tool-output"; toolCallId: string; output: unknown }
+  | {
+      type: "tool-input";
+      toolCallId: string;
+      toolName: string;
+      input: z.infer<typeof jsonObjectSchema>;
+    }
+  | { type: "tool-output"; toolCallId: string; output: z.infer<typeof jsonValueSchema> }
   | { type: "tool-error"; toolCallId: string; errorText: string }
   | { type: "error"; message: string }
   | { type: "finish" };
@@ -57,7 +65,7 @@ const toolBase = {
   type: z.literal("tool"),
   toolCallId: z.string().min(1),
   toolName: z.string().min(1),
-  input: z.unknown(),
+  input: jsonObjectSchema,
 };
 
 const textPartSchema = z.object({ type: z.literal("text"), text: z.string() });
@@ -65,7 +73,7 @@ const textPartSchema = z.object({ type: z.literal("text"), text: z.string() });
 const partSchema = z.union([
   textPartSchema,
   z.object({ ...toolBase, state: z.literal("input-available") }),
-  z.object({ ...toolBase, state: z.literal("output-available"), output: z.unknown() }),
+  z.object({ ...toolBase, state: z.literal("output-available"), output: jsonValueSchema }),
   z.object({ ...toolBase, state: z.literal("output-error"), errorText: z.string() }),
 ]);
 
@@ -92,9 +100,9 @@ const chatEventSchema: z.ZodType<ChatEvent> = z.discriminatedUnion("type", [
     type: z.literal("tool-input"),
     toolCallId: z.string(),
     toolName: z.string(),
-    input: z.unknown(),
+    input: jsonObjectSchema,
   }),
-  z.object({ type: z.literal("tool-output"), toolCallId: z.string(), output: z.unknown() }),
+  z.object({ type: z.literal("tool-output"), toolCallId: z.string(), output: jsonValueSchema }),
   z.object({ type: z.literal("tool-error"), toolCallId: z.string(), errorText: z.string() }),
   z.object({ type: z.literal("error"), message: z.string() }),
   z.object({ type: z.literal("finish") }),

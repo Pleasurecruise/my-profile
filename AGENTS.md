@@ -129,7 +129,7 @@ PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; loc
 - Local development values live in the gitignored `.env` file.
 - Every server-side value in `env.ts` (including non-sensitive configuration such as the provider
   URL, model, and sender address) is stored as a remote Cloudflare secret, uploaded with
-  `wrangler secret put <NAME>` or `void secret put <NAME>`.
+  `wrangler secret put <NAME>`.
 - `wrangler.json` declares only resource bindings; Void rejects schema-declared server keys in `vars`.
 - Application code reads environment values through `void/env` or `c.env`, never `process.env`.
 - The public Mapbox token is a client-side constant; it is not part of the environment schema.

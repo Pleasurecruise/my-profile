@@ -2,8 +2,6 @@ import type {
   AgentEvent,
   AgentMessage,
   AssistantMessage,
-  JsonObject,
-  JsonValue,
   Model,
   ToolResultMessage,
 } from "@my-profile/ai-core";
@@ -17,30 +15,6 @@ const EMPTY_USAGE = {
   totalTokens: 0,
   cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
 };
-
-function isJsonValue(value: unknown): value is JsonValue {
-  if (value === null) return true;
-  switch (typeof value) {
-    case "boolean":
-    case "number":
-    case "string":
-      return true;
-    case "object":
-      if (Array.isArray(value)) return value.every(isJsonValue);
-      return Object.values(value).every(isJsonValue);
-    default:
-      return false;
-  }
-}
-
-function isJsonObject(value: unknown): value is JsonObject {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    !Array.isArray(value) &&
-    Object.values(value).every(isJsonValue)
-  );
-}
 
 export function uiMessagesToPi(
   messages: ChatMessage[],
@@ -70,7 +44,7 @@ export function uiMessagesToPi(
           type: "toolCall",
           id: part.toolCallId,
           name: part.toolName,
-          arguments: isJsonObject(part.input) ? part.input : {},
+          arguments: part.input,
         });
         const output = part.state === "output-available" ? part.output : part.errorText;
         toolResults.push({
@@ -80,8 +54,7 @@ export function uiMessagesToPi(
           content: [
             { type: "text", text: typeof output === "string" ? output : JSON.stringify(output) },
           ],
-          details:
-            part.state === "output-available" && isJsonValue(part.output) ? part.output : undefined,
+          details: part.state === "output-available" ? part.output : undefined,
           isError: part.state === "output-error",
           timestamp: Date.now(),
         });

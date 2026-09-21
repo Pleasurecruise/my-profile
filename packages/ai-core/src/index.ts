@@ -4,8 +4,6 @@ export type { OpenAICompatibleModelOptions, RunAgentOptions } from "./types";
 export type { AgentEvent, AgentMessage, AgentTool } from "@earendil-works/pi-agent-core";
 export type {
   AssistantMessage,
-  JsonObject,
-  JsonValue,
   Model,
   ProviderHeaders,
   ToolResultMessage,
