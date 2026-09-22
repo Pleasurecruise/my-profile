@@ -98,4 +98,9 @@ export const FRIENDS: FriendLink[] = [
     url: "https://innei.in",
     avatar: "https://avatars.githubusercontent.com/u/41265413",
   },
+  {
+    name: "Pleasure1234",
+    url: "https://you-find.me",
+    avatar: "https://you-find.me/profile/me.png",
+  },
 ];
