@@ -103,4 +103,9 @@ export const FRIENDS: FriendLink[] = [
     url: "https://www.wutongyu.site/",
     avatar: "https://www.wutongyu.site/avatar.webp",
   },
+  {
+    name: "Rainey",
+    url: "https://rainey.space/",
+    avatar: "https://avatars.githubusercontent.com/u/10717953",
+  },
 ];
