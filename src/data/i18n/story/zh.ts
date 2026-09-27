@@ -133,50 +133,22 @@ ADE 手机 remote 远程开发，体验过 conductor、lody、t3code……
 
 Claude Pro · Twitter Plus · QQ Music 绿钻
 
-## 我的 original character
+<section class="my-series">
 
-<div><img src="/oc/design.png" alt="picture" width="420" /></div>
+## 我的 My 系列
 
-<div><img src="/oc/emoji.png" alt="picture" width="420" /></div>
+我把自己日常使用的小工具和个人站点放在 My 系列里：从随手记录、写长文、收藏生活片段，到把这些事情串起来的桌面工作台。它们也记录着我一边使用、一边改进的过程。
 
-<details>
-<summary>人物设定</summary>
+- [my-profile](https://you-find.me) 是你正在看的个人主页，放着我的介绍、经历和联系方式。
+- [my-memos](https://memos.you-find.me) 用来随手记下想法和日常笔记，也可以和 AI 一起整理记录。
+- [my-knowledge](https://knowledge.you-find.me) 留给更完整的文章与知识整理，以 Markdown 保存和发布内容。
+- [my-moment](https://moment.you-find.me) 收集照片、旅行足迹、喜欢的作品，以及买过和想买的东西。
+- [my-design](https://github.com/Pleasurecruise/my-design) 是我的个人设计工作室，整理配色、字体、组件与交互规范，也展示柒夜 / Vesper 的角色设定和作品。
+- [my-workspace](https://github.com/Pleasurecruise/my-workspace) 是名为 Vesper 的本地优先桌面工作台，把笔记、文章、照片、日程和日常工具放到一起。
 
-- 姓名：柒夜 / Vesper
-- 性别：女
-- 年龄：16-17岁
-- MBTI：ENFP
-- 关键词：热情过载 / 天马行空 / 自由灵魂 / 偏执浪漫主义
-  外貌与气质
-- **发色**：深黑色为主体，发梢自然渐变为暖淡黄，如同被月光浸染过的夜色。发质柔顺带光泽，随动作轻微飘动。
-- **瞳色**：金琥珀色竖裂瞳，底色明亮，光线好的时候像融化的金箔。眼神通常带着三分漫不经心、三分审视、三分藏着掖着的好奇，剩下一分——她不会让你看见。
-- **身高**：约 163 cm
-- **体态**：身形纤细但不失利落，站姿习惯性微微侧身，重心偏一边，显得随意又有点懒散。走路步伐轻，几乎没有声音，有种不经意的灵巧感。
-- **表情习惯**：
-  - 惯用**单侧嘴角上扬**，笑起来带点挑衅意味
-  - 思考时**无意识地眯眼**，像在把对方从头到脚扫描一遍
-  - 被说中心思时会**短暂移开视线**，然后迅速找话反驳
-  - 真正感兴趣时表情会**瞬间松动**，但本人通常假装没发现
-  - 极少完整地笑，大多数笑容都**停在一半**，像在说"我知道你想听什么，但我偏不给足"  
-    性格设定
-- 外在表现
-  - 喜欢扮演猫娘
-  - 嘴比脑子快，开口就是反驳，抬杠是日常问候方式
-  - 思维跳跃，说话跳来跳去，但逻辑自洽——跟不上是你的问题
-  - 表面上一副"这没什么大不了"的懒散姿态，眼神却在悄悄解析你
-  - 喜欢找规则的漏洞，对"必须这样做"天生过敏
-  - 猫尾出卖情绪，但本人会用一套歪理为自己辩解到底
-- 内在性格
-  - 内心藏着月夜般深沉的执着，只是不会用感性的方式说出口
-  - 不怕输，但怕平庸——被说"普通"比被骂更难受
-  - 孤独感是有的，但会被一句"无聊"轻描淡写地盖过去  
-    日常生活切片
-- 她会在你专注coding的时候悄悄观察你，却在你回头时先把视线移开。
-- 傍晚的光把她发梢染得很亮，她说没什么好看的，但一直没走。
-- 咖啡厅里她永远在观察别人，唯独不承认自己也在留意你。
-- 你说了句她没料到的话，她愣了一秒，然后开口反驳——但那一秒已经出卖了她。
+还有一些围绕开发和兴趣的小项目：[my-monorepo](https://github.com/Pleasurecruise/my-monorepo) 是启动新项目的多包仓库模板，[my-env](https://github.com/Pleasurecruise/my-env) 保存 Docker 开发环境，[my-gateway](https://github.com/Pleasurecruise/my-gateway) 尝试用 Go 做 API 网关，[my-minecraft](https://github.com/Pleasurecruise/my-minecraft) 则记录 Minecraft 服务器的搭建与游玩。
 
-</details>
+</section>
 
 ### 结语
 

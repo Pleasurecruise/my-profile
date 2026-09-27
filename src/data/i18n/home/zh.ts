@@ -25,10 +25,6 @@ export const home = {
     here: "这里",
   },
 
-  series: {
-    heading: "我的系列",
-  },
-
   friends: {
     badge: "朋友们 & 联系方式",
     heading: "朋友们",

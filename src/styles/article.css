@@ -107,6 +107,10 @@ code[data-line-numbers-max-digits="3"] > .line::before {
   transition: color 140ms ease;
 }
 
+.story-article .my-series a {
+  text-decoration: none;
+}
+
 .article a:hover {
   color: hsl(210, 85%, 40%);
 }

@@ -13,10 +13,12 @@ Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Ro
 - **Chat** — authenticated Pi Agent chat with typed NDJSON streaming
 - **Terminal** — interactive slash-command terminal (`/help` to explore)
 - **CV** — resume page with work, projects, and hackathons
-- **Story** — personal story page with interactive map
+- **Story** — multilingual personal story, interactive map, and My Series project introductions
 - **Auth** — sign up, login, email verification, password reset (Better Auth + GitHub/Google OAuth)
 
 ## Getting Started
+
+Use pnpm 12.6.0, as pinned in `package.json`.
 
 ```bash
 pnpm install

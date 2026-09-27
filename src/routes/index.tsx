@@ -8,7 +8,7 @@ import { Icons } from "@/components/shared/icons";
 import BlurFade from "@/components/magicui/blur-fade";
 import { DiaTextReveal } from "@/components/magicui/dia-text-reveal";
 import { Highlighter } from "@/components/magicui/highlighter";
-import { FRIENDS, MY_SERIES } from "@/data/links";
+import { FRIENDS } from "@/data/links";
 import { DATA } from "@/data/resume";
 import { useLocale, T } from "@/lib/i18n";
 import * as homeStrings from "@/data/i18n/home";
@@ -189,76 +189,13 @@ function HomePage() {
         </BlurFade>
       </section>
 
-      <section id="my-series" className="mt-10">
-        <BlurFade delay={BLUR_FADE_DELAY * 3}>
-          <div className="mx-auto w-full max-w-2xl mb-5">
-            <h2
-              className="text-lg font-semibold text-foreground italic"
-              style={{ fontFamily: "var(--font-newsreader)" }}
-            >
-              {t.series.heading}
-            </h2>
-          </div>
-        </BlurFade>
-        <BlurFade delay={BLUR_FADE_DELAY * 4}>
-          <div className="mx-auto w-full max-w-2xl">
-            <div className="grid gap-x-8 gap-y-0 border-t border-border pt-5 lg:grid-cols-2">
-              {(() => {
-                const mid = Math.ceil(MY_SERIES.length / 2);
-                return [MY_SERIES.slice(0, mid), MY_SERIES.slice(mid)];
-              })().map((group, gi) => (
-                <div key={gi} className={gi > 0 ? "border-t border-border lg:border-0" : ""}>
-                  <ul className="divide-y divide-border">
-                    {group.map((series) => (
-                      <li key={series.url} className="py-3 text-sm leading-relaxed">
-                        <div className="flex flex-wrap items-baseline gap-2">
-                          <span className="inline-flex text-sm leading-none">{series.emoji}</span>
-                          {series.name === "my-memos" || series.name === "my-moment" ? (
-                            <Highlighter action="highlight">
-                              <a
-                                href={series.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="font-medium text-foreground hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
-                              >
-                                {series.name}
-                                <ArrowUpRight className="w-3 h-3" />
-                              </a>
-                            </Highlighter>
-                          ) : (
-                            <a
-                              href={series.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="font-medium text-foreground hover:text-muted-foreground transition-colors inline-flex items-center gap-1"
-                            >
-                              {series.name}
-                              <ArrowUpRight className="w-3 h-3" />
-                            </a>
-                          )}
-                        </div>
-                        {series.description && (
-                          <p className="mt-1 text-xs text-muted-foreground/60">
-                            {series.description}
-                          </p>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-        </BlurFade>
-      </section>
-
       <section id="friends-connect" className="mt-10">
-        <BlurFade delay={BLUR_FADE_DELAY * 4.5}>
+        <BlurFade delay={BLUR_FADE_DELAY * 3}>
           <div className="mx-auto w-full max-w-2xl mb-5">
             <ImagesBadge text={t.friends.badge} images={FRIENDS.slice(0, 3).map((f) => f.avatar)} />
           </div>
         </BlurFade>
-        <BlurFade delay={BLUR_FADE_DELAY * 5}>
+        <BlurFade delay={BLUR_FADE_DELAY * 4}>
           <div className="mx-auto w-full max-w-2xl">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 border-t border-border pt-5">
               {/* Friends — left 2 columns */}
@@ -381,7 +318,7 @@ function HomePage() {
       </section>
 
       <section id="friend-link" className="mt-10">
-        <BlurFade delay={BLUR_FADE_DELAY * 7}>
+        <BlurFade delay={BLUR_FADE_DELAY * 5}>
           <div className="space-y-4 mx-auto w-full max-w-2xl">
             <span
               className="italic block font-semibold text-lg"
@@ -414,7 +351,7 @@ function HomePage() {
       </section>
 
       <footer className="mt-4 pt-4">
-        <BlurFade delay={BLUR_FADE_DELAY * 9}>
+        <BlurFade delay={BLUR_FADE_DELAY * 6}>
           <div className="mx-auto w-full max-w-2xl">
             <div className="flex items-center justify-between mb-4">
               <p className="text-lg text-muted-foreground/30">

@@ -133,59 +133,22 @@ For quick edits on smaller projects I use VS Code. I've also dabbled with Sublim
 
 Claude Pro · Twitter Plus · QQ Music VIP
 
-## My Original Character
+<section class="my-series">
 
-<div><img src="/oc/design.png" alt="picture" width="420" /></div>
+## My Series
 
-<div><img src="/oc/emoji.png" alt="picture" width="420" /></div>
+My Series brings together the small tools and personal sites I use every day: quick notes, longer writing, moments worth keeping, and a desktop workspace that connects them. They grow as I use them and find things to improve.
 
-<details>
-<summary>Character Profile</summary>
+- [my-profile](https://you-find.me) is the personal site you are reading, with my background, experience, and contact details.
+- [my-memos](https://memos.you-find.me) captures everyday notes and passing ideas, with AI to help work through them.
+- [my-knowledge](https://knowledge.you-find.me) is for longer articles and collected knowledge, written and published in Markdown.
+- [my-moment](https://moment.you-find.me) collects photos, travel memories, favorite media, purchases, and wishlists.
+- [my-design](https://github.com/Pleasurecruise/my-design) is my personal design studio for colors, typography, components, and interaction guidelines, alongside Qiye / Vesper’s character profile and artwork.
+- [my-workspace](https://github.com/Pleasurecruise/my-workspace), also called Vesper, is a local-first desktop workspace for notes, articles, photos, planning, and everyday tools.
 
-- **Name**: Qiye / Vesper
-- **Gender**: Female
-- **Age**: 16–17
-- **MBTI**: ENFP
-- **Keywords**: Overflowing enthusiasm / Unbounded imagination / Free spirit / Stubborn romantic
+A few more projects support development and play: [my-monorepo](https://github.com/Pleasurecruise/my-monorepo) is a starting template for projects with multiple packages, [my-env](https://github.com/Pleasurecruise/my-env) holds my Docker development environment, [my-gateway](https://github.com/Pleasurecruise/my-gateway) explores an API gateway in Go, and [my-minecraft](https://github.com/Pleasurecruise/my-minecraft) documents my Minecraft server setup and play.
 
-**Appearance & Aura**
-
-- **Hair**: Deep black at the roots, naturally fading into a warm pale yellow at the tips — like moonlight soaking through the night. Smooth and glossy, shifting gently with every movement.
-- **Eyes**: Gold-amber vertical slit pupils, brilliantly bright at their base. In good light, they look like melting gold leaf. Her gaze usually carries three parts nonchalance, three parts scrutiny, three parts hidden curiosity — and that last one part? She won't let you see it.
-- **Height**: ~163 cm
-- **Build**: Slim but not without sharpness. She habitually stands slightly sideways, weight shifted to one side — looking casual, almost lazy. Her footsteps are light, nearly soundless, with an unconscious nimbleness.
-- **Facial habits**:
-  - Default expression: **one corner of the mouth raised** — a smile with a hint of provocation.
-  - When thinking: **unconsciously narrows her eyes**, as if scanning you head to toe.
-  - When you hit a nerve: **briefly looks away**, then quickly finds something to retort with.
-  - When genuinely interested: her expression **momentarily softens** — though she pretends she didn't notice.
-  - Almost never smiles fully; most smiles **stop halfway**, as if saying: "I know what you want to hear, but I won't give you the satisfaction."
-
-**Personality**
-
-*Outer self*
-
-- Likes to play the catgirl role.
-- Mouth runs faster than brain — first instinct is always to argue. Friendly bickering is her default greeting.
-- Thoughts leap around, words hop from here to there, but the logic holds — keeping up is your problem.
-- Wears a "no big deal" lazy expression on the surface, but her eyes are quietly parsing you from behind it.
-- Loves finding loopholes in rules — allergic to "you have to do it this way."
-- Her cat tail betrays her emotions, but she'll defend herself with a twisted logic all the way.
-
-*Inner self*
-
-- Inside hides a moonlit, deep-seated persistence — she just won't say it aloud in emotional terms.
-- Not afraid of losing, but terrified of being mediocre — being called "ordinary" stings more than being scolded.
-- There is loneliness, but it gets brushed off with a light "boring" and left at that.
-
-**Daily Life Snippets**
-
-- She'll quietly observe you while you're deep in coding, then look away the moment you glance back.
-- The evening light makes the tips of her hair shine bright. She says there's nothing special to see — but she never left.
-- In the café, she's forever watching others — but she'll never admit she's also paying attention to you.
-- You say something she didn't expect. She freezes for a second, then shoots back with a retort — but that one second already gave her away.
-
-</details>
+</section>
 
 ### Closing Words
 

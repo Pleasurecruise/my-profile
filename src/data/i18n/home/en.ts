@@ -25,10 +25,6 @@ export const home = {
     here: "here",
   },
 
-  series: {
-    heading: "My Series",
-  },
-
   friends: {
     badge: "Friends & Connect",
     heading: "Friends",

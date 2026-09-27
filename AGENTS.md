@@ -27,7 +27,7 @@ pnpm format    # Vite+ formatting
 
 ### Core stack
 
-- **Vite+ 0.3** — dev server, build, lint, format, and checks
+- **Vite+ 1.0 RC** — dev server, build, lint, format, and checks
 - **Void 0.20** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
 - **React 19** — client-side SPA
 - **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
@@ -36,7 +36,7 @@ pnpm format    # Vite+ formatting
 - **Hono** — Worker request handlers
 - **Better Auth 1.6** — email/password and OAuth authentication
 - **PostgreSQL + Cloudflare Hyperdrive**
-- **Pi Agent 0.86.1** — stateless authenticated chat runtime with typed NDJSON events
+- **Pi Agent 0.87.1** — stateless authenticated chat runtime with typed NDJSON events
 
 `vite.config.ts` installs `voidPlugin()`, the TanStack Router plugin, React, and Tailwind. Void uses the Cloudflare Vite runtime internally; there is no hand-written Worker entry point.
 

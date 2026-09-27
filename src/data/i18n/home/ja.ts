@@ -25,10 +25,6 @@ export const home = {
     here: "こちら",
   },
 
-  series: {
-    heading: "マイシリーズ",
-  },
-
   friends: {
     badge: "友達 & 連絡先",
     heading: "友達",
