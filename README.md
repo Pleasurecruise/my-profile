@@ -4,7 +4,7 @@ Personal website — [you-find.me](https://you-find.me)
 
 ## Stack
 
-Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · PostgreSQL · Better Auth · Cloudflare Workers
+Vite+ · Void · React 19 · TypeScript · TailwindCSS v4 · Hono · TanStack Router · Cloudflare D1 · Better Auth · Cloudflare Workers
 
 ## Features
 
@@ -25,8 +25,8 @@ pnpm install
 pnpm dev
 ```
 
-Create a gitignored `.env` with the local values declared in `env.ts` (including `DATABASE_URL`
-for the local PostgreSQL instance) before running `pnpm dev`.
+Create a gitignored `.env` with the local values declared in `env.ts` before running `pnpm dev`.
+Void provides a local D1 database during development.
 
 `pnpm dev` runs Vite+ with `voidPlugin()`. Void uses Cloudflare's Vite runtime internally, so application development does not invoke `wrangler dev` directly.
 
@@ -35,41 +35,33 @@ for the local PostgreSQL instance) before running `pnpm dev`.
 This project splits runtime values by source.
 
 - `env.ts` declares and validates application environment variables.
-- `.env` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
-- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
-- Cloudflare resource bindings live in `wrangler.json`.
-- Every server-side value (including non-sensitive configuration) is uploaded to Cloudflare with
-  `wrangler secret put <NAME>`.
+- `.env` contains local secrets. It is ignored by Git.
+- Cloudflare resource bindings live under `cloudflare` in `void.config.ts`; `void.lock.json` records
+  the resolved resources.
+- Non-sensitive configuration (`OPENAI_API_URL`, `OPENAI_MODEL`, `RESEND_FROM`) is a default in
+  `env.ts`. Credentials are uploaded to Cloudflare with `void secret put <NAME>`.
 - Production builds do not load `.env`; runtime secrets stay in Cloudflare encrypted bindings.
 
-Remote/prod bindings are declared in `wrangler.json`:
+Remote/prod bindings are declared in `void.config.ts`:
 
-| Binding      | Type       | Purpose                     |
-| ------------ | ---------- | --------------------------- |
-| `ASSETS`     | Static     | Serves the SPA              |
-| `HYPERDRIVE` | Hyperdrive | PostgreSQL connection proxy |
+| Binding  | Type   | Purpose              |
+| -------- | ------ | -------------------- |
+| `ASSETS` | Static | Serves the SPA       |
+| `DB`     | D1     | Better Auth database |
 
-Runtime env values (all stored as Cloudflare secrets):
+Configuration defaults in `env.ts` (override locally in `.env`):
 
-| Variable         | Purpose                      |
-| ---------------- | ---------------------------- |
-| `OPENAI_API_URL` | Custom OpenAI-compatible URL |
-| `OPENAI_MODEL`   | Default chat model           |
-| `RESEND_FROM`    | Sender address               |
-
-Worker secrets:
-
-| Variable             | Purpose                    |
-| -------------------- | -------------------------- |
-| `BETTER_AUTH_SECRET` | Auth secret key            |
-| `OPENAI_API_URL`     | OpenAI-compatible base URL |
-| `OPENAI_MODEL`       | Default chat model         |
-| `RESEND_FROM`        | Sender address             |
+| Variable         | Purpose                    |
+| ---------------- | -------------------------- |
+| `OPENAI_API_URL` | OpenAI-compatible base URL |
+| `OPENAI_MODEL`   | Default chat model         |
+| `RESEND_FROM`    | Sender address             |
 
 Local `.env` / production secret bindings:
 
 | Variable               | Purpose                      |
 | ---------------------- | ---------------------------- |
+| `BETTER_AUTH_SECRET`   | Auth secret key              |
 | `GITHUB_CLIENT_ID`     | GitHub OAuth client ID       |
 | `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret   |
 | `GOOGLE_CLIENT_ID`     | Google OAuth client ID       |
@@ -77,26 +69,13 @@ Local `.env` / production secret bindings:
 | `RESEND_API_KEY`       | Transactional email (Resend) |
 | `OPENAI_API_KEY`       | AI chat                      |
 
-Required production secrets:
-
-- `BETTER_AUTH_SECRET`
-- `OPENAI_API_URL`
-- `OPENAI_MODEL`
-- `RESEND_FROM`
-- `GITHUB_CLIENT_ID`
-- `GITHUB_CLIENT_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `RESEND_API_KEY`
-- `OPENAI_API_KEY`
-
 ## Commands
 
 ```bash
 pnpm dev          # Local dev via Vite+ and Void
 pnpm test         # Isolated Vitest unit tests
-pnpm build        # Client build + wrangler dry-run deploy
-pnpm deploy       # Build and deploy with Wrangler
+pnpm build        # Production build
+pnpm deploy       # Build and deploy with Void
 pnpm check        # Format, lint, and type checks
 pnpm lint         # Lint (vite-plus)
 pnpm format       # Format (vite-plus)
@@ -108,13 +87,8 @@ pnpm format       # Format (vite-plus)
 pnpm deploy
 ```
 
-Production runtime values are split by binding type:
-
-```bash
-# Resource bindings are declared in wrangler.json
-# Local values live in the gitignored .env file
-# Every server-side value is uploaded with `wrangler secret put <NAME>`
-```
+`void deploy` applies pending D1 migrations in `db/migrations/` before the new
+version receives traffic. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Workspace
 

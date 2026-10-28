@@ -16,7 +16,7 @@ This is a pnpm workspace. Use pnpm commands, not npm or yarn.
 ```bash
 pnpm dev       # Vite+ dev server with Void and the Cloudflare runtime
 pnpm test      # Isolated Vitest unit tests
-pnpm build     # Production build plus Wrangler dry-run
+pnpm build     # Production build
 pnpm deploy    # Production build and Cloudflare deployment
 pnpm check     # Void codegen, formatting, lint, and TypeScript checks
 pnpm lint      # Void codegen plus Vite+ lint
@@ -27,16 +27,16 @@ pnpm format    # Vite+ formatting
 
 ### Core stack
 
-- **Vite+ 1.0 RC** — dev server, build, lint, format, and checks
-- **Void 0.20** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
+- **Vite+ 1.4** — dev server, build, lint, format, and checks
+- **Void 1.3** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
 - **React 19** — client-side SPA
 - **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
 - **TypeScript 7**
 - **Tailwind CSS 4** — CSS-first configuration
 - **Hono** — Worker request handlers
 - **Better Auth 1.6** — email/password and OAuth authentication
-- **PostgreSQL + Cloudflare Hyperdrive**
-- **Pi Agent 0.87.1** — stateless authenticated chat runtime with typed NDJSON events
+- **Cloudflare D1**
+- **Pi Agent 1.4** — stateless authenticated chat runtime with typed NDJSON events
 
 `vite.config.ts` installs `voidPlugin()`, the TanStack Router plugin, React, and Tailwind. Void uses the Cloudflare Vite runtime internally; there is no hand-written Worker entry point.
 
@@ -55,8 +55,9 @@ pnpm format    # Vite+ formatting
 ├── src/                    # React SPA and TanStack Router pages
 ├── types/                  # Shared application types (@shared/*)
 ├── packages/ui/            # Shared UI, footer, and terminal
-├── void.json               # Void target, database, binding inference, Worker flags
-├── wrangler.json           # Cloudflare resource bindings
+├── db/migrations/          # Committed D1 migrations (Better Auth tables)
+├── void.config.ts          # Void target, database, inference, Worker and Cloudflare bindings
+├── void.lock.json          # Void-recorded Cloudflare resource state
 └── .env                    # Local development values (gitignored)
 ```
 
@@ -120,17 +121,18 @@ The request origin plus local Vite origins are trusted. `BETTER_AUTH_URL` is not
 
 ## Data
 
-PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; local development uses `DATABASE_URL`.
+Cloudflare D1 (`DB` binding) is used by Better Auth. Migrations live in `db/migrations/` and are
+applied by `void deploy`; Void provides a local D1 database during development.
 
 ## Environment and deployment
 
 `env.ts` is the source of truth for validated variables.
 
 - Local development values live in the gitignored `.env` file.
-- Every server-side value in `env.ts` (including non-sensitive configuration such as the provider
-  URL, model, and sender address) is stored as a remote Cloudflare secret, uploaded with
-  `wrangler secret put <NAME>`.
-- `wrangler.json` declares only resource bindings; Void rejects schema-declared server keys in `vars`.
+- Non-sensitive configuration (provider URL, model, sender address) is a default in `env.ts`.
+  Credentials are remote Cloudflare secrets, uploaded with `void secret put <NAME>`.
+- The `cloudflare` section of `void.config.ts` declares only resource bindings; Void rejects
+  schema-declared server keys in `vars`.
 - Application code reads environment values through `void/env` or `c.env`, never `process.env`.
 - The public Mapbox token is a client-side constant; it is not part of the environment schema.
 
@@ -162,8 +164,8 @@ Use `void` for intentionally ignored promises when required by the linter. Avoid
 | File                        | Purpose                                                         |
 | --------------------------- | --------------------------------------------------------------- |
 | `vite.config.ts`            | Vite+, Void, React, Tailwind, and TanStack Router configuration |
-| `void.json`                 | Void application and Worker configuration                       |
-| `wrangler.json`             | Cloudflare resource bindings (assets and Hyperdrive)            |
+| `void.config.ts`            | Void application, Worker, and Cloudflare binding configuration  |
+| `void.lock.json`            | Void-recorded Cloudflare resource state (committed)             |
 | `auth.ts`                   | Better Auth and transactional email configuration               |
 | `env.ts`                    | Environment schema                                              |
 | `routes/`                   | Server route handlers                                           |

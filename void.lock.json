@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "source": {
+    "name": "my-profile",
+    "account_id": "fb71c4eceaf623ae1b19b8b37d7a38cf",
+    "compatibility_date": "2026-08-01",
+    "compatibility_flags": ["nodejs_compat"],
+    "upload_source_maps": true,
+    "workers_dev": false,
+    "preview_urls": false,
+    "routes": [
+      {
+        "pattern": "you-find.me",
+        "custom_domain": true
+      }
+    ],
+    "placement": {
+      "mode": "smart"
+    },
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "my-profile",
+        "migrations_dir": "./db/migrations"
+      }
+    ],
+    "observability": {
+      "logs": {
+        "enabled": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": true
+      }
+    }
+  },
+  "resolved": {
+    "name": "my-profile",
+    "account_id": "fb71c4eceaf623ae1b19b8b37d7a38cf",
+    "compatibility_date": "2026-08-01",
+    "compatibility_flags": ["nodejs_compat"],
+    "upload_source_maps": true,
+    "workers_dev": false,
+    "placement": {
+      "mode": "smart"
+    },
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "my-profile",
+        "migrations_dir": "./db/migrations",
+        "database_id": "44aced13-973a-4d7e-bdc9-843a61475352"
+      }
+    ],
+    "observability": {
+      "logs": {
+        "enabled": true,
+        "invocation_logs": true
+      },
+      "traces": {
+        "enabled": true
+      }
+    },
+    "preview_urls": false,
+    "routes": [
+      {
+        "pattern": "you-find.me",
+        "custom_domain": true
+      }
+    ]
+  },
+  "text": "{\n  \"name\": \"my-profile\",\n  \"account_id\": \"fb71c4eceaf623ae1b19b8b37d7a38cf\",\n  \"compatibility_date\": \"2026-08-01\",\n  \"compatibility_flags\": [\n    \"nodejs_compat\"\n  ],\n  \"upload_source_maps\": true,\n  \"workers_dev\": false,\n  \"placement\": {\n    \"mode\": \"smart\"\n  },\n  \"d1_databases\": [\n    {\n      \"binding\": \"DB\",\n      \"database_name\": \"my-profile\",\n      \"migrations_dir\": \"./db/migrations\",\n      \"database_id\": \"44aced13-973a-4d7e-bdc9-843a61475352\"\n    }\n  ],\n  \"observability\": {\n    \"logs\": {\n      \"enabled\": true,\n      \"invocation_logs\": true\n    },\n    \"traces\": {\n      \"enabled\": true\n    }\n  },\n  \"preview_urls\": false,\n  \"routes\": [\n    {\n      \"pattern\": \"you-find.me\",\n      \"custom_domain\": true\n    }\n  ]\n}\n"
+}

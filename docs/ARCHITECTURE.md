@@ -27,7 +27,7 @@ Browser (React chat state, current page only)
   -> provider configured by OPENAI_API_URL and OPENAI_MODEL
 ```
 
-The app otherwise uses PostgreSQL through Hyperdrive for Better Auth and Cloudflare static assets
+The app otherwise uses Cloudflare D1 for Better Auth and Cloudflare static assets
 for the React client. Production asset requests bypass Worker execution; only `/api/*` and Void's
 internal routes run Worker code before asset resolution.
 

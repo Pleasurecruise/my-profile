@@ -45,3 +45,4 @@ next-env.d.ts
 .tanstack
 .wrangler
 .void
+.void-wrangler.jsonc

@@ -1,34 +1,18 @@
 # Database
 
-The application uses PostgreSQL. Void is configured with `"database": "pg"` in `void.json` and
-wires Better Auth to the database automatically.
+The application uses Cloudflare D1. `void.config.ts` declares the `DB` binding with
+`migrations_dir: "./db/migrations"`; Void wires Better Auth to it automatically. Omitting
+`database` selects D1.
 
 ## Local development
 
-Set the direct PostgreSQL connection in the gitignored `.env` file:
-
-```dotenv
-DATABASE_URL=postgresql://app:password@localhost:5432/mydb
-CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database
-```
-
-A matching local instance can be started with Docker:
-
-```bash
-docker run -d \
-  --name my-profile-postgres \
-  -e POSTGRES_USER=app \
-  -e POSTGRES_PASSWORD=password \
-  -e POSTGRES_DB=mydb \
-  -p 5432:5432 \
-  --restart always \
-  postgres:latest
-```
+Void provides a local D1 database during `pnpm dev`. Apply committed migrations locally with
+`void db migrate`.
 
 ## Production
 
-Production uses the `HYPERDRIVE` binding declared in `wrangler.json`. Local connection strings and
-database credentials must not be added to that file.
+`void deploy` provisions the `my-profile` D1 database, records it in `void.lock.json`, saves a
+restore point, and applies pending migrations before activating the new Worker.
 
 ## Schema ownership
 
@@ -40,4 +24,5 @@ Better Auth currently owns the active authentication models:
 - `verification`
 
 Void generates its Better Auth integration under `.void/`; that directory is ignored and must not
-be edited manually.
+be edited manually. The matching SQL lives in `db/migrations/`. After a schema change, run
+`void db generate`, review the migration, and commit it.

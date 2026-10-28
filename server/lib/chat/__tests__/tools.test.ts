@@ -9,7 +9,7 @@ describe("chat tools", () => {
         requestedUrl = request.url;
         return new Response("# Public profile");
       },
-    } as unknown as Fetcher;
+    };
     const tools = createChatTools({
       assets,
       profileUrl: new URL("https://you-find.me/llms-full.txt"),
@@ -26,7 +26,7 @@ describe("chat tools", () => {
 
   it("exposes only the public profile tool", () => {
     const tools = createChatTools({
-      assets: {} as Fetcher,
+      assets: { fetch: async () => new Response() },
       profileUrl: new URL("https://you-find.me/llms-full.txt"),
     });
 

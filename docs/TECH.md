@@ -9,8 +9,8 @@ The project is a pnpm workspace containing:
 - a React 19 SPA built with Vite+
 - TanStack Router file-based client routes
 - Void file-based Hono routes running on Cloudflare Workers
-- Better Auth backed by PostgreSQL
-- Cloudflare Hyperdrive and static assets
+- Better Auth backed by Cloudflare D1
+- Cloudflare static assets
 - `@my-profile/ui` and a platform-neutral `@my-profile/ai-core` package
 
 ## Core runtime
@@ -21,7 +21,7 @@ The project is a pnpm workspace containing:
 | Void + Hono                      | Worker routing, auth, environment, and Cloudflare packaging |
 | React + TanStack Router          | Browser SPA and file-based routes                           |
 | Tailwind CSS                     | CSS-first styling with the existing project design tokens   |
-| Better Auth + PostgreSQL         | Authentication and persistence through Hyperdrive           |
+| Better Auth + D1                 | Authentication and persistence in Cloudflare D1             |
 | Cloudflare Assets                | Static client files                                         |
 | Pi Agent                         | Agent loop, tool execution, events, and cancellation        |
 | OpenAI-compatible model endpoint | Model transport selected by environment variables           |
@@ -65,7 +65,8 @@ the Worker nor the database persists chat transcripts.
 ## Environment strategy
 
 `env.ts` validates runtime values. Local values belong in the gitignored `.env`; resource
-bindings belong in `wrangler.json`; every server-side value is stored as a Cloudflare secret.
+bindings belong in the `cloudflare` section of `void.config.ts`; non-sensitive configuration is an
+`env.ts` default and credentials are Cloudflare secrets.
 Application code reads environment values through Void or Hono context, not `process.env`.
 
 The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Its profile tool uses the
@@ -76,7 +77,7 @@ The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Its 
 ```bash
 pnpm dev       # Local Void/Vite+ development server
 pnpm test      # Isolated Vitest unit tests
-pnpm build     # Production build and Wrangler dry-run
+pnpm build     # Production build
 pnpm deploy    # Production build and Cloudflare deployment
 pnpm check     # Codegen, formatting, lint, and TypeScript checks
 pnpm lint      # Codegen and lint
