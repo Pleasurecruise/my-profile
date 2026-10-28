@@ -1,8 +1,12 @@
 import { Type, type AgentTool } from "@my-profile/ai-core";
+import type { CloudBindings } from "void/handler";
 
 const noParameters = Type.Object({});
 
-export function createChatTools(bindings: { assets: Fetcher; profileUrl: URL }): AgentTool[] {
+export function createChatTools(bindings: {
+  assets: CloudBindings["ASSETS"];
+  profileUrl: URL;
+}): AgentTool[] {
   const getProfile: AgentTool<typeof noParameters> = {
     name: "get_profile",
     label: "Read profile",

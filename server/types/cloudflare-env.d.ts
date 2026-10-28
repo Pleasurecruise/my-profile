@@ -11,7 +11,6 @@ declare global {
 
 declare module "void/handler" {
   interface CloudBindings {
-    ASSETS: Fetcher;
     HYPERDRIVE: Hyperdrive;
   }
 }

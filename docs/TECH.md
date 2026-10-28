@@ -76,7 +76,7 @@ The AI runtime uses `OPENAI_API_URL`, `OPENAI_MODEL`, and `OPENAI_API_KEY`. Its 
 ```bash
 pnpm dev       # Local Void/Vite+ development server
 pnpm test      # Isolated Vitest unit tests
-pnpm build     # Production build and Wrangler dry-run
+pnpm build     # Production build
 pnpm deploy    # Production build and Cloudflare deployment
 pnpm check     # Codegen, formatting, lint, and TypeScript checks
 pnpm lint      # Codegen and lint
