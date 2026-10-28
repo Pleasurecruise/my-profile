@@ -36,7 +36,7 @@ This project splits runtime values by source.
 
 - `env.ts` declares and validates application environment variables.
 - `.env` contains local values, including `DATABASE_URL` and local secrets. It is ignored by Git.
-- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
+- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets the local Cloudflare runtime emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
 - Cloudflare resource bindings live in `wrangler.json`.
 - Every server-side value (including non-sensitive configuration) is uploaded to Cloudflare with
   `void secret put <NAME>`.
