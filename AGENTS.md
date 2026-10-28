@@ -16,7 +16,7 @@ This is a pnpm workspace. Use pnpm commands, not npm or yarn.
 ```bash
 pnpm dev       # Vite+ dev server with Void and the Cloudflare runtime
 pnpm test      # Isolated Vitest unit tests
-pnpm build     # Production build plus Wrangler dry-run
+pnpm build     # Production build
 pnpm deploy    # Production build and Cloudflare deployment
 pnpm check     # Void codegen, formatting, lint, and TypeScript checks
 pnpm lint      # Void codegen plus Vite+ lint
@@ -27,8 +27,8 @@ pnpm format    # Vite+ formatting
 
 ### Core stack
 
-- **Vite+ 1.0 RC** — dev server, build, lint, format, and checks
-- **Void 0.20** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
+- **Vite+ 1.4** — dev server, build, lint, format, and checks
+- **Void 1.3** — Hono integration, file-based server routes, authentication, environment validation, database wiring, and Cloudflare packaging
 - **React 19** — client-side SPA
 - **TanStack Router** — file-based client routing; generates `src/routeTree.gen.ts`
 - **TypeScript 7**
@@ -36,7 +36,7 @@ pnpm format    # Vite+ formatting
 - **Hono** — Worker request handlers
 - **Better Auth 1.6** — email/password and OAuth authentication
 - **PostgreSQL + Cloudflare Hyperdrive**
-- **Pi Agent 0.87.1** — stateless authenticated chat runtime with typed NDJSON events
+- **Pi Agent 1.4** — stateless authenticated chat runtime with typed NDJSON events
 
 `vite.config.ts` installs `voidPlugin()`, the TanStack Router plugin, React, and Tailwind. Void uses the Cloudflare Vite runtime internally; there is no hand-written Worker entry point.
 
@@ -129,7 +129,7 @@ PostgreSQL is used by Better Auth. Production connects through `HYPERDRIVE`; loc
 - Local development values live in the gitignored `.env` file.
 - Every server-side value in `env.ts` (including non-sensitive configuration such as the provider
   URL, model, and sender address) is stored as a remote Cloudflare secret, uploaded with
-  `wrangler secret put <NAME>`.
+  `void secret put <NAME>`.
 - `wrangler.json` declares only resource bindings; Void rejects schema-declared server keys in `vars`.
 - Application code reads environment values through `void/env` or `c.env`, never `process.env`.
 - The public Mapbox token is a client-side constant; it is not part of the environment schema.

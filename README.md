@@ -39,7 +39,7 @@ This project splits runtime values by source.
 - `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=postgresql://user:password@localhost:5432/database` lets Wrangler emulate the production `HYPERDRIVE` binding locally without duplicating the connection string.
 - Cloudflare resource bindings live in `wrangler.json`.
 - Every server-side value (including non-sensitive configuration) is uploaded to Cloudflare with
-  `wrangler secret put <NAME>`.
+  `void secret put <NAME>`.
 - Production builds do not load `.env`; runtime secrets stay in Cloudflare encrypted bindings.
 
 Remote/prod bindings are declared in `wrangler.json`:
@@ -95,8 +95,8 @@ Required production secrets:
 ```bash
 pnpm dev          # Local dev via Vite+ and Void
 pnpm test         # Isolated Vitest unit tests
-pnpm build        # Client build + wrangler dry-run deploy
-pnpm deploy       # Build and deploy with Wrangler
+pnpm build        # Production build
+pnpm deploy       # Build and deploy with Void
 pnpm check        # Format, lint, and type checks
 pnpm lint         # Lint (vite-plus)
 pnpm format       # Format (vite-plus)
@@ -113,7 +113,7 @@ Production runtime values are split by binding type:
 ```bash
 # Resource bindings are declared in wrangler.json
 # Local values live in the gitignored .env file
-# Every server-side value is uploaded with `wrangler secret put <NAME>`
+# Every server-side value is uploaded with `void secret put <NAME>`
 ```
 
 ## Workspace

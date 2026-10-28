@@ -2,6 +2,9 @@
   "$schema": "./node_modules/void/schema.json",
   "target": "cloudflare",
   "database": "pg",
+  "routing": {
+    "notFound": "404-page"
+  },
   "inference": {
     "appType": "void"
   },
